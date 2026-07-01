@@ -464,13 +464,8 @@ async function onSaveTestLabBody(body: string) {
 async function onSaveTestLabResponse(entry: { status: number; statusText: string; body: string }) {
   if (!editMode.value) await enterEditMode()
   const current = ((mergedFields.value.responses ?? []) as Array<Record<string, unknown>>)
-  const incomingCode = String(entry.status)
-  const existingIdx = current.findIndex(r => String(r.code) === incomingCode)
-  const newEntry = { id: (current[existingIdx]?.id ?? crypto.randomUUID()) as string, code: incomingCode, status: entry.statusText, body: entry.body }
-  const updated = existingIdx >= 0
-    ? current.map((r, i) => i === existingIdx ? newEntry : r)
-    : [...current, newEntry]
-  patchFields({ responses: updated })
+  const newEntry = { id: crypto.randomUUID(), code: String(entry.status), status: entry.statusText, body: entry.body }
+  patchFields({ responses: [...current, newEntry] })
 }
 
 async function onSaveTestLabMethodPath(payload: { method: string; path: string }) {
