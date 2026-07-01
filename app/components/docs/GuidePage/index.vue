@@ -28,7 +28,7 @@
 
     <!-- Live view: always rendered so changes appear in real time while editing -->
     <div class="docs-content">
-      <DocsBlockRenderer :blocks="blocks" @edit-block="openEditor" />
+      <DocsBlockRenderer :blocks="displayBlocks" @edit-block="openEditor" />
     </div>
 
     <DocsFeedback v-if="!editMode" />
@@ -105,6 +105,13 @@ async function onDiscard() {
 async function onPublish() {
   await publishPage()
 }
+
+// Use props.page.blocks as the authoritative source for display so the content
+// renders immediately on mount without depending on the async editor state.
+// In edit mode, switch to editor blocks so draft changes appear in real time.
+const displayBlocks = computed(() =>
+  editMode.value && blocks.value.length > 0 ? blocks.value : (props.page.blocks ?? [])
+)
 
 const prevLink = computed(() =>
   props.prev ? { label: cleanTitle(props.prev.title), href: `/${props.prev.slug}` } : null

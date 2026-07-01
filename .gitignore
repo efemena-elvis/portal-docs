@@ -45,5 +45,5 @@ scripts/migration-report.txt
 scripts/restructure-collection.js
 scripts/screenshot-*.py
 
-# Internal planning docs
-docs/
+# Internal planning docs (root-level only)
+/docs/
