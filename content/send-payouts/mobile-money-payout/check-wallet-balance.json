@@ -1,0 +1,120 @@
+{
+  "type": "endpoint",
+  "title": "Check Wallet Balance",
+  "meta": {
+    "description": "",
+    "hidden": false
+  },
+  "method": "GET",
+  "path": "/api/v1/merchant/wallets",
+  "headers": [
+    {
+      "key": "x-api-key",
+      "value": "{{secret_key}}",
+      "description": "Your Vesicash secret key — required"
+    },
+    {
+      "key": "Content-Type",
+      "value": "application/json",
+      "description": ""
+    }
+  ],
+  "body": "",
+  "params": [
+    {
+      "name": "uuid",
+      "type": "",
+      "required": false,
+      "description": "string"
+    },
+    {
+      "name": "country_code",
+      "type": "",
+      "required": false,
+      "description": "string"
+    },
+    {
+      "name": "currency",
+      "type": "",
+      "required": false,
+      "description": "string"
+    },
+    {
+      "name": "balance",
+      "type": "",
+      "required": false,
+      "description": "number"
+    },
+    {
+      "name": "collection_balance",
+      "type": "",
+      "required": false,
+      "description": "number"
+    },
+    {
+      "name": "status",
+      "type": "",
+      "required": false,
+      "description": "string"
+    }
+  ],
+  "responses": [
+    {
+      "name": "200",
+      "status": "OK",
+      "code": 200,
+      "body": "{\n    \"success\": true,\n    \"code\": 200,\n    \"data\": [\n        {\n            \"uuid\": \"ec9dee9e-9965-4fc3-b84b-2e1f4aabd813\",\n            \"country_code\": \"ZM\",\n            \"currency\": \"ZMW\",\n            \"balance\": 3.0,\n            \"collection_balance\": 16.1,\n            \"status\": \"active\"\n        },\n        {\n            \"uuid\": \"6563a12c-87d9-4e40-b6c7-4d0cb80c6d87\",\n            \"country_code\": \"GH\",\n            \"currency\": \"GHS\",\n            \"balance\": 3.22,\n            \"collection_balance\": 11.42,\n            \"status\": \"active\"\n        }\n    ]\n}"
+    },
+    {
+      "name": "401",
+      "status": "Unauthorized",
+      "code": 401,
+      "body": "{\n    \"success\": false,\n    \"code\": 401,\n    \"message\": \"Unauthorized. Invalid or missing API key.\"\n}"
+    },
+    {
+      "name": "500",
+      "status": "Internal Server Error",
+      "code": 500,
+      "body": "{\n    \"success\": false,\n    \"code\": 500,\n    \"message\": \"Internal Server Error. An unexpected error occurred. Please try again later.\"\n}"
+    }
+  ],
+  "blocks": [
+    {
+      "id": "5d93275c-98a9-4898-924a-4af81c780250",
+      "type": "prose",
+      "props": {
+        "variant": "body"
+      },
+      "content": "**Endpoint:** `GET /api/v1/merchant/wallets`\n\nReturns all active wallets for your Vesicash account. **Always check your wallet balance before initiating a payout** — insufficient funds will cause the payout to fail immediately with `INSUFFICIENT_FUNDS`.\n\n---",
+      "meta": {}
+    },
+    {
+      "id": "8cea688b-2d01-4c69-8e86-0a7e4da208b5",
+      "type": "prose",
+      "props": {
+        "variant": "heading",
+        "level": "h3"
+      },
+      "content": "Response Fields",
+      "meta": {}
+    },
+    {
+      "id": "75db2d3b-eefb-48ea-9ece-0889d8840aac",
+      "type": "prose",
+      "props": {
+        "variant": "body"
+      },
+      "content": "---",
+      "meta": {}
+    },
+    {
+      "id": "e1bbcb1a-9b45-4388-8ee1-41fb53592e71",
+      "type": "callout",
+      "props": {
+        "variant": "note"
+      },
+      "content": "✅ Ensure `balance` ≥ the payout amount before proceeding to Step 2.",
+      "meta": {}
+    }
+  ]
+}

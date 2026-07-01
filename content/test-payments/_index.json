@@ -1,0 +1,14 @@
+{
+  "title": "Test Payments",
+  "items": [
+    {
+      "type": "page",
+      "slug": "test-overview"
+    },
+    {
+      "type": "page",
+      "slug": "create-refund"
+    }
+  ],
+  "order": 1
+}

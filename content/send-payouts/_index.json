@@ -1,0 +1,19 @@
+{
+  "title": "Send Payouts",
+  "collapsible": true,
+  "items": [
+    {
+      "type": "page",
+      "slug": "send-payouts-overview"
+    },
+    {
+      "type": "category",
+      "slug": "mobile-money-payout"
+    },
+    {
+      "type": "category",
+      "slug": "bank-payout"
+    }
+  ],
+  "order": 3
+}

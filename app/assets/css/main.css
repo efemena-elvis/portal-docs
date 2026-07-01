@@ -1,0 +1,105 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    font-family: 'Inter', ui-sans-serif, system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* Default body scrollbar (normal OS scrollbar) */
+  html { scrollbar-width: auto; }
+
+  /* Sidebar scrollbar — hidden by default, shown on hover */
+  .sidebar-scroll {
+    scrollbar-width: thin;
+    scrollbar-color: transparent transparent;
+  }
+  .sidebar-scroll:hover {
+    scrollbar-color: #E5EDEB transparent;
+  }
+  .sidebar-scroll::-webkit-scrollbar { width: 0; height: 0; }
+  .sidebar-scroll:hover::-webkit-scrollbar { width: 5px; height: 5px; }
+  .sidebar-scroll::-webkit-scrollbar-track { background: transparent; }
+  .sidebar-scroll::-webkit-scrollbar-thumb { background: #E5EDEB; border-radius: 9999px; }
+  .sidebar-scroll::-webkit-scrollbar-thumb:hover { background: #696F6E; }
+
+  .dark .sidebar-scroll:hover {
+    scrollbar-color: #30363d transparent;
+  }
+  .dark .sidebar-scroll::-webkit-scrollbar-thumb { background: #30363d; }
+  .dark .sidebar-scroll::-webkit-scrollbar-thumb:hover { background: #6e7681; }
+}
+
+@layer components {
+  /* Prose styles for markdown-rendered endpoint descriptions */
+  .docs-prose {
+    @apply text-ink-muted dark:text-dark-muted text-[16px] leading-[1.7];
+  }
+  .docs-prose p { @apply mb-5; }
+  .docs-prose h2 { @apply text-xl font-bold text-ink-primary dark:text-dark-text mb-4 mt-12 first:mt-0; }
+  .docs-prose h3 { @apply text-base font-semibold text-ink-primary dark:text-dark-text mb-3 mt-8; }
+  .docs-prose ul { @apply list-disc pl-5 mb-5 space-y-1.5; }
+  .docs-prose ol { @apply list-decimal pl-5 mb-5 space-y-1.5; }
+  .docs-prose li { @apply text-[16px] text-ink-muted dark:text-dark-muted; }
+  .docs-prose code {
+    @apply font-mono text-xs bg-surface-pale-blue dark:bg-dark-surface text-brand-sky px-1.5 py-0.5 rounded;
+  }
+  .docs-prose pre { @apply hidden; }
+  .docs-prose h4 { @apply text-[15px] font-semibold text-ink-primary dark:text-dark-text mb-3 mt-7; }
+  .docs-prose strong { @apply font-semibold text-ink-primary dark:text-dark-text; }
+  .docs-prose a { @apply text-brand-blue underline hover:text-brand-sky transition-colors; }
+  .prose-body a { @apply text-brand-green hover:text-brand-green/70 transition-colors; }
+  .docs-prose hr { @apply border-surface-sage dark:border-dark-border my-8; }
+  .docs-prose blockquote {
+    @apply border-l-2 border-brand-green pl-4 text-ink-secondary dark:text-dark-muted italic;
+  }
+  .docs-prose table { @apply w-full text-[15px] mb-5; }
+  .docs-prose thead tr { @apply border-b border-surface-sage dark:border-dark-border; }
+  .docs-prose thead th { @apply text-xs font-semibold text-ink-muted dark:text-dark-subtle uppercase tracking-wide py-2.5 pr-4 text-left; }
+  .docs-prose tbody tr:nth-child(even) { background-color: rgba(241,247,246,0.55); }
+  .dark .docs-prose tbody tr:nth-child(even) { background-color: rgba(33,38,45,0.5); }
+  .docs-prose tbody td { @apply py-2.5 pr-4 text-ink-secondary dark:text-dark-muted border-b border-surface-sage/60 dark:border-dark-border/60; }
+  .docs-prose tbody td code { @apply text-xs; }
+  .docs-prose img {
+    @apply rounded-xl border border-surface-sage dark:border-dark-border max-w-full h-auto my-8 shadow-sm;
+  }
+  .docs-prose figure { @apply my-8; }
+  .docs-prose figcaption {
+    @apply text-xs text-center text-ink-muted dark:text-dark-subtle mt-2;
+  }
+
+  /* Active nav item */
+  .nav-item-active {
+    @apply text-brand-green font-semibold bg-brand-green/10 rounded-lg;
+  }
+
+  /* Method badge base */
+  .method-badge {
+    @apply inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold font-mono uppercase tracking-wide;
+  }
+
+  /* Auth note block — rendered by BlockRenderer for auth-note blocks */
+  .auth-note-text a { color: #0b618f; text-decoration: none; }
+  .auth-note-text a:hover { text-decoration: underline; }
+  .dark .auth-note-text a { color: #24acee; }
+  .auth-note-text code {
+    font-family: ui-monospace, "SFMono-Regular", Menlo, Monaco, Consolas, monospace;
+    font-size: 0.82em;
+    background: #f1f7f6;
+    border: 1px solid #e5edeb;
+    border-radius: 4px;
+    padding: 1px 6px;
+    color: #525857;
+    white-space: nowrap;
+  }
+  .dark .auth-note-text code {
+    background: #21262d;
+    border-color: #30363d;
+    color: #8b949e;
+  }
+  .auth-note-text strong { font-weight: 600; }
+  .auth-note-text em { font-style: italic; }
+}

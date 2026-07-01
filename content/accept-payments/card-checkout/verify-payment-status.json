@@ -1,0 +1,134 @@
+{
+  "type": "endpoint",
+  "title": "Verify Payment Status",
+  "meta": {
+    "description": "",
+    "hidden": false
+  },
+  "method": "GET",
+  "path": "/api/v1/transactions/{{transaction_reference}}/status",
+  "headers": [
+    {
+      "key": "x-api-key",
+      "value": "{{secret_key}}",
+      "description": ""
+    },
+    {
+      "key": "Content-Type",
+      "value": "application/json",
+      "description": ""
+    }
+  ],
+  "body": "",
+  "params": [
+    {
+      "name": "payment_reference",
+      "type": "",
+      "required": false,
+      "description": "The `reference` returned by `POST /v1/payment/init`. Auto-populated from the previous step's test script."
+    }
+  ],
+  "responses": [
+    {
+      "name": "200",
+      "status": "OK",
+      "code": 200,
+      "body": "{\n    \"success\": true,\n    \"code\": 200,\n    \"data\": {\n        \"uuid\": \"6d4a7b3c-39e4-4b26-bcca-2a4b433bab15\",\n        \"reference\": \"PAYIN-VES-1781519012\",\n        \"type\": \"pay_in\",\n        \"status\": \"completed\",\n        \"method\": \"mobilemoney\",\n        \"source\": \"provider\",\n        \"funding_id\": null,\n        \"environment\": \"live\",\n        \"amount\": 3.1,\n        \"currency\": \"ZMW\",\n        \"fee\": 0,\n        \"net_amount\": 3.1,\n        \"provider_amount\": 3.1,\n        \"narration\": \"Test payment\",\n        \"account_number\": \"260968832801\",\n        \"bank_code\": \"\",\n        \"failure_reason\": \"\",\n        \"created_at\": \"2026-06-15T10:23:32Z\",\n        \"completed_at\": \"2026-06-15T10:25:03Z\"\n    }\n}"
+    },
+    {
+      "name": "200",
+      "status": "OK",
+      "code": 200,
+      "body": "{\n    \"success\": true,\n    \"code\": 200,\n    \"data\": {\n        \"uuid\": \"a1b2c3d4-e5f6-7890-abcd-ef1234567890\",\n        \"reference\": \"PAYIN-VES-1781519999\",\n        \"type\": \"pay_in\",\n        \"status\": \"failed\",\n        \"method\": \"mobilemoney\",\n        \"source\": \"provider\",\n        \"environment\": \"live\",\n        \"amount\": 1.0,\n        \"currency\": \"GHS\",\n        \"fee\": 0,\n        \"net_amount\": 0,\n        \"failure_reason\": \"INSUFFICIENT_FUNDS\",\n        \"created_at\": \"2026-06-15T11:00:00Z\",\n        \"completed_at\": null\n    }\n}"
+    },
+    {
+      "name": "401",
+      "status": "Unauthorized",
+      "code": 401,
+      "body": "{\n    \"success\": false,\n    \"code\": 401,\n    \"message\": \"Unauthorized. Invalid or missing API key.\"\n}"
+    },
+    {
+      "name": "500",
+      "status": "Internal Server Error",
+      "code": 500,
+      "body": "{\n    \"success\": false,\n    \"code\": 500,\n    \"message\": \"Internal Server Error. An unexpected error occurred. Please try again later.\"\n}"
+    }
+  ],
+  "blocks": [
+    {
+      "id": "ba631a5d-a290-4fe9-8abd-f35988a81913",
+      "type": "prose",
+      "props": {
+        "variant": "heading",
+        "level": "h2"
+      },
+      "content": "Verify Payment Status (Post-Redirect)",
+      "meta": {}
+    },
+    {
+      "id": "990fa791-ba19-46bc-be5c-7eac37f45bd6",
+      "type": "prose",
+      "props": {
+        "variant": "body"
+      },
+      "content": "**Endpoint:** `GET /v1/payment/:payment_reference`\n\nCall this after the customer returns to your `redirect_success_url` or `redirect_failed_url` — or upon receiving a webhook event — to confirm the authoritative payment outcome.\n\n---",
+      "meta": {}
+    },
+    {
+      "id": "6d80047e-f4f0-4dd1-8720-88d283ccf2de",
+      "type": "prose",
+      "props": {
+        "variant": "heading",
+        "level": "h3"
+      },
+      "content": "Path Parameters",
+      "meta": {}
+    },
+    {
+      "id": "1e1b56c7-4f35-4272-ad4c-01b83a9ff647",
+      "type": "prose",
+      "props": {
+        "variant": "body"
+      },
+      "content": "---",
+      "meta": {}
+    },
+    {
+      "id": "fbdc3689-e4df-4005-ae1a-6adb99d8b1bb",
+      "type": "prose",
+      "props": {
+        "variant": "heading",
+        "level": "h3"
+      },
+      "content": "Response",
+      "meta": {}
+    },
+    {
+      "id": "2b1c8bc1-c9c7-4804-8798-175ce6d0b103",
+      "type": "code",
+      "props": {
+        "language": "json"
+      },
+      "content": "{\n  \"status\": \"success\",\n  \"code\": 200,\n  \"data\": {\n    \"id\": \"pay_XXXXXX\",\n    \"amount\": 10000,\n    \"type\": \"payment\",\n    \"method\": \"card\",\n    \"status\": \"success\",\n    \"currency\": \"GHS\",\n    \"reference\": \"APX-REF-XXXXXX\",\n    \"business_id\": \"biz_XXX\",\n    \"created_at\": \"2026-05-25T10:00:00Z\",\n    \"environment\": \"live\",\n    \"redirect_url\": \"https://yourbank.com/payment/success\",\n    \"email\": \"customer@email.com\",\n    \"customer_first_name\": \"John\",\n    \"customer_last_name\": \"Doe\",\n    \"phone_number\": \"+233XXXXXXXXX\"\n  }\n}",
+      "meta": {}
+    },
+    {
+      "id": "1076c42b-ea67-43ea-a8d1-0c0f552703ea",
+      "type": "prose",
+      "props": {
+        "variant": "body"
+      },
+      "content": "---",
+      "meta": {}
+    },
+    {
+      "id": "705c40c1-c0ae-44db-8685-1eda94393b71",
+      "type": "callout",
+      "props": {
+        "variant": "warning"
+      },
+      "content": "Never finalise an order, credit a wallet, or trigger fulfilment based on the redirect URL params alone. Always call this endpoint to confirm `status: \"success\"` before taking business action.",
+      "meta": {}
+    }
+  ]
+}

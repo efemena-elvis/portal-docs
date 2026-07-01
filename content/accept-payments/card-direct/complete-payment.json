@@ -1,0 +1,282 @@
+{
+  "type": "endpoint",
+  "title": "Complete Payment",
+  "meta": {
+    "description": "",
+    "hidden": false
+  },
+  "method": "POST",
+  "path": "/api/v1/transactions/{{transaction_reference}}/pay",
+  "headers": [
+    {
+      "key": "x-api-key",
+      "value": "{{secret_key}}",
+      "description": ""
+    },
+    {
+      "key": "Idempotency-Key",
+      "value": "{{$guid}}",
+      "description": ""
+    },
+    {
+      "key": "Content-Type",
+      "value": "application/json",
+      "description": ""
+    }
+  ],
+  "body": "{\n   \"customer_first_name\": \"Jane\",\n    \"customer_last_name\": \"Customer\",\n    \"email\": \"customer@example.com\",\n    \"customer_phone_number\": \"08012345678\",\n    \"account_number\": \"08012345678\",\n    \"card_number\": \"4111111111111111\",\n    \"card_cvv\": \"123\",\n    \"card_expiry_date\": \"1126\"\n    }",
+  "params": [
+    {
+      "name": "payment_reference",
+      "type": "",
+      "required": false,
+      "description": "The `reference` from `POST /v1/payment/init`. Auto-populated."
+    },
+    {
+      "name": "phone",
+      "type": "string",
+      "required": true,
+      "description": "Customer's phone number in E.164 international format, e.g. `+233501234567`. Used for 3DS2 authentication SMS and receipt delivery."
+    },
+    {
+      "name": "email",
+      "type": "string",
+      "required": true,
+      "description": "Customer's email address. Used for 3DS2 authentication and to send the payment receipt. Must be a valid RFC 5321 address."
+    },
+    {
+      "name": "name",
+      "type": "string",
+      "required": true,
+      "description": "Customer's full name as it appears on their account. Displayed on the receipt and used for fraud-screening checks."
+    },
+    {
+      "name": "card.number",
+      "type": "string",
+      "required": true,
+      "description": "The Primary Account Number (PAN) — 16-digit card number, no spaces or dashes. Transmitted over TLS; Vesicash does not store raw PANs."
+    },
+    {
+      "name": "card.expiry",
+      "type": "string",
+      "required": true,
+      "description": "Card expiry in `MM/YY` format, e.g. `07/26`. Must match the date embossed on the card."
+    },
+    {
+      "name": "card.cvv",
+      "type": "string",
+      "required": true,
+      "description": "The Card Verification Value printed on the card (3 digits for Visa/Mastercard, 4 for Amex). Never stored after authorisation."
+    },
+    {
+      "name": "device.screen_width",
+      "type": "",
+      "required": false,
+      "description": "integer"
+    },
+    {
+      "name": "device.screen_height",
+      "type": "",
+      "required": false,
+      "description": "integer"
+    },
+    {
+      "name": "device.browser_agent",
+      "type": "",
+      "required": false,
+      "description": "string"
+    },
+    {
+      "name": "device.user_ip",
+      "type": "",
+      "required": false,
+      "description": "string"
+    },
+    {
+      "name": "device.time_zone",
+      "type": "",
+      "required": false,
+      "description": "string"
+    },
+    {
+      "name": "device.java_enabled",
+      "type": "",
+      "required": false,
+      "description": "boolean"
+    },
+    {
+      "name": "device.language",
+      "type": "",
+      "required": false,
+      "description": "string"
+    }
+  ],
+  "responses": [
+    {
+      "name": "200",
+      "status": "OK",
+      "code": 200,
+      "body": "{\n    \"success\": true,\n    \"code\": 200,\n    \"data\": {\n        \"reference\": \"MREF-JP83-1781520972\",\n        \"status\": \"challenge_required\",\n        \"payment_status\": \"\",\n        \"message\": \"3DS Challenge Required\"\n    }\n}"
+    },
+    {
+      "name": "400",
+      "status": "Bad Request",
+      "code": 400,
+      "body": "{\n    \"success\": false,\n    \"code\": 400,\n    \"message\": \"Bad Request. The request contains invalid or missing required parameters.\"\n}"
+    },
+    {
+      "name": "401",
+      "status": "Unauthorized",
+      "code": 401,
+      "body": "{\n    \"success\": false,\n    \"code\": 401,\n    \"message\": \"Unauthorized. Invalid or missing API key.\"\n}"
+    },
+    {
+      "name": "500",
+      "status": "Internal Server Error",
+      "code": 500,
+      "body": "{\n    \"success\": false,\n    \"code\": 500,\n    \"message\": \"Internal Server Error. An unexpected error occurred. Please try again later.\"\n}"
+    }
+  ],
+  "blocks": [
+    {
+      "id": "4bfb2dbc-64a1-4971-99b7-4dadafb827f6",
+      "type": "prose",
+      "props": {
+        "variant": "heading",
+        "level": "h2"
+      },
+      "content": "Complete Payment — Submit Card Data",
+      "meta": {}
+    },
+    {
+      "id": "b5296a49-1bfc-46c2-9b61-63969719b7cc",
+      "type": "prose",
+      "props": {
+        "variant": "body"
+      },
+      "content": "**Endpoint:** `POST /v1/payment/pay/:payment_reference`\n\nSubmit the customer's card details and device fingerprint to complete the payment initiated in the previous step. Vesicash processes the card through the MPGS network and triggers 3DS2 if required.\n\n---",
+      "meta": {}
+    },
+    {
+      "id": "3f35ab8f-b824-486e-a7ad-c9cf2e01052a",
+      "type": "prose",
+      "props": {
+        "variant": "heading",
+        "level": "h3"
+      },
+      "content": "Path Parameters",
+      "meta": {}
+    },
+    {
+      "id": "0f39e5c1-7f24-4641-b0d0-9ed43ad9b0dc",
+      "type": "prose",
+      "props": {
+        "variant": "body"
+      },
+      "content": "---",
+      "meta": {}
+    },
+    {
+      "id": "30cf74ba-498e-4239-9bdc-38a5531e7a40",
+      "type": "prose",
+      "props": {
+        "variant": "heading",
+        "level": "h3"
+      },
+      "content": "Request Body",
+      "meta": {}
+    },
+    {
+      "id": "2f1ed9b0-3922-4764-bf6b-7702b2d51ece",
+      "type": "prose",
+      "props": {
+        "variant": "body"
+      },
+      "content": "**Customer Identity:**",
+      "meta": {}
+    },
+    {
+      "id": "1d3019c1-a66e-41d1-8881-ed67fc750509",
+      "type": "prose",
+      "props": {
+        "variant": "body"
+      },
+      "content": "**Card Details:**",
+      "meta": {}
+    },
+    {
+      "id": "94df6eab-24bb-41ed-a550-8c5dc5bd9fcb",
+      "type": "prose",
+      "props": {
+        "variant": "body"
+      },
+      "content": "**Device Fingerprint (all required for 3DS2 risk scoring):**",
+      "meta": {}
+    },
+    {
+      "id": "5967f22e-bc22-4291-8744-e64899147a2d",
+      "type": "prose",
+      "props": {
+        "variant": "body"
+      },
+      "content": "---",
+      "meta": {}
+    },
+    {
+      "id": "321c2e77-2bb0-4094-a218-92ef216fc9e9",
+      "type": "prose",
+      "props": {
+        "variant": "heading",
+        "level": "h3"
+      },
+      "content": "3DS2 Challenge Response",
+      "meta": {}
+    },
+    {
+      "id": "54c38bee-7d2d-41f8-989d-b202d988dcf3",
+      "type": "prose",
+      "props": {
+        "variant": "body"
+      },
+      "content": "If the issuer requires a challenge, Vesicash returns:",
+      "meta": {}
+    },
+    {
+      "id": "f3913674-1b8b-4674-8dde-eb2a3d178787",
+      "type": "code",
+      "props": {
+        "language": "json"
+      },
+      "content": "{\n  \"status\": \"challenge_required\",\n  \"data\": {\n    \"device_storage_token\": \"...\",\n    \"methodUrl\": \"https://issuer-acs.example.com/3ds/method\",\n    \"methodPostData\": \"<base64-encoded-payload>\"\n  }\n}",
+      "meta": {}
+    },
+    {
+      "id": "10ba5435-99ba-4094-84b6-b8c2ef829d46",
+      "type": "prose",
+      "props": {
+        "variant": "body"
+      },
+      "content": "**Your bank frontend must:**\n1. POST `methodPostData` to `methodUrl` (Card Issuer ACS)\n2. Display the issuer's challenge to the customer (OTP / in-app / biometric)\n3. On completion, Vesicash will deliver the final result via webhook\n\n---",
+      "meta": {}
+    },
+    {
+      "id": "dbda3914-3964-4c52-8623-0d82f39a20e3",
+      "type": "prose",
+      "props": {
+        "variant": "heading",
+        "level": "h3"
+      },
+      "content": "Success Response",
+      "meta": {}
+    },
+    {
+      "id": "a6d62fbb-23dc-4c30-9c9a-0eaae15d7667",
+      "type": "code",
+      "props": {
+        "language": "json"
+      },
+      "content": "{\n  \"status\": \"success\",\n  \"data\": {\n    \"status\": \"success\",\n    \"reference\": \"APX-REF-XXXXXX\"\n  }\n}",
+      "meta": {}
+    }
+  ]
+}

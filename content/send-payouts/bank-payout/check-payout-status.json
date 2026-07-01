@@ -1,0 +1,108 @@
+{
+  "type": "endpoint",
+  "title": "Check Payout Status",
+  "meta": {
+    "description": "",
+    "hidden": false
+  },
+  "method": "GET",
+  "path": "/api/v1/transactions/{{transaction_reference}}/status",
+  "headers": [
+    {
+      "key": "x-api-key",
+      "value": "{{secret_key}}",
+      "description": ""
+    },
+    {
+      "key": "Content-Type",
+      "value": "application/json",
+      "description": ""
+    }
+  ],
+  "body": "",
+  "params": [
+    {
+      "name": "status",
+      "type": "",
+      "required": false,
+      "description": "`\"success\"`, `\"failed\"`, or `\"processing\"`"
+    },
+    {
+      "name": "is_disbursed",
+      "type": "",
+      "required": false,
+      "description": "`true` when funds have been delivered to the beneficiary"
+    },
+    {
+      "name": "failure_reason",
+      "type": "",
+      "required": false,
+      "description": "Present if `status` is `\"failed\"`"
+    },
+    {
+      "name": "amount",
+      "type": "",
+      "required": false,
+      "description": "Disbursed amount"
+    },
+    {
+      "name": "reference",
+      "type": "",
+      "required": false,
+      "description": "Your payout reference"
+    },
+    {
+      "name": "created_at",
+      "type": "",
+      "required": false,
+      "description": "When the payout was initiated"
+    },
+    {
+      "name": "updated_at",
+      "type": "",
+      "required": false,
+      "description": "Last status change timestamp"
+    }
+  ],
+  "responses": [
+    {
+      "name": "200",
+      "status": "OK",
+      "code": 200,
+      "body": "{\n    \"success\": true,\n    \"code\": 200,\n    \"data\": {\n        \"uuid\": \"1c543991-bdc3-4918-a800-6f19b61a0781\",\n        \"reference\": \"PAYOUT-VES-1781276304\",\n        \"type\": \"pay_out\",\n        \"status\": \"completed\",\n        \"method\": \"mobilemoney\",\n        \"environment\": \"live\",\n        \"amount\": 0.3,\n        \"currency\": \"ZMW\",\n        \"fee\": 0,\n        \"net_amount\": 0.3,\n        \"narration\": \"Payout to customer\",\n        \"account_number\": \"260968832801\",\n        \"is_disbursed\": true,\n        \"failure_reason\": \"\",\n        \"created_at\": \"2026-06-15T09:27:44Z\",\n        \"completed_at\": \"2026-06-15T09:29:12Z\"\n    }\n}"
+    },
+    {
+      "name": "401",
+      "status": "Unauthorized",
+      "code": 401,
+      "body": "{\n    \"success\": false,\n    \"code\": 401,\n    \"message\": \"Unauthorized. Invalid or missing API key.\"\n}"
+    },
+    {
+      "name": "500",
+      "status": "Internal Server Error",
+      "code": 500,
+      "body": "{\n    \"success\": false,\n    \"code\": 500,\n    \"message\": \"Internal Server Error. An unexpected error occurred. Please try again later.\"\n}"
+    }
+  ],
+  "blocks": [
+    {
+      "id": "f21ce068-12cc-4269-912c-abbd3452cb59",
+      "type": "prose",
+      "props": {
+        "variant": "body"
+      },
+      "content": "**Endpoint:** `GET /v1/payment/:payment_ref`\n\nVerifies the final outcome of a payout. Call after receiving a webhook notification, or poll periodically if webhooks are not configured.\n\n---",
+      "meta": {}
+    },
+    {
+      "id": "0d61b465-e1ae-44e0-b225-363264c30af6",
+      "type": "prose",
+      "props": {
+        "variant": "heading",
+        "level": "h3"
+      },
+      "content": "Key Response Fields for Payouts",
+      "meta": {}
+    }
+  ]
+}

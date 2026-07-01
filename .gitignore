@@ -1,0 +1,49 @@
+# Nuxt dev/build outputs
+.output
+.data
+.nuxt
+.nitro
+.cache
+dist
+
+# Node dependencies
+node_modules
+
+# Logs
+logs
+*.log
+
+# Misc
+.DS_Store
+.fleet
+.idea
+
+# Local env files
+.env
+.env.*
+!.env.example
+
+# Draft content files — local transient state; publish before deploying
+content/**/*.draft.json
+
+api-doc-design-principles.md
+collection-conventions.md
+vesicash-design-system.md
+ui-improvements-discussion.md
+ui-improvements-plan.md
+PLAN.md
+
+screenshots
+
+# Old Postman collection artefacts
+public/collection.json
+public/collection.backup*.json
+
+# One-time migration scripts / reports
+scripts/migrate.ts
+scripts/migration-report.txt
+scripts/restructure-collection.js
+scripts/screenshot-*.py
+
+# Internal planning docs
+docs/

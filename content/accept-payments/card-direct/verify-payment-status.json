@@ -1,0 +1,159 @@
+{
+  "type": "endpoint",
+  "title": "Verify Payment Status",
+  "meta": {
+    "description": "",
+    "hidden": false
+  },
+  "method": "GET",
+  "path": "/api/v1/transactions/{{transaction_reference}}/status",
+  "headers": [
+    {
+      "key": "x-api-key",
+      "value": "{{secret_key}}",
+      "description": ""
+    },
+    {
+      "key": "Content-Type",
+      "value": "application/json",
+      "description": ""
+    }
+  ],
+  "body": "",
+  "params": [
+    {
+      "name": "payment_reference",
+      "type": "",
+      "required": false,
+      "description": "The `reference` from the init step. Auto-populated."
+    },
+    {
+      "name": "status",
+      "type": "",
+      "required": false,
+      "description": "`\"success\"` before confirming order"
+    },
+    {
+      "name": "is_fraud_resolved",
+      "type": "",
+      "required": false,
+      "description": "`false` = still under fraud review"
+    },
+    {
+      "name": "failure_reason",
+      "type": "",
+      "required": false,
+      "description": "Present on failed transactions"
+    },
+    {
+      "name": "refunds",
+      "type": "",
+      "required": false,
+      "description": "Array grows as refunds are processed"
+    }
+  ],
+  "responses": [
+    {
+      "name": "200",
+      "status": "OK",
+      "code": 200,
+      "body": "{\n    \"success\": true,\n    \"code\": 200,\n    \"data\": {\n        \"uuid\": \"6d4a7b3c-39e4-4b26-bcca-2a4b433bab15\",\n        \"reference\": \"PAYIN-VES-1781519012\",\n        \"type\": \"pay_in\",\n        \"status\": \"completed\",\n        \"method\": \"mobilemoney\",\n        \"source\": \"provider\",\n        \"funding_id\": null,\n        \"environment\": \"live\",\n        \"amount\": 3.1,\n        \"currency\": \"ZMW\",\n        \"fee\": 0,\n        \"net_amount\": 3.1,\n        \"provider_amount\": 3.1,\n        \"narration\": \"Test payment\",\n        \"account_number\": \"260968832801\",\n        \"bank_code\": \"\",\n        \"failure_reason\": \"\",\n        \"created_at\": \"2026-06-15T10:23:32Z\",\n        \"completed_at\": \"2026-06-15T10:25:03Z\"\n    }\n}"
+    },
+    {
+      "name": "200",
+      "status": "OK",
+      "code": 200,
+      "body": "{\n    \"success\": true,\n    \"code\": 200,\n    \"data\": {\n        \"uuid\": \"a1b2c3d4-e5f6-7890-abcd-ef1234567890\",\n        \"reference\": \"PAYIN-VES-1781519999\",\n        \"type\": \"pay_in\",\n        \"status\": \"failed\",\n        \"method\": \"mobilemoney\",\n        \"source\": \"provider\",\n        \"environment\": \"live\",\n        \"amount\": 1.0,\n        \"currency\": \"GHS\",\n        \"fee\": 0,\n        \"net_amount\": 0,\n        \"failure_reason\": \"INSUFFICIENT_FUNDS\",\n        \"created_at\": \"2026-06-15T11:00:00Z\",\n        \"completed_at\": null\n    }\n}"
+    },
+    {
+      "name": "401",
+      "status": "Unauthorized",
+      "code": 401,
+      "body": "{\n    \"success\": false,\n    \"code\": 401,\n    \"message\": \"Unauthorized. Invalid or missing API key.\"\n}"
+    },
+    {
+      "name": "500",
+      "status": "Internal Server Error",
+      "code": 500,
+      "body": "{\n    \"success\": false,\n    \"code\": 500,\n    \"message\": \"Internal Server Error. An unexpected error occurred. Please try again later.\"\n}"
+    }
+  ],
+  "blocks": [
+    {
+      "id": "c61c7947-ea8b-4b33-9684-ed74a271955a",
+      "type": "prose",
+      "props": {
+        "variant": "heading",
+        "level": "h2"
+      },
+      "content": "Verify Transaction Status",
+      "meta": {}
+    },
+    {
+      "id": "3be168d9-8732-4357-a48b-850f9c82e887",
+      "type": "prose",
+      "props": {
+        "variant": "body"
+      },
+      "content": "**Endpoint:** `GET /v1/payment/:payment_ref`\n\nReturns the full transaction record including all fields relevant for audit, refund eligibility and fraud monitoring.\n\n---",
+      "meta": {}
+    },
+    {
+      "id": "062c3c17-78d2-4b19-a64b-6a4d0ebfddbb",
+      "type": "prose",
+      "props": {
+        "variant": "heading",
+        "level": "h3"
+      },
+      "content": "Path Parameters",
+      "meta": {}
+    },
+    {
+      "id": "bdf3e9d4-299a-4335-8850-6e5cab09588a",
+      "type": "prose",
+      "props": {
+        "variant": "body"
+      },
+      "content": "---",
+      "meta": {}
+    },
+    {
+      "id": "fa5749be-1b92-420c-9ccb-5d56c666f008",
+      "type": "prose",
+      "props": {
+        "variant": "heading",
+        "level": "h3"
+      },
+      "content": "Response (key fields)",
+      "meta": {}
+    },
+    {
+      "id": "e647881e-f8e5-46f6-87cf-c79456f952e9",
+      "type": "code",
+      "props": {
+        "language": "json"
+      },
+      "content": "{\n  \"status\": \"success\",\n  \"data\": {\n    \"id\": \"pay_XXXXXX\",\n    \"amount\": 10000,\n    \"charge\": 150,\n    \"environment\": \"live\",\n    \"type\": \"payment\",\n    \"method\": \"card\",\n    \"status\": \"success\",\n    \"currency\": \"GHS\",\n    \"reference\": \"APX-REF-XXXXXX\",\n    \"narration\": \"Payment for Order #12345\",\n    \"provider_transaction_id\": \"MPGS-XXXXXX\",\n    \"operator\": \"mpgs\",\n    \"business_id\": \"biz_XXX\",\n    \"is_disbursed\": false,\n    \"is_fraud_resolved\": false,\n    \"refunds\": [],\n    \"created_at\": \"2026-05-25T10:00:00Z\",\n    \"updated_at\": \"2026-05-25T10:00:05Z\"\n  }\n}",
+      "meta": {}
+    },
+    {
+      "id": "6a6c3371-4591-427d-925f-27aedcf13777",
+      "type": "prose",
+      "props": {
+        "variant": "body"
+      },
+      "content": "---",
+      "meta": {}
+    },
+    {
+      "id": "508886db-8e2d-4524-9b9b-57fb6679f208",
+      "type": "prose",
+      "props": {
+        "variant": "heading",
+        "level": "h3"
+      },
+      "content": "Fields to monitor",
+      "meta": {}
+    }
+  ]
+}

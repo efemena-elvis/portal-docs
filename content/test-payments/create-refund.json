@@ -1,0 +1,50 @@
+{
+  "type": "endpoint",
+  "title": "Create Refund",
+  "meta": {
+    "description": "",
+    "hidden": true
+  },
+  "description": "Creates a new mobile money checkout transaction. Vesicash returns a hosted payment_url to which you redirect the customer — it handles the mobile money prompt and 3DS entirely.",
+  "auth": "Requires a valid API key passed in the `x-api-key` request header. See the [Authentication](/getting-started/authentication) guide for details.",
+  "method": "GET",
+  "path": "/api/v1/refund/create-session",
+  "headers": [
+    {
+      "key": "x-api-key",
+      "value": "sk_test_123456789",
+      "description": "",
+      "disabled": false
+    }
+  ],
+  "body": "",
+  "params": [],
+  "responseSchema": [],
+  "responses": [
+    {
+      "id": "f1a1585c-f445-49cf-bbdd-19c621e7878b",
+      "code": "404",
+      "status": "Not Found",
+      "body": "{\n  \"success\": false,\n  \"error\": \"not_found\",\n  \"message\": \"Endpoint not found\",\n  \"code\": 404\n}"
+    }
+  ],
+  "errors": [],
+  "blocks": [],
+  "sectionOrder": [
+    "description",
+    "auth",
+    "endpoint",
+    "params-heading",
+    "headers",
+    "request-example-heading",
+    "request-example",
+    "path-params",
+    "query-params",
+    "body-params",
+    "response-heading",
+    "response-schema",
+    "responses",
+    "errors-heading",
+    "errors"
+  ]
+}

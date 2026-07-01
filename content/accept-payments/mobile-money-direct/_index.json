@@ -1,0 +1,17 @@
+{
+  "title": "Mobile Money — Direct",
+  "items": [
+    {
+      "type": "page",
+      "slug": "initialize-payment"
+    },
+    {
+      "type": "page",
+      "slug": "complete-payment"
+    },
+    {
+      "type": "page",
+      "slug": "verify-payment-status"
+    }
+  ]
+}

@@ -1,0 +1,235 @@
+{
+  "type": "guide",
+  "title": "Accept Payments Overview",
+  "meta": {
+    "description": "",
+    "hidden": false
+  },
+  "blocks": [
+    {
+      "id": "12af5248-6fe8-4792-af80-cba147106e03",
+      "type": "callout",
+      "props": {
+        "variant": "nutshell"
+      },
+      "content": "Accept mobile money and card payments from customers across Africa. Choose between a Vesicash-hosted checkout page or a direct integration built into your own UI.",
+      "meta": {}
+    },
+    {
+      "id": "20b5d6c0-a8c1-43d8-a552-ba9fc0cbbde2",
+      "type": "callout",
+      "props": {
+        "variant": "before-you-begin"
+      },
+      "content": "- You have completed KYC and generated API keys.\n- You have set your `secret_key` and `public_key` in your environment.\n- You have configured a `webhook_url` to receive event notifications.",
+      "meta": {}
+    },
+    {
+      "id": "72cbf902-bc18-44ed-a44b-ce03238e94fe",
+      "type": "prose",
+      "props": {
+        "variant": "heading",
+        "level": "h2"
+      },
+      "content": "Hosted Checkout Flow",
+      "meta": {}
+    },
+    {
+      "id": "d368de02-658d-4544-bb3f-8205ceb554c4",
+      "type": "prose",
+      "props": {
+        "variant": "body"
+      },
+      "content": "The simplest integration. Vesicash collects payment details on a hosted page — no card data touches your server.",
+      "meta": {}
+    },
+    {
+      "id": "58737a8b-8673-4645-b8a0-6bbeca597a71",
+      "type": "code",
+      "props": {
+        "language": "@step number=1 title=\"Initialize the payment\""
+      },
+      "content": "Call `POST /v1/payment/init`. Vesicash returns a `payment_link` and a `reference`.",
+      "meta": {}
+    },
+    {
+      "id": "0997b0ce-017a-4e1b-a9ef-c7f256dc5821",
+      "type": "code",
+      "props": {
+        "language": "@step number=2 title=\"Redirect the customer\""
+      },
+      "content": "Send the customer to `data.payment_link`. Vesicash handles card data collection and 3DS2 entirely.",
+      "meta": {}
+    },
+    {
+      "id": "812910f6-39af-4320-b251-e304e31ac5dd",
+      "type": "code",
+      "props": {
+        "language": "@step number=3 title=\"Handle the redirect\""
+      },
+      "content": "After payment, Vesicash redirects to your `redirect_success_url` or `redirect_failed_url` with `?payment_reference=<ref>` appended.",
+      "meta": {}
+    },
+    {
+      "id": "51043438-b6b6-4303-bcd6-94389689d13e",
+      "type": "code",
+      "props": {
+        "language": "@step number=4 title=\"Verify the outcome\" last=true"
+      },
+      "content": "**Always** confirm with `GET /v1/payment/:reference` before fulfilling the order. Never rely on redirect parameters alone.",
+      "meta": {}
+    },
+    {
+      "id": "86bf0595-c1ae-4acd-a892-c1e96ee1f9a8",
+      "type": "prose",
+      "props": {
+        "variant": "heading",
+        "level": "h2"
+      },
+      "content": "Direct Integration Flow",
+      "meta": {}
+    },
+    {
+      "id": "3b9c492c-7d5e-43a4-89eb-3909da8d5994",
+      "type": "prose",
+      "props": {
+        "variant": "body"
+      },
+      "content": "Build your own payment UI. You collect card details and submit them directly to Vesicash.",
+      "meta": {}
+    },
+    {
+      "id": "d117eec1-5c92-490b-b5d2-65ea023c6e74",
+      "type": "code",
+      "props": {
+        "language": "@step number=1 title=\"Initialize the payment\""
+      },
+      "content": "Call `POST /v1/payment/init` with `integration_type: \"DIRECT_API\"`. You receive a `reference` — no `payment_link` is returned.",
+      "meta": {}
+    },
+    {
+      "id": "24afa8f9-2702-4709-a9d9-c7870a2371f8",
+      "type": "code",
+      "props": {
+        "language": "@step number=2 title=\"Collect and submit card details\""
+      },
+      "content": "POST the customer's card details and device fingerprint to `POST /v1/payment/pay/:reference`.",
+      "meta": {}
+    },
+    {
+      "id": "49f7e1be-c65c-4fb3-9c9a-a478dc63c90b",
+      "type": "code",
+      "props": {
+        "language": "@step number=3 title=\"Handle 3DS2 challenge (if required)\""
+      },
+      "content": "If the issuer returns `challenge_required`, display the ACS challenge to the customer and await the webhook confirmation.",
+      "meta": {}
+    },
+    {
+      "id": "4f5eec39-a643-4ab7-a789-10add988c289",
+      "type": "code",
+      "props": {
+        "language": "@step number=4 title=\"Verify the outcome\" last=true"
+      },
+      "content": "Call `GET /v1/payment/:reference` to confirm `status: \"success\"` before fulfilling the order.",
+      "meta": {}
+    },
+    {
+      "id": "334091ab-5812-4d5d-b47c-9f81ec3f01a7",
+      "type": "prose",
+      "props": {
+        "variant": "heading",
+        "level": "h2"
+      },
+      "content": "Supported Currencies",
+      "meta": {}
+    },
+    {
+      "id": "c61137db-bc14-41cd-b1e0-68a901b50f1d",
+      "type": "table",
+      "props": {
+        "headers": [
+          {
+            "text": "Currency"
+          },
+          {
+            "text": "Payment methods"
+          }
+        ],
+        "rows": [
+          {
+            "cells": [
+              {
+                "text": "`NGN`"
+              },
+              {
+                "text": "card, bank_transfer, ussd"
+              }
+            ]
+          },
+          {
+            "cells": [
+              {
+                "text": "`GHS`"
+              },
+              {
+                "text": "card, mobile_money"
+              }
+            ]
+          },
+          {
+            "cells": [
+              {
+                "text": "`KES`"
+              },
+              {
+                "text": "card, mobile_money"
+              }
+            ]
+          },
+          {
+            "cells": [
+              {
+                "text": "`ZMW`"
+              },
+              {
+                "text": "card, mobile_money"
+              }
+            ]
+          },
+          {
+            "cells": [
+              {
+                "text": "`ZAR`"
+              },
+              {
+                "text": "card, bank_transfer"
+              }
+            ]
+          }
+        ]
+      },
+      "content": null,
+      "meta": {}
+    },
+    {
+      "id": "638244c8-ddc3-453b-9b18-7a34025f0747",
+      "type": "prose",
+      "props": {
+        "variant": "heading",
+        "level": "h2"
+      },
+      "content": "Related Flows",
+      "meta": {}
+    },
+    {
+      "id": "fe0b9117-ddc0-48dc-a709-306eb2cfe06b",
+      "type": "prose",
+      "props": {
+        "variant": "body"
+      },
+      "content": "- [Mobile Money — Checkout](/accept-payments/mobile-money-checkout/initialize-payment)\n- [Mobile Money — Direct](/accept-payments/mobile-money-direct/initialize-payment)\n- [Card — Checkout](/accept-payments/card-checkout/initialize-payment)\n- [Card — Direct](/accept-payments/card-direct/initialize-payment)",
+      "meta": {}
+    }
+  ]
+}

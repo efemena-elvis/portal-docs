@@ -1,0 +1,201 @@
+{
+  "type": "guide",
+  "title": "Home",
+  "meta": {
+    "description": "",
+    "hidden": true
+  },
+  "heroTitle": "Build payments across Africa with a single API",
+  "heroDescription": "Accept mobile money and card payments, send payouts to banks and wallets, and manage the full transaction lifecycle — all from one integration.",
+  "heroBadge": "API v1 · REST · HTTPS only",
+  "heroPrimaryLabel": "Get started",
+  "heroPrimaryHref": "/getting-started/introduction",
+  "heroSecondaryLabel": "Authentication",
+  "heroSecondaryHref": "/getting-started/authentication",
+  "blocks": [
+    {
+      "id": "home-cap-label",
+      "type": "prose",
+      "props": {
+        "variant": "heading"
+      },
+      "content": "What you can build",
+      "meta": {
+        "hidden": false,
+        "class": "",
+        "style": "",
+        "toc": ""
+      }
+    },
+    {
+      "id": "home-cap-grid",
+      "type": "card-grid",
+      "props": {
+        "columns": 2,
+        "items": [
+          {
+            "title": "Accept payments",
+            "description": "Mobile money and card payments via hosted checkout or direct API.",
+            "href": "/accept-payments/accept-payments-overview",
+            "icon": {
+              "kind": "emoji",
+              "value": "💳"
+            },
+            "bg": "bg-brand-sky/10"
+          },
+          {
+            "title": "Send payouts",
+            "description": "Disburse funds to bank accounts and mobile money wallets instantly.",
+            "href": "/send-payouts/send-payouts-overview",
+            "icon": {
+              "kind": "emoji",
+              "value": "🏦"
+            },
+            "bg": "bg-brand-green/10"
+          },
+          {
+            "title": "Process refunds",
+            "description": "Reverse payments back to customers with full audit history.",
+            "href": "/manage-transactions/process-refund/process-refund",
+            "icon": {
+              "kind": "emoji",
+              "value": "↩️"
+            },
+            "bg": "bg-amber-100 dark:bg-amber-900/20"
+          }
+        ]
+      },
+      "content": null,
+      "meta": {
+        "hidden": false,
+        "class": "mb-16",
+        "style": "",
+        "toc": ""
+      }
+    },
+    {
+      "id": "home-auth-heading",
+      "type": "prose",
+      "props": {
+        "variant": "heading",
+        "level": "h2"
+      },
+      "content": "Authenticate every request",
+      "meta": {
+        "hidden": false,
+        "class": "",
+        "style": "",
+        "toc": ""
+      }
+    },
+    {
+      "id": "home-auth-desc",
+      "type": "prose",
+      "props": {
+        "variant": "body"
+      },
+      "content": "Include your secret key, public key, and a unique idempotency key in every request. [View auth guide →](/getting-started/authentication)",
+      "meta": {
+        "hidden": false,
+        "class": "",
+        "style": "",
+        "toc": ""
+      }
+    },
+    {
+      "id": "home-auth-code",
+      "type": "code",
+      "props": {
+        "language": "bash",
+        "title": "Request Headers",
+        "hideHeader": false,
+        "hideCopy": true
+      },
+      "content": "x-api-key: sk_test_xxxxxxxxxxxxxxxxxxxx\nIdempotency-Key: 6f8e9d2c-4b3a-4a5e-9c7f-1234567890ab\nContent-Type: application/json",
+      "meta": {
+        "hidden": false,
+        "class": "mb-16",
+        "style": "",
+        "toc": ""
+      }
+    },
+    {
+      "id": "home-resp-heading",
+      "type": "prose",
+      "props": {
+        "variant": "heading",
+        "level": "h2"
+      },
+      "content": "Consistent response format",
+      "meta": {
+        "hidden": false,
+        "class": "",
+        "style": "",
+        "toc": ""
+      }
+    },
+    {
+      "id": "home-resp-desc",
+      "type": "prose",
+      "props": {
+        "variant": "body"
+      },
+      "content": "Every endpoint returns the same JSON envelope. Check `success` and `code` before reading `data`.",
+      "meta": {
+        "hidden": false,
+        "class": "",
+        "style": "",
+        "toc": ""
+      }
+    },
+    {
+      "id": "home-resp-success",
+      "type": "code",
+      "props": {
+        "language": "json",
+        "title": "Success Response",
+        "hideHeader": false,
+        "hideCopy": true
+      },
+      "content": "{\n  \"success\": true,\n  \"code\": 200,\n  \"data\": {\n    \"reference\": \"PAYIN-VES-1781519012\",\n    \"payment_link\": \"https://checkout.vesicash.com/pay/...\"\n  }\n}",
+      "meta": {
+        "hidden": false,
+        "class": "",
+        "style": "",
+        "toc": ""
+      }
+    },
+    {
+      "id": "home-resp-error",
+      "type": "code",
+      "props": {
+        "language": "json",
+        "title": "Error Response",
+        "hideHeader": false,
+        "hideCopy": true
+      },
+      "content": "{\n  \"success\": false,\n  \"code\": 401,\n  \"error\": {\n    \"type\": \"UNAUTHORIZED_ERROR\",\n    \"title\": \"Authentication failed\"\n  }\n}",
+      "meta": {
+        "hidden": false,
+        "class": "mb-16",
+        "style": "",
+        "toc": ""
+      }
+    },
+    {
+      "id": "home-support",
+      "type": "support",
+      "props": {
+        "buttonText": "Contact Support",
+        "href": "mailto:developers@vesicash.com"
+      },
+      "content": "Need help with your integration? Reach out to our developer team.",
+      "meta": {
+        "hidden": false,
+        "class": "",
+        "style": "",
+        "toc": ""
+      }
+    }
+  ]
+}

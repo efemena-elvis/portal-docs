@@ -1,0 +1,15 @@
+{
+  "title": "Manage Transactions",
+  "collapsible": true,
+  "items": [
+    {
+      "type": "category",
+      "slug": "process-refund"
+    },
+    {
+      "type": "category",
+      "slug": "query-payments"
+    }
+  ],
+  "order": 4
+}

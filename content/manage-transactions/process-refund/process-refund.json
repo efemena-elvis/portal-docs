@@ -1,0 +1,239 @@
+{
+  "type": "endpoint",
+  "title": "Process Refund",
+  "meta": {
+    "description": "",
+    "hidden": false
+  },
+  "method": "POST",
+  "path": "/api/v1/transactions/:transaction_reference/refund",
+  "headers": [
+    {
+      "key": "x-api-key",
+      "value": "{{secret_key}}",
+      "description": ""
+    },
+    {
+      "key": "Idempotency-Key",
+      "value": "{{$guid}}",
+      "description": ""
+    },
+    {
+      "key": "Content-Type",
+      "value": "application/json",
+      "description": ""
+    }
+  ],
+  "body": "{\n  \"amount\": 1,\n  \"payment_reference\": \"{{payment_reference}}\",\n  \"transfer_to\": \"mobilemoney\",\n  \"reason\": \"Customer requested cancellation before fulfilment\",\n  \"country_id\": \"ZM\",\n  \"webhook_url\": \"{{webhook_url}}\"\n}",
+  "params": [
+    {
+      "name": "amount",
+      "type": "",
+      "required": false,
+      "description": "number"
+    },
+    {
+      "name": "payment_reference",
+      "type": "",
+      "required": false,
+      "description": "string"
+    },
+    {
+      "name": "reason",
+      "type": "",
+      "required": false,
+      "description": "string"
+    },
+    {
+      "name": "country_id",
+      "type": "",
+      "required": false,
+      "description": "string"
+    },
+    {
+      "name": "webhook_url",
+      "type": "",
+      "required": false,
+      "description": "string"
+    }
+  ],
+  "responses": [
+    {
+      "name": "201",
+      "status": "Created",
+      "code": 201,
+      "body": "{\n    \"success\": true,\n    \"code\": 201,\n    \"data\": {\n        \"uuid\": \"713204b9-c4be-4cc2-990a-006c0c8d7c62\",\n        \"reference\": \"REFUND-PAYIN-JP83-1781277204-1781519373\",\n        \"status\": \"pending\",\n        \"environment\": \"live\",\n        \"message\": \"refund queued successfully\"\n    }\n}"
+    },
+    {
+      "name": "400",
+      "status": "Bad Request",
+      "code": 400,
+      "body": "{\n    \"success\": false,\n    \"code\": 400,\n    \"message\": \"Bad Request. The request contains invalid or missing required parameters.\"\n}"
+    },
+    {
+      "name": "401",
+      "status": "Unauthorized",
+      "code": 401,
+      "body": "{\n    \"success\": false,\n    \"code\": 401,\n    \"message\": \"Unauthorized. Invalid or missing API key.\"\n}"
+    },
+    {
+      "name": "500",
+      "status": "Internal Server Error",
+      "code": 500,
+      "body": "{\n    \"success\": false,\n    \"code\": 500,\n    \"message\": \"Internal Server Error. An unexpected error occurred. Please try again later.\"\n}"
+    }
+  ],
+  "blocks": [
+    {
+      "id": "fe16e209-68ee-4205-ba1e-0b31000b0c9b",
+      "type": "prose",
+      "props": {
+        "variant": "body"
+      },
+      "content": "**Endpoint:** `POST /v1/payment/refunds/process`\n\nInitiates a refund against a completed card payment. Vesicash queues the reversal and routes it through the card network back to the customer's card issuer.\n\n---",
+      "meta": {}
+    },
+    {
+      "id": "020fd17f-9daf-4c96-bd66-7ba013c3fd9b",
+      "type": "prose",
+      "props": {
+        "variant": "heading",
+        "level": "h3"
+      },
+      "content": "Request Body",
+      "meta": {}
+    },
+    {
+      "id": "2b16726d-509e-4e97-bcc5-ae252a5281b8",
+      "type": "prose",
+      "props": {
+        "variant": "body"
+      },
+      "content": "**Required fields:**",
+      "meta": {}
+    },
+    {
+      "id": "4d37f75c-25be-401e-93c4-15d9795d18d3",
+      "type": "prose",
+      "props": {
+        "variant": "body"
+      },
+      "content": "**Optional fields:**",
+      "meta": {}
+    },
+    {
+      "id": "79253866-37e6-4e34-a254-05cdabb6aa82",
+      "type": "prose",
+      "props": {
+        "variant": "body"
+      },
+      "content": "---",
+      "meta": {}
+    },
+    {
+      "id": "f9ba1706-905e-4649-9302-2693093ca124",
+      "type": "prose",
+      "props": {
+        "variant": "heading",
+        "level": "h3"
+      },
+      "content": "Response",
+      "meta": {}
+    },
+    {
+      "id": "81090dd8-e3f5-4ba1-85cd-a9af35e2a68d",
+      "type": "code",
+      "props": {
+        "language": "json"
+      },
+      "content": "{\n  \"status\": \"success\",\n  \"code\": 200,\n  \"message\": \"Refund queued\",\n  \"data\": {\n    \"refund_id\": \"ref_XXXXXX\",\n    \"status\": \"pending\",\n    \"reference\": \"APX-RF-XXXXXX\"\n  }\n}",
+      "meta": {}
+    },
+    {
+      "id": "9d80ccb9-aba0-4951-84d5-ec8126123439",
+      "type": "prose",
+      "props": {
+        "variant": "body"
+      },
+      "content": "---",
+      "meta": {}
+    },
+    {
+      "id": "8ba5314d-5467-42e6-a53d-dc9457108d7f",
+      "type": "prose",
+      "props": {
+        "variant": "heading",
+        "level": "h3"
+      },
+      "content": "Validation Rules",
+      "meta": {}
+    },
+    {
+      "id": "fcd530cd-0220-4b2c-b153-e44f21dd09ae",
+      "type": "prose",
+      "props": {
+        "variant": "body"
+      },
+      "content": "- Vesicash returns `400` if `amount` exceeds the original payment\n- The `payment_reference` must map to a completed (not failed) transaction\n- Multiple partial refunds are supported up to the original amount total\n\n---",
+      "meta": {}
+    },
+    {
+      "id": "7104fd7c-db7f-44ed-b247-ca5aa1ad57c7",
+      "type": "prose",
+      "props": {
+        "variant": "heading",
+        "level": "h3"
+      },
+      "content": "Failure Codes",
+      "meta": {}
+    },
+    {
+      "id": "fc5e229e-683f-4355-84d6-9766aa5d3454",
+      "type": "table",
+      "props": {
+        "headers": [
+          {
+            "text": "Code"
+          },
+          {
+            "text": "Meaning"
+          }
+        ],
+        "rows": [
+          {
+            "cells": [
+              {
+                "text": "`INSUFFICIENT_FUNDS`"
+              },
+              {
+                "text": "Wallet balance insufficient to fund the refund"
+              }
+            ]
+          },
+          {
+            "cells": [
+              {
+                "text": "`DECLINED_TRANSACTION`"
+              },
+              {
+                "text": "Refund rejected by card network"
+              }
+            ]
+          },
+          {
+            "cells": [
+              {
+                "text": "`PROVIDER_TIMEOUT`"
+              },
+              {
+                "text": "Third-party system delay — retry may be appropriate"
+              }
+            ]
+          }
+        ]
+      },
+      "content": null,
+      "meta": {}
+    }
+  ]
+}

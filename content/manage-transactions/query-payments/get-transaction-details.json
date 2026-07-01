@@ -1,0 +1,152 @@
+{
+  "type": "endpoint",
+  "title": "Get Transaction Details",
+  "meta": {
+    "description": "",
+    "hidden": false
+  },
+  "method": "GET",
+  "path": "/api/v1/transactions/{{transaction_reference}}/status",
+  "headers": [
+    {
+      "key": "x-api-key",
+      "value": "{{secret_key}}",
+      "description": ""
+    },
+    {
+      "key": "Content-Type",
+      "value": "application/json",
+      "description": ""
+    }
+  ],
+  "body": "",
+  "params": [
+    {
+      "name": "charge",
+      "type": "",
+      "required": false,
+      "description": "number"
+    },
+    {
+      "name": "narration",
+      "type": "",
+      "required": false,
+      "description": "string"
+    },
+    {
+      "name": "provider_transaction_id",
+      "type": "",
+      "required": false,
+      "description": "string"
+    },
+    {
+      "name": "operator",
+      "type": "",
+      "required": false,
+      "description": "string"
+    },
+    {
+      "name": "is_disbursed",
+      "type": "",
+      "required": false,
+      "description": "boolean"
+    },
+    {
+      "name": "is_fraud_resolved",
+      "type": "",
+      "required": false,
+      "description": "boolean"
+    },
+    {
+      "name": "refunds",
+      "type": "",
+      "required": false,
+      "description": "array"
+    },
+    {
+      "name": "updated_at",
+      "type": "",
+      "required": false,
+      "description": "string"
+    }
+  ],
+  "responses": [
+    {
+      "name": "200",
+      "status": "OK",
+      "code": 200,
+      "body": "{\n    \"success\": true,\n    \"code\": 200,\n    \"data\": {\n        \"uuid\": \"6d4a7b3c-39e4-4b26-bcca-2a4b433bab15\",\n        \"reference\": \"PAYIN-VES-1781519012\",\n        \"type\": \"pay_in\",\n        \"status\": \"completed\",\n        \"method\": \"mobilemoney\",\n        \"environment\": \"live\",\n        \"amount\": 3.1,\n        \"currency\": \"ZMW\",\n        \"fee\": 0,\n        \"net_amount\": 3.1,\n        \"narration\": \"Test payment\",\n        \"is_disbursed\": false,\n        \"is_fraud_resolved\": true,\n        \"refunds\": [],\n        \"created_at\": \"2026-06-15T10:23:32Z\",\n        \"completed_at\": \"2026-06-15T10:25:03Z\"\n    }\n}"
+    },
+    {
+      "name": "401",
+      "status": "Unauthorized",
+      "code": 401,
+      "body": "{\n    \"success\": false,\n    \"code\": 401,\n    \"message\": \"Unauthorized. Invalid or missing API key.\"\n}"
+    },
+    {
+      "name": "500",
+      "status": "Internal Server Error",
+      "code": 500,
+      "body": "{\n    \"success\": false,\n    \"code\": 500,\n    \"message\": \"Internal Server Error. An unexpected error occurred. Please try again later.\"\n}"
+    }
+  ],
+  "blocks": [
+    {
+      "id": "63bc9ada-245b-4fb4-82be-4d60805434de",
+      "type": "prose",
+      "props": {
+        "variant": "heading",
+        "level": "h2"
+      },
+      "content": "Get Full Transaction Details",
+      "meta": {}
+    },
+    {
+      "id": "bb7c024f-2a90-49a6-b3a5-a838ba89b313",
+      "type": "prose",
+      "props": {
+        "variant": "body"
+      },
+      "content": "**Endpoint:** `GET /v1/payment/:payment_ref`\n\nReturns the complete transaction record, including fields specific to refunds, payouts, and fraud monitoring. Use this endpoint when you need the full audit trail.\n\n---",
+      "meta": {}
+    },
+    {
+      "id": "4ff99e62-165c-422c-a031-f39e3179e312",
+      "type": "prose",
+      "props": {
+        "variant": "heading",
+        "level": "h3"
+      },
+      "content": "Additional Fields (vs. basic status check)",
+      "meta": {}
+    },
+    {
+      "id": "b92034c6-453c-4c6d-b3ad-ade749786463",
+      "type": "prose",
+      "props": {
+        "variant": "body"
+      },
+      "content": "---",
+      "meta": {}
+    },
+    {
+      "id": "027584dd-6a92-4f07-94aa-9f953203169b",
+      "type": "prose",
+      "props": {
+        "variant": "heading",
+        "level": "h3"
+      },
+      "content": "Use Cases",
+      "meta": {}
+    },
+    {
+      "id": "35a8beb2-7b11-4460-8c97-969711920181",
+      "type": "prose",
+      "props": {
+        "variant": "body"
+      },
+      "content": "- Dispute resolution: check `is_fraud_resolved` and `refunds[]`\n- Payout audit: check `is_disbursed`\n- Reconciliation: compare `amount`, `charge`, `provider_transaction_id`",
+      "meta": {}
+    }
+  ]
+}

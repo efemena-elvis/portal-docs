@@ -1,0 +1,224 @@
+{
+  "type": "guide",
+  "title": "Rate Limits",
+  "meta": {
+    "description": "",
+    "hidden": false
+  },
+  "blocks": [
+    {
+      "id": "b7005d34-5cc8-400f-b8b8-554855b23b14",
+      "type": "prose",
+      "props": {
+        "variant": "body"
+      },
+      "content": "Rate limiting is one of the mechanisms Vesicash uses to protect the stability and availability of the API. It prevents any single integration from monopolising shared infrastructure.\n\nWhen you exceed a rate limit, the API returns `429 Too Many Requests`. The response includes a `Retry-After` header indicating how long to wait before resuming.",
+      "meta": {
+        "hidden": false
+      }
+    },
+    {
+      "id": "986fc056-e2d3-4589-a072-5e9e37b22ee6",
+      "type": "prose",
+      "props": {
+        "variant": "heading",
+        "level": "h2"
+      },
+      "content": "Rate Limit Headers",
+      "meta": {}
+    },
+    {
+      "id": "1f37083b-f1d0-454c-84a6-35146f03ab50",
+      "type": "prose",
+      "props": {
+        "variant": "body"
+      },
+      "content": "Vesicash includes the following headers on every API response so you can track your consumption in real time:",
+      "meta": {}
+    },
+    {
+      "id": "3e2a398c-4dee-4d47-b4ca-8a4d4707d97f",
+      "type": "table",
+      "props": {
+        "headers": [
+          {
+            "text": "Header"
+          },
+          {
+            "text": "Description"
+          }
+        ],
+        "rows": [
+          {
+            "cells": [
+              {
+                "text": "`X-RateLimit-Limit`"
+              },
+              {
+                "text": "Maximum number of requests allowed in the current window"
+              }
+            ]
+          },
+          {
+            "cells": [
+              {
+                "text": "`X-RateLimit-Remaining`"
+              },
+              {
+                "text": "Requests remaining in the current rate window"
+              }
+            ]
+          },
+          {
+            "cells": [
+              {
+                "text": "`X-RateLimit-Reset`"
+              },
+              {
+                "text": "Unix timestamp at which the current window resets"
+              }
+            ]
+          }
+        ]
+      },
+      "content": null,
+      "meta": {}
+    },
+    {
+      "id": "6785df41-4a51-4f1b-9bd6-8f59d3f26847",
+      "type": "prose",
+      "props": {
+        "variant": "heading",
+        "level": "h2"
+      },
+      "content": "Standard Limits",
+      "meta": {}
+    },
+    {
+      "id": "20f8a8fb-3ca1-47f6-9f96-f809b7987ae1",
+      "type": "prose",
+      "props": {
+        "variant": "body"
+      },
+      "content": "Most endpoints share the following default limit:",
+      "meta": {}
+    },
+    {
+      "id": "d01e9ad1-64ac-4d7f-a406-094d550c507a",
+      "type": "table",
+      "props": {
+        "headers": [
+          {
+            "text": "Mode"
+          },
+          {
+            "text": "Limit"
+          }
+        ],
+        "rows": [
+          {
+            "cells": [
+              {
+                "text": "Live"
+              },
+              {
+                "text": "100 requests per 60 seconds"
+              }
+            ]
+          },
+          {
+            "cells": [
+              {
+                "text": "Test"
+              },
+              {
+                "text": "100 requests per 60 seconds"
+              }
+            ]
+          }
+        ]
+      },
+      "content": null,
+      "meta": {}
+    },
+    {
+      "id": "f2758809-890a-4f37-a108-6f245869fe2b",
+      "meta": {
+        "class": "",
+        "style": "",
+        "toc": "",
+        "hidden": false
+      },
+      "type": "prose",
+      "props": {
+        "variant": "body"
+      },
+      "content": "Test mode is designed for integration testing, not load testing. Do not run performance or stress tests against the Vesicash test environment."
+    },
+    {
+      "id": "cbc033c7-d48d-4e9a-a8e2-097d80659bb5",
+      "type": "prose",
+      "props": {
+        "variant": "heading",
+        "level": "h2"
+      },
+      "content": "Handling a 429",
+      "meta": {}
+    },
+    {
+      "id": "e852bf3e-0e89-46a1-a6c6-d619fde5c8c7",
+      "type": "prose",
+      "props": {
+        "variant": "body"
+      },
+      "content": "When an endpoint returns `429 Too Many Requests`, your integration should follow these steps:",
+      "meta": {}
+    },
+    {
+      "id": "41982b91-5d37-4a79-aa1b-2d05c369e1d2",
+      "type": "code",
+      "props": {
+        "language": "@step number=1 title=\"Read the Retry-After header\""
+      },
+      "content": "The `Retry-After` response header contains the number of seconds to wait before resuming requests.",
+      "meta": {}
+    },
+    {
+      "id": "db1338dd-d421-4330-b9ac-22a3159498c6",
+      "type": "code",
+      "props": {
+        "language": "@step number=2 title=\"Stop sending new requests\""
+      },
+      "content": "Do not queue or fire additional requests while backing off. Check `X-RateLimit-Remaining` to track your current allowance.",
+      "meta": {}
+    },
+    {
+      "id": "e72bd44c-6125-475e-a2a3-564c14a9dded",
+      "type": "code",
+      "props": {
+        "language": "@step number=3 title=\"Wait, then retry\" last=true"
+      },
+      "content": "Wait the exact duration from `Retry-After`, then resume. Adapt your cadence dynamically using `X-RateLimit-Remaining` and `X-RateLimit-Reset` — avoid fixed-frequency polling.",
+      "meta": {}
+    },
+    {
+      "id": "f7964c9b-fcae-4370-93aa-2ebf9b157df5",
+      "type": "prose",
+      "props": {
+        "variant": "heading",
+        "level": "h2"
+      },
+      "content": "Staying Within Limits",
+      "meta": {}
+    },
+    {
+      "id": "27a3c147-1537-4916-9c5d-8f6fa2713892",
+      "type": "prose",
+      "props": {
+        "variant": "body"
+      },
+      "content": "A few patterns that help you stay well within rate limits in production:\n\n- **Listen for webhooks instead of polling.** Register a `webhook_url` on your transaction requests. Vesicash will POST a status update the moment a payment changes state — no polling loop needed.\n- **Cache stable responses.** Resources like country lists and bank lists rarely change. Fetch them once on startup, cache locally, and refresh on a schedule.\n- **Use list endpoints with pagination.** Fetching individual transactions in a loop counts each call against your limit. Use `GET /v1/payment` with `page` and `limit` to retrieve multiple records per request.\n- **Back off exponentially on retries.** For transient `5xx` errors, retry with exponential backoff: wait 1s, then 2s, 4s, 8s — give up after 4–5 attempts.",
+      "meta": {}
+    }
+  ]
+}

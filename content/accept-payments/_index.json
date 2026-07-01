@@ -1,0 +1,27 @@
+{
+  "title": "Accept Payments",
+  "collapsible": true,
+  "items": [
+    {
+      "type": "page",
+      "slug": "accept-payments-overview"
+    },
+    {
+      "type": "category",
+      "slug": "mobile-money-checkout"
+    },
+    {
+      "type": "category",
+      "slug": "mobile-money-direct"
+    },
+    {
+      "type": "category",
+      "slug": "card-checkout"
+    },
+    {
+      "type": "category",
+      "slug": "card-direct"
+    }
+  ],
+  "order": 2
+}

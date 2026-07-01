@@ -1,0 +1,153 @@
+{
+  "type": "endpoint",
+  "title": "Verify Payment Status",
+  "meta": {
+    "description": "",
+    "hidden": false
+  },
+  "method": "GET",
+  "path": "/api/v1/transactions/{{transaction_reference}}/status",
+  "headers": [
+    {
+      "key": "x-api-key",
+      "value": "{{secret_key}}",
+      "description": ""
+    },
+    {
+      "key": "Content-Type",
+      "value": "application/json",
+      "description": ""
+    }
+  ],
+  "body": "",
+  "params": [
+    {
+      "name": "payment_reference",
+      "type": "",
+      "required": false,
+      "description": "The `reference` from the init step. Auto-populated."
+    },
+    {
+      "name": "status",
+      "type": "",
+      "required": false,
+      "description": "`\"success\"` before confirming order"
+    },
+    {
+      "name": "is_fraud_resolved",
+      "type": "",
+      "required": false,
+      "description": "`false` = still under fraud review"
+    },
+    {
+      "name": "failure_reason",
+      "type": "",
+      "required": false,
+      "description": "Present on failed transactions"
+    },
+    {
+      "name": "refunds",
+      "type": "",
+      "required": false,
+      "description": "Array grows as refunds are processed"
+    }
+  ],
+  "responses": [
+    {
+      "name": "200",
+      "status": "OK",
+      "code": 200,
+      "body": "{\n    \"success\": true,\n    \"code\": 200,\n    \"data\": {\n        \"uuid\": \"e7f8b4bb-d83c-463f-a676-c714d3b11bc0\",\n        \"reference\": \"PAYIN-JP83-1781520709\",\n        \"type\": \"pay_in\",\n        \"status\": \"pending\",\n        \"method\": \"mobilemoney\",\n        \"source\": \"provider\",\n        \"funding_id\": null,\n        \"environment\": \"live\",\n        \"amount\": 1.2,\n        \"currency\": \"ZMW\",\n        \"fee\": 0,\n        \"net_amount\": 1.2,\n        \"provider_amount\": 1.2,\n        \"narration\": \"Test payment\",\n        \"account_number\": \"260968832801\",\n        \"bank_code\": \"\",\n        \"failure_reason\": \"\",\n        \"created_at\": \"2026-06-15T10:51:49Z\",\n        \"completed_at\": null\n    }\n}"
+    },
+    {
+      "name": "401",
+      "status": "Unauthorized",
+      "code": 401,
+      "body": "{\n    \"success\": false,\n    \"code\": 401,\n    \"message\": \"Unauthorized. Invalid or missing API key.\"\n}"
+    },
+    {
+      "name": "500",
+      "status": "Internal Server Error",
+      "code": 500,
+      "body": "{\n    \"success\": false,\n    \"code\": 500,\n    \"message\": \"Internal Server Error. An unexpected error occurred. Please try again later.\"\n}"
+    }
+  ],
+  "blocks": [
+    {
+      "id": "6147ffe9-7f23-4ff3-aedf-f4632b75613c",
+      "type": "prose",
+      "props": {
+        "variant": "heading",
+        "level": "h2"
+      },
+      "content": "Verify Transaction Status",
+      "meta": {}
+    },
+    {
+      "id": "a16b331a-a014-413d-b9d3-de28c4d8ea65",
+      "type": "prose",
+      "props": {
+        "variant": "body"
+      },
+      "content": "**Endpoint:** `GET /v1/payment/:payment_ref`\n\nReturns the full transaction record including all fields relevant for audit, refund eligibility and fraud monitoring.\n\n---",
+      "meta": {}
+    },
+    {
+      "id": "68df878a-dd87-438d-a8a6-09a1b9c645de",
+      "type": "prose",
+      "props": {
+        "variant": "heading",
+        "level": "h3"
+      },
+      "content": "Path Parameters",
+      "meta": {}
+    },
+    {
+      "id": "22d37d60-d730-475f-81e1-4207d13ebd28",
+      "type": "prose",
+      "props": {
+        "variant": "body"
+      },
+      "content": "---",
+      "meta": {}
+    },
+    {
+      "id": "83b8f9a2-7e25-44a4-a74e-33c369421802",
+      "type": "prose",
+      "props": {
+        "variant": "heading",
+        "level": "h3"
+      },
+      "content": "Response (key fields)",
+      "meta": {}
+    },
+    {
+      "id": "6a9ad1e0-9262-4938-83e2-acd5e3e4587f",
+      "type": "code",
+      "props": {
+        "language": "json"
+      },
+      "content": "{\n  \"status\": \"success\",\n  \"data\": {\n    \"id\": \"pay_XXXXXX\",\n    \"amount\": 10000,\n    \"charge\": 150,\n    \"environment\": \"live\",\n    \"type\": \"payment\",\n    \"method\": \"card\",\n    \"status\": \"success\",\n    \"currency\": \"GHS\",\n    \"reference\": \"APX-REF-XXXXXX\",\n    \"narration\": \"Payment for Order #12345\",\n    \"provider_transaction_id\": \"MPGS-XXXXXX\",\n    \"operator\": \"mpgs\",\n    \"business_id\": \"biz_XXX\",\n    \"is_disbursed\": false,\n    \"is_fraud_resolved\": false,\n    \"refunds\": [],\n    \"created_at\": \"2026-05-25T10:00:00Z\",\n    \"updated_at\": \"2026-05-25T10:00:05Z\"\n  }\n}",
+      "meta": {}
+    },
+    {
+      "id": "04f7fd0b-5b5b-4f63-a211-608fce98e025",
+      "type": "prose",
+      "props": {
+        "variant": "body"
+      },
+      "content": "---",
+      "meta": {}
+    },
+    {
+      "id": "fe9f764e-a821-4355-ab3f-7d66295f967e",
+      "type": "prose",
+      "props": {
+        "variant": "heading",
+        "level": "h3"
+      },
+      "content": "Fields to monitor",
+      "meta": {}
+    }
+  ]
+}

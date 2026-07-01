@@ -1,0 +1,141 @@
+{
+  "type": "endpoint",
+  "title": "Check Refund Status",
+  "meta": {
+    "description": "",
+    "hidden": false
+  },
+  "method": "GET",
+  "path": "/api/v1/transactions/{{transaction_reference}}/status",
+  "headers": [
+    {
+      "key": "x-api-key",
+      "value": "{{secret_key}}",
+      "description": ""
+    },
+    {
+      "key": "Content-Type",
+      "value": "application/json",
+      "description": ""
+    }
+  ],
+  "body": "",
+  "params": [],
+  "responses": [
+    {
+      "name": "200",
+      "status": "OK",
+      "code": 200,
+      "body": "{\n    \"success\": true,\n    \"code\": 200,\n    \"data\": {\n        \"uuid\": \"713204b9-c4be-4cc2-990a-006c0c8d7c62\",\n        \"reference\": \"PAYIN-VES-1781277204\",\n        \"type\": \"pay_in\",\n        \"status\": \"completed\",\n        \"method\": \"mobilemoney\",\n        \"environment\": \"live\",\n        \"amount\": 1.0,\n        \"currency\": \"ZMW\",\n        \"refunds\": [\n            {\n                \"uuid\": \"713204b9-c4be-4cc2-990a-006c0c8d7c62\",\n                \"reference\": \"REFUND-VES-1781277204-1781519373\",\n                \"status\": \"completed\",\n                \"amount\": 1.0,\n                \"reason\": \"Customer requested cancellation before fulfilment\",\n                \"created_at\": \"2026-06-15T10:29:35Z\",\n                \"completed_at\": \"2026-06-15T10:31:00Z\"\n            }\n        ]\n    }\n}"
+    },
+    {
+      "name": "401",
+      "status": "Unauthorized",
+      "code": 401,
+      "body": "{\n    \"success\": false,\n    \"code\": 401,\n    \"message\": \"Unauthorized. Invalid or missing API key.\"\n}"
+    },
+    {
+      "name": "500",
+      "status": "Internal Server Error",
+      "code": 500,
+      "body": "{\n    \"success\": false,\n    \"code\": 500,\n    \"message\": \"Internal Server Error. An unexpected error occurred. Please try again later.\"\n}"
+    }
+  ],
+  "blocks": [
+    {
+      "id": "37351a3e-c842-445c-adff-7766064bbbef",
+      "type": "prose",
+      "props": {
+        "variant": "body"
+      },
+      "content": "**Endpoint:** `GET /v1/payment/:payment_reference`\n\nReturns the full transaction record including the `refunds[]` array. Use this to confirm the refund outcome after receiving a webhook notification.\n\n---",
+      "meta": {}
+    },
+    {
+      "id": "251752dd-a67f-4c55-9b7f-2460e5b59cc8",
+      "type": "prose",
+      "props": {
+        "variant": "heading",
+        "level": "h3"
+      },
+      "content": "Key Fields to Inspect",
+      "meta": {}
+    },
+    {
+      "id": "59851361-e4dd-46ab-9126-b835a2c625d6",
+      "type": "code",
+      "props": {
+        "language": "json"
+      },
+      "content": "{\n  \"data\": {\n    \"status\": \"success\",\n    \"refunds\": [\n      {\n        \"refund_id\": \"ref_XXXXXX\",\n        \"amount\": 10000,\n        \"status\": \"success\",\n        \"reason\": \"Customer requested cancellation\",\n        \"reference\": \"APX-RF-XXXXXX\",\n        \"created_at\": \"2026-05-25T11:00:00Z\",\n        \"updated_at\": \"2026-05-25T11:00:30Z\"\n      }\n    ]\n  }\n}",
+      "meta": {}
+    },
+    {
+      "id": "b606c914-a1ea-4ec1-80fe-6038ab9b91a1",
+      "type": "prose",
+      "props": {
+        "variant": "body"
+      },
+      "content": "---",
+      "meta": {}
+    },
+    {
+      "id": "8ba552e3-90d6-49ec-bb74-fcdaf92384b8",
+      "type": "prose",
+      "props": {
+        "variant": "heading",
+        "level": "h3"
+      },
+      "content": "Refund Status Values",
+      "meta": {}
+    },
+    {
+      "id": "1b35d15a-b355-4e26-9ab9-1fca291ec6b2",
+      "type": "table",
+      "props": {
+        "headers": [
+          {
+            "text": "Value"
+          },
+          {
+            "text": "Meaning"
+          }
+        ],
+        "rows": [
+          {
+            "cells": [
+              {
+                "text": "`pending`"
+              },
+              {
+                "text": "Queued, not yet processed"
+              }
+            ]
+          },
+          {
+            "cells": [
+              {
+                "text": "`success`"
+              },
+              {
+                "text": "Funds reversed to cardholder"
+              }
+            ]
+          },
+          {
+            "cells": [
+              {
+                "text": "`failed`"
+              },
+              {
+                "text": "Reversal failed — see `failure_reason`"
+              }
+            ]
+          }
+        ]
+      },
+      "content": null,
+      "meta": {}
+    }
+  ]
+}

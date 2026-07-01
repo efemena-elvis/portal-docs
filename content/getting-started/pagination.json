@@ -1,0 +1,221 @@
+{
+  "type": "guide",
+  "title": "Pagination",
+  "meta": {
+    "description": "",
+    "hidden": false
+  },
+  "blocks": [
+    {
+      "id": "70f18383-c465-4fab-bf33-8e6370e24305",
+      "type": "prose",
+      "props": {
+        "variant": "body"
+      },
+      "content": "Endpoints that return collections of resources — transactions, payouts, wallets — support pagination. The Vesicash API uses **offset-based pagination** on all list endpoints.",
+      "meta": {}
+    },
+    {
+      "id": "c6556237-e45b-40a1-8eb5-4e773cbeac31",
+      "type": "prose",
+      "props": {
+        "variant": "heading",
+        "level": "h2"
+      },
+      "content": "Pagination Parameters",
+      "meta": {}
+    },
+    {
+      "id": "41251c20-a16d-4777-a108-07f36fa5f113",
+      "type": "prose",
+      "props": {
+        "variant": "body"
+      },
+      "content": "Pass these query parameters to any list endpoint:",
+      "meta": {}
+    },
+    {
+      "id": "29bd5b3a-b2ad-4935-ab96-c2331a711b2e",
+      "type": "params-table",
+      "props": {
+        "rows": [
+          {
+            "name": "page",
+            "type": "integer",
+            "required": false,
+            "description": "The page number to retrieve. Starts at `1`."
+          },
+          {
+            "name": "limit",
+            "type": "integer",
+            "required": false,
+            "description": "Number of results to return per page. Maximum is `100`."
+          }
+        ]
+      },
+      "content": null,
+      "meta": {}
+    },
+    {
+      "id": "f63277ba-0f24-44d2-b75b-3e73a2398ee8",
+      "type": "code",
+      "props": {
+        "language": "bash",
+        "title": "Example Request",
+        "hideCopy": true
+      },
+      "content": "GET /v1/payment?page=2&limit=50",
+      "meta": {}
+    },
+    {
+      "id": "b0dc03bd-2270-444b-9c2d-420e45ccc9d9",
+      "type": "prose",
+      "props": {
+        "variant": "heading",
+        "level": "h2"
+      },
+      "content": "Pagination Response",
+      "meta": {}
+    },
+    {
+      "id": "3283fe18-12fe-4550-b673-656140258586",
+      "type": "prose",
+      "props": {
+        "variant": "body"
+      },
+      "content": "Every list response wraps results in a consistent `data` envelope:",
+      "meta": {}
+    },
+    {
+      "id": "77b3bc12-a6d6-40c3-9910-2de78d406469",
+      "type": "code",
+      "props": {
+        "language": "json",
+        "title": "Paginated Response",
+        "hideCopy": true
+      },
+      "content": "{\n  \"status\": \"success\",\n  \"data\": {\n    \"transactions\": [ ... ],\n    \"pagination\": {\n      \"page\": 2,\n      \"totalPages\": 8,\n      \"limit\": 50,\n      \"total\": 371\n    }\n  }\n}",
+      "meta": {}
+    },
+    {
+      "id": "0c2f3be1-ad22-4691-8fc8-4565781af322",
+      "type": "params-table",
+      "props": {
+        "rows": [
+          {
+            "name": "page",
+            "type": "",
+            "required": false,
+            "description": "The current page number"
+          },
+          {
+            "name": "totalPages",
+            "type": "",
+            "required": false,
+            "description": "Total number of pages given the current `limit`"
+          },
+          {
+            "name": "limit",
+            "type": "",
+            "required": false,
+            "description": "Number of results returned per page"
+          },
+          {
+            "name": "total",
+            "type": "",
+            "required": false,
+            "description": "Total number of matching records across all pages"
+          }
+        ]
+      },
+      "content": null,
+      "meta": {}
+    },
+    {
+      "id": "901a69c1-28df-4873-858b-2a414c667888",
+      "type": "prose",
+      "props": {
+        "variant": "heading",
+        "level": "h2"
+      },
+      "content": "Filtering Alongside Pagination",
+      "meta": {}
+    },
+    {
+      "id": "5a38302f-38c8-4745-92a1-38d7a097b9e6",
+      "type": "prose",
+      "props": {
+        "variant": "body"
+      },
+      "content": "List endpoints accept filter parameters that combine with `page` and `limit`:",
+      "meta": {}
+    },
+    {
+      "id": "97e1f7e6-bb78-4568-a820-5c5b7718b3af",
+      "type": "params-table",
+      "props": {
+        "rows": [
+          {
+            "name": "from",
+            "type": "",
+            "required": false,
+            "description": "integer"
+          },
+          {
+            "name": "to",
+            "type": "",
+            "required": false,
+            "description": "integer"
+          },
+          {
+            "name": "reference",
+            "type": "",
+            "required": false,
+            "description": "string"
+          }
+        ]
+      },
+      "content": null,
+      "meta": {}
+    },
+    {
+      "id": "2a268cde-2918-497d-831c-aa76319fc904",
+      "type": "code",
+      "props": {
+        "language": "bash",
+        "title": "Date-filtered Request",
+        "hideCopy": true
+      },
+      "content": "GET /v1/payment?from=1700000000&to=1700086400&page=1&limit=20",
+      "meta": {}
+    },
+    {
+      "id": "6caa95e3-60cf-48cf-a371-18747a3aa478",
+      "type": "prose",
+      "props": {
+        "variant": "heading",
+        "level": "h2"
+      },
+      "content": "Best Practices",
+      "meta": {}
+    },
+    {
+      "id": "7ecc4956-bc99-46ff-b4fa-b73624afad49",
+      "type": "code",
+      "props": {
+        "language": "@callout type=\"tip\" title=\"Start with a small page size\""
+      },
+      "content": "Don't default to `limit=100`. Start smaller and increase only when your pipeline can handle it — smaller pages respond faster and are easier to process incrementally.",
+      "meta": {}
+    },
+    {
+      "id": "5f3f0e3b-71e6-455e-8e05-e4cfe2322637",
+      "type": "prose",
+      "props": {
+        "variant": "body"
+      },
+      "content": "- **Use `total` from page 1 to plan ahead.** The first response tells you how many records and pages exist. Fetch subsequent pages only if you need them.\n- **Always paginate in production.** Fetching all records in a single call with a very high `limit` puts unnecessary load on both your system and the API. Process records in batches.\n- **Scope queries with date filters.** Use `from` and `to` to retrieve records for the specific period you need — this dramatically reduces both response time and page count.",
+      "meta": {}
+    }
+  ]
+}

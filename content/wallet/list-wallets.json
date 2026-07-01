@@ -1,0 +1,177 @@
+{
+  "type": "endpoint",
+  "title": "List Wallets",
+  "meta": {
+    "description": "",
+    "hidden": false
+  },
+  "method": "GET",
+  "path": "/api/v1/merchant/wallets",
+  "headers": [
+    {
+      "key": "x-api-key",
+      "value": "{{secret_key}}",
+      "description": ""
+    },
+    {
+      "key": "Content-Type",
+      "value": "application/json",
+      "description": ""
+    }
+  ],
+  "body": "",
+  "params": [
+    {
+      "name": "uuid",
+      "type": "",
+      "required": false,
+      "description": "string"
+    },
+    {
+      "name": "country_code",
+      "type": "",
+      "required": false,
+      "description": "string"
+    },
+    {
+      "name": "currency",
+      "type": "",
+      "required": false,
+      "description": "string"
+    },
+    {
+      "name": "balance",
+      "type": "",
+      "required": false,
+      "description": "number"
+    },
+    {
+      "name": "collection_balance",
+      "type": "",
+      "required": false,
+      "description": "number"
+    },
+    {
+      "name": "status",
+      "type": "",
+      "required": false,
+      "description": "string"
+    }
+  ],
+  "responses": [
+    {
+      "name": "200",
+      "status": "OK",
+      "code": 200,
+      "body": "{\n    \"success\": true,\n    \"code\": 200,\n    \"data\": [\n        {\n            \"uuid\": \"ec9dee9e-9965-4fc3-b84b-2e1f4aabd813\",\n            \"country_code\": \"ZM\",\n            \"currency\": \"ZMW\",\n            \"balance\": 3,\n            \"collection_balance\": 16.1,\n            \"status\": \"active\"\n        },\n        {\n            \"uuid\": \"16e38d76-ced0-4b53-86e9-10c45614dff9\",\n            \"country_code\": \"TZ\",\n            \"currency\": \"TZS\",\n            \"balance\": 0,\n            \"collection_balance\": 0,\n            \"status\": \"active\"\n        },\n        {\n            \"uuid\": \"3a727a8e-79c3-48e9-bd53-53bee8b53243\",\n            \"country_code\": \"US\",\n            \"currency\": \"USD\",\n            \"balance\": 0,\n            \"collection_balance\": 0,\n            \"status\": \"active\"\n        },\n        {\n            \"uuid\": \"c6c33ec8-bc44-4a33-8972-047a0b55b007\",\n            \"country_code\": \"NG\",\n            \"currency\": \"NGN\",\n            \"balance\": 0,\n            \"collection_balance\": 0,\n            \"status\": \"active\"\n        },\n        {\n            \"uuid\": \"686a8fa4-c212-4bd8-bb5c-f41298c16801\",\n            \"country_code\": \"KE\",\n            \"currency\": \"KES\",\n            \"balance\": 0,\n            \"collection_balance\": 0,\n            \"status\": \"active\"\n        },\n        {\n            \"uuid\": \"6563a12c-87d9-4e40-b6c7-4d0cb80c6d87\",\n            \"country_code\": \"GH\",\n            \"currency\": \"GHS\",\n            \"balance\": 3.22,\n            \"collection_balance\": 11.42,\n            \"status\": \"active\"\n        }\n    ]\n}"
+    },
+    {
+      "name": "401",
+      "status": "Unauthorized",
+      "code": 401,
+      "body": "{\n    \"success\": false,\n    \"code\": 401,\n    \"message\": \"Unauthorized. Invalid or missing API key.\"\n}"
+    },
+    {
+      "name": "500",
+      "status": "Internal Server Error",
+      "code": 500,
+      "body": "{\n    \"success\": false,\n    \"code\": 500,\n    \"message\": \"Internal Server Error. An unexpected error occurred. Please try again later.\"\n}"
+    }
+  ],
+  "blocks": [
+    {
+      "id": "5f23f4fa-37dd-45c1-b212-3a98b12c46f7",
+      "type": "prose",
+      "props": {
+        "variant": "body"
+      },
+      "content": "Returns all wallets associated with your Vesicash merchant account, one per supported country. Use this to check balances before initiating payouts.",
+      "meta": {}
+    },
+    {
+      "id": "b0610201-1e07-4799-86cd-760700940795",
+      "type": "prose",
+      "props": {
+        "variant": "heading",
+        "level": "h3"
+      },
+      "content": "Headers",
+      "meta": {}
+    },
+    {
+      "id": "6438d598-b985-4e35-b1cb-01c31e3f658f",
+      "type": "table",
+      "props": {
+        "headers": [
+          {
+            "text": "Header"
+          },
+          {
+            "text": "Required"
+          },
+          {
+            "text": "Description"
+          }
+        ],
+        "rows": [
+          {
+            "cells": [
+              {
+                "text": "`x-api-key`"
+              },
+              {
+                "text": "✅"
+              },
+              {
+                "text": "Your Vesicash secret key"
+              }
+            ]
+          }
+        ]
+      },
+      "content": null,
+      "meta": {}
+    },
+    {
+      "id": "baa0d4ff-d57e-4a69-a8c6-b10d8e624be6",
+      "type": "prose",
+      "props": {
+        "variant": "body"
+      },
+      "content": "---",
+      "meta": {}
+    },
+    {
+      "id": "dba8ac83-2eb2-42a1-84e0-7a2c7c4ac8da",
+      "type": "prose",
+      "props": {
+        "variant": "heading",
+        "level": "h3"
+      },
+      "content": "Response Fields",
+      "meta": {}
+    }
+  ],
+  "sectionOrder": [
+    "5f23f4fa-37dd-45c1-b212-3a98b12c46f7",
+    "endpoint",
+    "b0610201-1e07-4799-86cd-760700940795",
+    "6438d598-b985-4e35-b1cb-01c31e3f658f",
+    "baa0d4ff-d57e-4a69-a8c6-b10d8e624be6",
+    "dba8ac83-2eb2-42a1-84e0-7a2c7c4ac8da",
+    "params-heading",
+    "headers",
+    "body-params",
+    "request-example-heading",
+    "request-example",
+    "response-heading",
+    "responses",
+    "description",
+    "auth",
+    "path-params",
+    "query-params",
+    "response-schema",
+    "errors-heading",
+    "errors"
+  ]
+}

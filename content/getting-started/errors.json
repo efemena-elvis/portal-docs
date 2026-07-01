@@ -1,0 +1,344 @@
+{
+  "type": "guide",
+  "title": "Errors",
+  "meta": {
+    "description": "",
+    "hidden": false
+  },
+  "blocks": [
+    {
+      "id": "c723e000-1f8c-4f15-ab40-e870c303cc4c",
+      "type": "prose",
+      "props": {
+        "variant": "body"
+      },
+      "content": "When a request to the Vesicash API cannot be completed, the API returns an error response. All errors follow a consistent JSON structure designed to be easy to parse and handle programmatically.",
+      "meta": {}
+    },
+    {
+      "id": "5d1241a7-8d49-42be-addc-9d40804e77f8",
+      "type": "prose",
+      "props": {
+        "variant": "heading",
+        "level": "h2"
+      },
+      "content": "HTTP Status Codes",
+      "meta": {}
+    },
+    {
+      "id": "6ed09a47-ed9e-4f0f-a783-cba3b4bcaea2",
+      "type": "prose",
+      "props": {
+        "variant": "body"
+      },
+      "content": "Vesicash uses standard HTTP status codes to indicate the outcome of every request:",
+      "meta": {}
+    },
+    {
+      "id": "6d774436-0104-4aa4-81ae-08ece92deb95",
+      "type": "table",
+      "props": {
+        "headers": [
+          {
+            "text": "Code"
+          },
+          {
+            "text": "Meaning"
+          }
+        ],
+        "rows": [
+          {
+            "cells": [
+              {
+                "text": "`200`"
+              },
+              {
+                "text": "**OK** — The request succeeded."
+              }
+            ]
+          },
+          {
+            "cells": [
+              {
+                "text": "`201`"
+              },
+              {
+                "text": "**Created** — A new resource was created successfully."
+              }
+            ]
+          },
+          {
+            "cells": [
+              {
+                "text": "`400`"
+              },
+              {
+                "text": "**Bad Request** — The request is malformed or missing required parameters. Check your request body and query string."
+              }
+            ]
+          },
+          {
+            "cells": [
+              {
+                "text": "`401`"
+              },
+              {
+                "text": "**Unauthorised** — Your API key is missing, invalid, or has been revoked. Re-check your `Authorization` header."
+              }
+            ]
+          },
+          {
+            "cells": [
+              {
+                "text": "`403`"
+              },
+              {
+                "text": "**Forbidden** — Your key is valid but lacks permission for this action (e.g. using a public key where a secret key is required)."
+              }
+            ]
+          },
+          {
+            "cells": [
+              {
+                "text": "`404`"
+              },
+              {
+                "text": "**Not Found** — The requested resource does not exist. Check the reference or ID you supplied."
+              }
+            ]
+          },
+          {
+            "cells": [
+              {
+                "text": "`422`"
+              },
+              {
+                "text": "**Unprocessable Entity** — The request is well-formed but the values fail validation (e.g. an unsupported currency code)."
+              }
+            ]
+          },
+          {
+            "cells": [
+              {
+                "text": "`429`"
+              },
+              {
+                "text": "**Too Many Requests** — You have exceeded the rate limit. Read the `Retry-After` header and back off before retrying."
+              }
+            ]
+          },
+          {
+            "cells": [
+              {
+                "text": "`500`"
+              },
+              {
+                "text": "**Server Error** — Something went wrong on Vesicash's end. These are rare and are monitored automatically."
+              }
+            ]
+          }
+        ]
+      },
+      "content": null,
+      "meta": {}
+    },
+    {
+      "id": "c43cb517-a24e-41cb-a853-44426e935d4b",
+      "type": "prose",
+      "props": {
+        "variant": "heading",
+        "level": "h2"
+      },
+      "content": "Error Response Format",
+      "meta": {}
+    },
+    {
+      "id": "209951c1-ee86-4469-9fe7-4fab977181c1",
+      "type": "prose",
+      "props": {
+        "variant": "body"
+      },
+      "content": "Every error response uses the same envelope as a success response, with `\"status\": \"error\"`:",
+      "meta": {}
+    },
+    {
+      "id": "efae1a2a-9d96-405e-bfcb-c42dce48808b",
+      "type": "code",
+      "props": {
+        "language": "json",
+        "title": "Error Response",
+        "hideCopy": true
+      },
+      "content": "{\n  \"status\": \"error\",\n  \"code\": 400,\n  \"message\": \"The amount field is required.\",\n  \"data\": null\n}",
+      "meta": {}
+    },
+    {
+      "id": "d8f51690-dea1-4f85-9041-be0a6d6c0efc",
+      "type": "params-table",
+      "props": {
+        "rows": [
+          {
+            "name": "status",
+            "type": "",
+            "required": false,
+            "description": "Always `\"error\"` for failed requests"
+          },
+          {
+            "name": "code",
+            "type": "",
+            "required": false,
+            "description": "The HTTP status code, mirrored in the body for convenience"
+          },
+          {
+            "name": "message",
+            "type": "",
+            "required": false,
+            "description": "A human-readable description of what went wrong"
+          },
+          {
+            "name": "data",
+            "type": "",
+            "required": false,
+            "description": "`null` for most errors; may contain field-level validation detail for `422` responses"
+          }
+        ]
+      },
+      "content": null,
+      "meta": {}
+    },
+    {
+      "id": "c334f47e-5c96-4ab0-b058-361854f13ce5",
+      "type": "prose",
+      "props": {
+        "variant": "heading",
+        "level": "h2"
+      },
+      "content": "Validation Errors",
+      "meta": {}
+    },
+    {
+      "id": "e616f9ed-5696-4cd0-8723-ac3f90d96876",
+      "type": "prose",
+      "props": {
+        "variant": "body"
+      },
+      "content": "For `400` and `422` responses, the `data` field may contain a map of field-level errors:",
+      "meta": {}
+    },
+    {
+      "id": "7314b617-f799-40cb-9a74-24a41118a648",
+      "type": "code",
+      "props": {
+        "language": "json",
+        "title": "Validation Error",
+        "hideCopy": true
+      },
+      "content": "{\n  \"status\": \"error\",\n  \"code\": 422,\n  \"message\": \"Validation failed\",\n  \"data\": {\n    \"amount\": [\"Amount must be a positive integer.\"],\n    \"currency\": [\"Currency code 'XYZ' is not supported.\"]\n  }\n}",
+      "meta": {}
+    },
+    {
+      "id": "9e227531-7f55-4060-a4e6-18f8a6d4630d",
+      "type": "prose",
+      "props": {
+        "variant": "body"
+      },
+      "content": "Each key in `data` corresponds to the name of the failing field; each value is an array of error strings explaining what went wrong.",
+      "meta": {}
+    },
+    {
+      "id": "e7ea385e-47ae-41f7-8673-c610244f3186",
+      "type": "prose",
+      "props": {
+        "variant": "heading",
+        "level": "h2"
+      },
+      "content": "Error Categories",
+      "meta": {}
+    },
+    {
+      "id": "77370377-dad0-4f9a-b1a7-a5cfbd58ddcf",
+      "type": "prose",
+      "props": {
+        "variant": "body"
+      },
+      "content": "Vesicash errors fall into three broad categories:",
+      "meta": {}
+    },
+    {
+      "id": "cd2f6130-c46d-4ef3-a3d2-9eced7813207",
+      "type": "table",
+      "props": {
+        "headers": [
+          {
+            "text": "Category"
+          },
+          {
+            "text": "Description"
+          }
+        ],
+        "rows": [
+          {
+            "cells": [
+              {
+                "text": "`api_error`"
+              },
+              {
+                "text": "Something went wrong on Vesicash's infrastructure. Retry with exponential backoff."
+              }
+            ]
+          },
+          {
+            "cells": [
+              {
+                "text": "`validation_error`"
+              },
+              {
+                "text": "A required field is missing, the wrong type, or fails a constraint. Fix the request before retrying."
+              }
+            ]
+          },
+          {
+            "cells": [
+              {
+                "text": "`processing_error`"
+              },
+              {
+                "text": "The request was valid but the payment processor or banking partner declined it (e.g. insufficient funds, card blocked). Do not auto-retry without customer action."
+              }
+            ]
+          }
+        ]
+      },
+      "content": null,
+      "meta": {}
+    },
+    {
+      "id": "df920d52-bac4-4843-a466-0474834ba798",
+      "type": "prose",
+      "props": {
+        "variant": "heading",
+        "level": "h2"
+      },
+      "content": "Error Handling Best Practices",
+      "meta": {}
+    },
+    {
+      "id": "b2875f63-8bd2-4bc0-9a46-75f3bbc0069d",
+      "type": "code",
+      "props": {
+        "language": "@callout type=\"warning\" title=\"Always check status in the response body\""
+      },
+      "content": "Never rely solely on the HTTP status code. Some gateways or proxies may return `200` with an error body — always read `status` from the response envelope to confirm the outcome.",
+      "meta": {}
+    },
+    {
+      "id": "2ab030e8-32e8-446d-b417-259a88f2a327",
+      "type": "prose",
+      "props": {
+        "variant": "body"
+      },
+      "content": "- **Show `message` to your support team, not to end users.** Error messages are technical. Display your own user-friendly copy in your UI.\n- **Log `code` + `message` + the request reference together** to make errors searchable in your logging system.\n- **Don't auto-retry `4xx` errors.** Client errors mean the request itself is wrong — retrying the same request produces the same error.\n- **Retry `5xx` errors with exponential backoff.** Server errors are transient. Wait 1s, then 2s, 4s, 8s — give up after 4–5 attempts.",
+      "meta": {}
+    }
+  ]
+}

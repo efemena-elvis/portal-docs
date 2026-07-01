@@ -1,0 +1,235 @@
+{
+  "type": "endpoint",
+  "title": "Initialize Payment",
+  "meta": {
+    "description": "",
+    "hidden": false
+  },
+  "status": "stable",
+  "description": "Creates a new mobile money checkout transaction. Vesicash returns a hosted payment_url to which you redirect the customer — it handles the mobile money prompt and 3DS entirely.",
+  "auth": "Requires a live x-api-key (secret key) in the request header. See the Authentication guide for key management.",
+  "method": "POST",
+  "path": "/api/v1/transactions/initiate",
+  "headers": [
+    {
+      "key": "x-api-key",
+      "value": "",
+      "description": "",
+      "disabled": false
+    },
+    {
+      "key": "Idempotency-Key",
+      "value": "djdjjdjdnnddddffhww",
+      "description": "",
+      "disabled": false
+    },
+    {
+      "key": "Content-Type",
+      "value": "application/json",
+      "description": "",
+      "disabled": false
+    }
+  ],
+  "body": "{\n    \"country_code\": \"GH\",\n    \"amount\": 3,\n    \"narration\": \"Test payment\",\n    \"webhook_url\": \"{{webhook_url}}\",\n    \"redirect_url\": \"https://www.google.com/\",\n    \"method\": \"mobilemoney\",\n    \"customer_email\": \"damilola@vesicash.com\",\n    \"customer_first_name\": \"Jane\",\n    \"customer_last_name\": \"Doe\",\n    \"customer_phone_number\": \"260968832801\"\n}",
+  "params": [
+    {
+      "name": "amount",
+      "type": "number",
+      "required": true,
+      "description": "The transaction amount in the **smallest currency unit**. For Ghana, pass pesewas (1 GHS = 100 pesewas); for Nigeria, pass kobo (1 NGN = 100 kobo); for Zambia, pass ngwe (1 ZMW = 100 ngwe). Must be a positive integer."
+    },
+    {
+      "name": "country",
+      "type": "string",
+      "required": true,
+      "description": "ISO 3166-1 alpha-2 country code for the transaction. Determines which banking network Vesicash routes through. Example: `GH` for Ghana, `NG` for Nigeria, `ZM` for Zambia, `KE` for Kenya."
+    },
+    {
+      "name": "currency",
+      "type": "string",
+      "required": true,
+      "description": "ISO 4217 three-letter currency code. Must match the country you specified. Example: `GHS` for Ghana Cedis, `NGN` for Nigerian Naira, `ZMW` for Zambian Kwacha."
+    },
+    {
+      "name": "method",
+      "type": "string",
+      "required": true,
+      "description": "The payment channel to use. Set to `\"mobilemoney\"` for mobile money checkout."
+    },
+    {
+      "name": "narration",
+      "type": "string",
+      "required": true,
+      "description": "A short description of what the customer is paying for. Displayed on the Vesicash checkout page and included on the customer's bank statement. Maximum 100 characters."
+    },
+    {
+      "name": "redirect_url",
+      "type": "string",
+      "required": true,
+      "description": "A publicly accessible URL on your server. Vesicash redirects the customer here after the payment completes (success or failure). Must be HTTPS in production."
+    },
+    {
+      "name": "webhook_url",
+      "type": "string",
+      "required": true,
+      "description": "A publicly accessible HTTPS endpoint on your server. Vesicash POSTs a signed JSON payload to this URL whenever the transaction status changes. Always verify the signature using your webhook secret."
+    },
+    {
+      "name": "customer_email",
+      "type": "string",
+      "required": true,
+      "description": "Customer's email address. Used for receipt delivery and fraud screening."
+    },
+    {
+      "name": "customer_first_name",
+      "type": "string",
+      "required": true,
+      "description": "Customer's first name."
+    },
+    {
+      "name": "customer_last_name",
+      "type": "string",
+      "required": true,
+      "description": "Customer's last name."
+    },
+    {
+      "name": "customer_phone_number",
+      "type": "string",
+      "required": true,
+      "description": "Customer's phone number in international format (no `+`). Example: `260968832801` for a Zambian number."
+    }
+  ],
+  "responseSchema": [
+    {
+      "name": "success",
+      "type": "boolean",
+      "required": true,
+      "description": "`true` when the transaction was initialized successfully."
+    },
+    {
+      "name": "code",
+      "type": "number",
+      "required": true,
+      "description": "HTTP status code echoed in the response body. `201` on success."
+    },
+    {
+      "name": "data.uuid",
+      "type": "string",
+      "required": true,
+      "description": "Vesicash's internal unique identifier for this transaction."
+    },
+    {
+      "name": "data.reference",
+      "type": "string",
+      "required": true,
+      "description": "Vesicash-generated payment reference. Use this to query transaction status via `GET /api/v1/transactions/:reference`."
+    },
+    {
+      "name": "data.merchant_reference",
+      "type": "string",
+      "required": true,
+      "description": "Your own reference passed in the request, echoed back for reconciliation."
+    },
+    {
+      "name": "data.status",
+      "type": "string",
+      "required": true,
+      "description": "Initial transaction status. Typically `\"pending\"` immediately after initialization."
+    },
+    {
+      "name": "data.payment_url",
+      "type": "string",
+      "required": true,
+      "description": "The hosted Vesicash checkout URL. Redirect your customer here to complete the mobile money payment."
+    },
+    {
+      "name": "data.environment",
+      "type": "string",
+      "required": true,
+      "description": "`\"live\"` or `\"test\"` depending on the API key used."
+    }
+  ],
+  "responses": [
+    {
+      "name": "Success - Created",
+      "status": "Created",
+      "code": 201,
+      "body": "{\n    \"success\": true,\n    \"code\": 201,\n    \"data\": {\n        \"uuid\": \"57f9f560-5ace-41be-a13f-93ff25b87a75\",\n        \"reference\": \"PAYIN-JP83-1781089622\",\n        \"merchant_reference\": \"MREF-JP83-1781089622\",\n        \"status\": \"pending\",\n        \"environment\": \"live\",\n        \"payment_url\": \"https://portal.vesicash.com/checkout?reference=PAYIN-JP83-1781089622\",\n        \"message\": \"success\"\n    }\n}"
+    },
+    {
+      "id": "b548433e-9085-48d6-a749-bf58c9a45231",
+      "code": "400",
+      "status": "Bad Request",
+      "body": "{\n  \"success\": false,\n  \"error\": \"transaction_failed\",\n  \"message\": \"wallet not found for country GH: record not found\",\n  \"code\": 400\n}"
+    },
+    {
+      "id": "0f8388d7-c54d-49d0-b3fd-743eee32f16c",
+      "code": "401",
+      "status": "Unauthorized",
+      "body": "{\n  \"success\": false,\n  \"error\": \"unauthorized\",\n  \"message\": \"x-api-key header is required\",\n  \"code\": 401\n}"
+    },
+    {
+      "name": "500",
+      "status": "Internal Server Error",
+      "code": 500,
+      "body": "{\n    \"success\": false,\n    \"code\": 500,\n    \"message\": \"Internal Server Error. An unexpected error occurred. Please try again later.\"\n}"
+    }
+  ],
+  "errors": [
+    {
+      "code": "invalid_amount",
+      "status": 400,
+      "description": "The `amount` field is missing, zero, or not a positive integer."
+    },
+    {
+      "code": "invalid_currency",
+      "status": 400,
+      "description": "The `currency` does not match the supported currencies for the specified `country`."
+    },
+    {
+      "code": "invalid_phone_number",
+      "status": 400,
+      "description": "The `customer_phone_number` is not a valid international-format number for the specified country."
+    },
+    {
+      "code": "unauthorized",
+      "status": 401,
+      "description": "The `x-api-key` header is missing, expired, or not a valid live key."
+    },
+    {
+      "code": "duplicate_idempotency_key",
+      "status": 409,
+      "description": "A transaction with this `Idempotency-Key` was already created. Return the original response instead of retrying."
+    },
+    {
+      "code": "internal_error",
+      "status": 500,
+      "description": "An unexpected server-side error occurred. Retry with exponential backoff or contact support."
+    }
+  ],
+  "blocks": [
+    {
+      "id": "a0942929-9eaf-49bc-8e03-8fe97e543d3f",
+      "type": "callout",
+      "props": {
+        "variant": "tip"
+      },
+      "content": "After the customer completes payment, Vesicash redirects to your `redirect_url` and sends a signed webhook to your `webhook_url`. **Always verify the outcome server-side** using `GET /api/v1/transactions/:reference` — never rely solely on the redirect.",
+      "meta": {}
+    }
+  ],
+  "sectionHeadings": {
+    "description": {
+      "content": "Creates a new mobile money checkout transaction. Vesicash returns a hosted payment_url to which you redirect the customer — it handles the mobile money prompt and 3DS entirely.",
+      "variant": "body",
+      "level": "h2"
+    }
+  },
+  "sectionMeta": {
+    "responses": {}
+  },
+  "errorsTitle": "",
+  "errorsShowInToc": true,
+  "responseSchemaTitle": "",
+  "responseSchemaShowInToc": false
+}

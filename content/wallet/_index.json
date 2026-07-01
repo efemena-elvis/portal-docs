@@ -1,0 +1,15 @@
+{
+  "title": "Wallet",
+  "collapsible": true,
+  "items": [
+    {
+      "type": "page",
+      "slug": "get-wallet-by-country"
+    },
+    {
+      "type": "page",
+      "slug": "list-wallets"
+    }
+  ],
+  "order": 5
+}

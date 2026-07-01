@@ -1,0 +1,200 @@
+{
+  "type": "guide",
+  "title": "Authentication",
+  "meta": {
+    "description": "",
+    "hidden": false
+  },
+  "blocks": [
+    {
+      "id": "fc6e84e4-baac-432d-b792-9d71ebc36f99",
+      "type": "prose",
+      "props": {
+        "variant": "body"
+      },
+      "content": "All requests to the Vesicash API must be authenticated. Authentication identifies which integration a request belongs to and determines whether it is authorised to perform the requested action.",
+      "meta": {}
+    },
+    {
+      "id": "4faac582-5ace-4b8c-a91e-0775aaed0b55",
+      "type": "prose",
+      "props": {
+        "variant": "heading",
+        "level": "h2"
+      },
+      "content": "API Keys",
+      "meta": {}
+    },
+    {
+      "id": "a117a82c-cabb-416b-9482-1418696f4234",
+      "type": "prose",
+      "props": {
+        "variant": "body"
+      },
+      "content": "Every Vesicash merchant account gets two types of API keys:",
+      "meta": {}
+    },
+    {
+      "id": "7372f813-8098-4be7-ad5f-367ecbcd9cb6",
+      "type": "table",
+      "props": {
+        "headers": [
+          {
+            "text": "Type"
+          },
+          {
+            "text": "Prefix"
+          },
+          {
+            "text": "Use"
+          }
+        ],
+        "rows": [
+          {
+            "cells": [
+              {
+                "text": "Secret Key"
+              },
+              {
+                "text": "`sk_live_***`"
+              },
+              {
+                "text": "Backend server code only. Grants full account access. Never expose in client-side code, mobile apps, or public repositories."
+              }
+            ]
+          }
+        ]
+      },
+      "content": null,
+      "meta": {}
+    },
+    {
+      "id": "d5fea14f-4203-4f9a-8e9c-fd8d1266958d",
+      "type": "prose",
+      "props": {
+        "variant": "body"
+      },
+      "content": "Find your API keys in **Settings → API Keys** on the [Vesicash Dashboard](https://portal.vesicash.com).",
+      "meta": {}
+    },
+    {
+      "id": "513b3282-c8a3-4368-a32b-56186423d044",
+      "type": "prose",
+      "props": {
+        "variant": "heading",
+        "level": "h2"
+      },
+      "content": "Test and Live Modes",
+      "meta": {}
+    },
+    {
+      "id": "9309487e-b904-4660-aea3-f384f1f277dc",
+      "type": "prose",
+      "props": {
+        "variant": "body"
+      },
+      "content": "Vesicash provides two environments for every integration:\n\n**Test mode** is for development and integration testing. Transactions do not involve real funds. Test keys carry a `test_` infix — e.g. `VCsec_test_xxxxxxxxxxxx`.\n\n**Live mode** processes real transactions and moves actual funds. Live keys carry a `live_` infix — e.g. `VCsec_live_xxxxxxxxxxxx`.",
+      "meta": {}
+    },
+    {
+      "id": "ebdd15db-f08b-4f59-b996-240700226e10",
+      "type": "prose",
+      "props": {
+        "variant": "heading",
+        "level": "h2"
+      },
+      "content": "Using Your Keys",
+      "meta": {
+        "toc": "Using my keys"
+      }
+    },
+    {
+      "id": "49b33a16-8cc9-46ac-80e7-f7dde74352c5",
+      "type": "prose",
+      "props": {
+        "variant": "body"
+      },
+      "content": "Pass your Secret Key in the `Authorization` header:",
+      "meta": {}
+    },
+    {
+      "id": "28cd5184-752b-4f4c-8fff-66e8c8da92ea",
+      "type": "code",
+      "props": {
+        "language": "bash",
+        "title": "Authorization Header",
+        "hideCopy": true
+      },
+      "content": "Authorization: Bearer VCsec_live_xxxxxxxxxxxx",
+      "meta": {}
+    },
+    {
+      "id": "7332aa74-7963-416a-8bec-7ca2c5dba6cf",
+      "type": "prose",
+      "props": {
+        "variant": "body"
+      },
+      "content": "Some endpoints instead use the `x-api-key` header:",
+      "meta": {}
+    },
+    {
+      "id": "0d081b82-16ba-4cdf-9a6e-fb0212de2893",
+      "type": "code",
+      "props": {
+        "language": "bash",
+        "title": "x-api-key Header",
+        "hideCopy": true
+      },
+      "content": "x-api-key: VCsec_live_xxxxxxxxxxxx",
+      "meta": {}
+    },
+    {
+      "id": "3b4e0807-04a7-4057-98cc-aefad2166557",
+      "type": "prose",
+      "props": {
+        "variant": "body"
+      },
+      "content": "API requests without a valid authentication header will fail with status `401 Unauthorised`. All requests must be made over **HTTPS** — plain HTTP is rejected.",
+      "meta": {}
+    },
+    {
+      "id": "3b4dd4ec-e4d4-4e1f-8c9d-6fcdd3813e7b",
+      "type": "prose",
+      "props": {
+        "variant": "heading",
+        "level": "h2"
+      },
+      "content": "Key Management Best Practices",
+      "meta": {}
+    },
+    {
+      "id": "ef1f3999-6bb1-405d-bbd2-332484b6f76c",
+      "meta": {
+        "class": "",
+        "style": "",
+        "toc": "",
+        "hidden": false
+      },
+      "type": "list",
+      "props": {
+        "ordered": false,
+        "items": [
+          {
+            "content": "**Never commit your secret key** to version control, mobile app code, or client-side JavaScript."
+          },
+          {
+            "content": "**Store keys using environment variables** or a dedicated secrets manager (AWS Secrets Manager, HashiCorp Vault, etc.)"
+          },
+          {
+            "content": "**Rotate keys periodically** — especially if you suspect compromise. Regenerate from the dashboard at any time; previously issued keys are invalidated immediately."
+          },
+          {
+            "content": "**Use separate keys per environment** — maintain distinct test and live key sets to prevent accidental live charges during development or CI."
+          }
+        ],
+        "hideMarker": true
+      },
+      "content": null
+    }
+  ]
+}

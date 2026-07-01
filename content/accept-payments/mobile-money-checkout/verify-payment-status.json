@@ -1,0 +1,90 @@
+{
+  "type": "endpoint",
+  "title": "Verify Payment Status",
+  "meta": {
+    "description": "",
+    "hidden": false
+  },
+  "method": "GET",
+  "path": "/api/v1/transactions/{{transaction_reference}}/status",
+  "headers": [
+    {
+      "key": "x-api-key",
+      "value": "{{secret_key}}",
+      "description": ""
+    },
+    {
+      "key": "Content-Type",
+      "value": "application/json",
+      "description": ""
+    }
+  ],
+  "body": "",
+  "params": [
+    {
+      "name": "payment_reference",
+      "type": "",
+      "required": false,
+      "description": "The `reference` returned by `POST /v1/payment/init`. Auto-populated from the previous step's test script."
+    }
+  ],
+  "responses": [
+    {
+      "name": "200",
+      "status": "OK",
+      "code": 200,
+      "body": "{\n    \"success\": true,\n    \"code\": 200,\n    \"data\": {\n        \"uuid\": \"6d4a7b3c-39e4-4b26-bcca-2a4b433bab15\",\n        \"reference\": \"PAYIN-JP83-1781519012\",\n        \"type\": \"pay_in\",\n        \"status\": \"completed\",\n        \"method\": \"mobilemoney\",\n        \"source\": \"provider\",\n        \"funding_id\": null,\n        \"environment\": \"live\",\n        \"amount\": 3.1,\n        \"currency\": \"ZMW\",\n        \"fee\": 0,\n        \"net_amount\": 3.1,\n        \"provider_amount\": 3.1,\n        \"narration\": \"Test payment\",\n        \"account_number\": \"260968832801\",\n        \"bank_code\": \"\",\n        \"failure_reason\": \"\",\n        \"created_at\": \"2026-06-15T10:23:32Z\",\n        \"completed_at\": \"2026-06-15T10:25:03Z\"\n    }\n}"
+    },
+    {
+      "name": "401",
+      "status": "Unauthorized",
+      "code": 401,
+      "body": "{\n    \"success\": false,\n    \"code\": 401,\n    \"message\": \"Unauthorized. Invalid or missing API key.\"\n}"
+    },
+    {
+      "name": "500",
+      "status": "Internal Server Error",
+      "code": 500,
+      "body": "{\n    \"success\": false,\n    \"code\": 500,\n    \"message\": \"Internal Server Error. An unexpected error occurred. Please try again later.\"\n}"
+    }
+  ],
+  "blocks": [
+    {
+      "id": "c21506d4-1161-4d20-ba22-ab76c934c702",
+      "type": "callout",
+      "props": {
+        "variant": "warning"
+      },
+      "content": "Never finalise an order, credit a wallet, or trigger fulfilment based on the redirect URL params alone. Always call this endpoint to confirm `status: \"success\"` before taking business action.",
+      "meta": {}
+    },
+    {
+      "id": "fd62666a-09ea-4e11-8de1-a9cad5d953ec",
+      "type": "prose",
+      "props": {
+        "variant": "body"
+      },
+      "content": "Call this after the customer returns to your `redirect_success_url` or `redirect_failed_url` — or upon receiving a webhook event — to confirm the authoritative payment outcome.",
+      "meta": {}
+    }
+  ],
+  "sectionOrder": [
+    "fd62666a-09ea-4e11-8de1-a9cad5d953ec",
+    "c21506d4-1161-4d20-ba22-ab76c934c702",
+    "endpoint",
+    "params-heading",
+    "path-params",
+    "headers",
+    "body-params",
+    "request-example-heading",
+    "request-example",
+    "response-heading",
+    "responses",
+    "description",
+    "auth",
+    "query-params",
+    "response-schema",
+    "errors-heading",
+    "errors"
+  ]
+}

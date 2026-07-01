@@ -1,0 +1,252 @@
+{
+  "type": "endpoint",
+  "title": "Process Payout",
+  "meta": {
+    "description": "",
+    "hidden": false
+  },
+  "method": "POST",
+  "path": "/api/v1/transactions/pay-out",
+  "headers": [
+    {
+      "key": "x-api-key",
+      "value": "{{secret_key}}",
+      "description": ""
+    },
+    {
+      "key": "Idempotency-Key",
+      "value": "kkknjjkDDjdk",
+      "description": ""
+    },
+    {
+      "key": "Content-Type",
+      "value": "application/json",
+      "description": ""
+    }
+  ],
+  "body": "{\n  \"country_code\": \"ZM\",\n  \"amount\": 0.3,\n  \"narration\": \"Payout to customer\",\n  \"webhook_url\": \"{{webhook_url}}\",\n  \"method\": \"mobilemoney\",\n  \"phone_number\": \"{{customer_phone_number}}\",\n  \"account_number\": \"{{customer_phone_number}}\"\n}",
+  "params": [
+    {
+      "name": "amount",
+      "type": "",
+      "required": false,
+      "description": "integer"
+    },
+    {
+      "name": "countryId",
+      "type": "",
+      "required": false,
+      "description": "string"
+    },
+    {
+      "name": "transfer_to",
+      "type": "",
+      "required": false,
+      "description": "string"
+    },
+    {
+      "name": "bank_id",
+      "type": "",
+      "required": false,
+      "description": "string"
+    },
+    {
+      "name": "account_number",
+      "type": "",
+      "required": false,
+      "description": "string"
+    },
+    {
+      "name": "narration",
+      "type": "",
+      "required": false,
+      "description": "string"
+    },
+    {
+      "name": "webhook_url",
+      "type": "",
+      "required": false,
+      "description": "string"
+    }
+  ],
+  "responses": [
+    {
+      "name": "201",
+      "status": "Created",
+      "code": 201,
+      "body": "{\n    \"success\": true,\n    \"code\": 201,\n    \"data\": {\n        \"uuid\": \"1c543991-bdc3-4918-a800-6f19b61a0781\",\n        \"reference\": \"PAYOUT-JP83-1781276304\",\n        \"merchant_reference\": \"MREF-JP83-1781276304\",\n        \"status\": \"pending\",\n        \"environment\": \"live\",\n        \"message\": \"Payout is being processed\"\n    }\n}"
+    },
+    {
+      "name": "400",
+      "status": "Bad Request",
+      "code": 400,
+      "body": "{\n    \"success\": false,\n    \"code\": 400,\n    \"message\": \"Bad Request. The request contains invalid or missing required parameters.\"\n}"
+    },
+    {
+      "name": "401",
+      "status": "Unauthorized",
+      "code": 401,
+      "body": "{\n    \"success\": false,\n    \"code\": 401,\n    \"message\": \"Unauthorized. Invalid or missing API key.\"\n}"
+    },
+    {
+      "name": "500",
+      "status": "Internal Server Error",
+      "code": 500,
+      "body": "{\n    \"success\": false,\n    \"code\": 500,\n    \"message\": \"Internal Server Error. An unexpected error occurred. Please try again later.\"\n}"
+    }
+  ],
+  "blocks": [
+    {
+      "id": "b013594e-51a4-4460-881d-7ae4b5d9482d",
+      "type": "prose",
+      "props": {
+        "variant": "heading",
+        "level": "h2"
+      },
+      "content": "Process Bank Payout",
+      "meta": {}
+    },
+    {
+      "id": "b471312e-0aae-4e91-b714-9f6676f9728b",
+      "type": "prose",
+      "props": {
+        "variant": "body"
+      },
+      "content": "**Endpoint:** `POST /v1/payment/payouts/process`\n\nInitiates a disbursement from your Vesicash wallet to a beneficiary's bank account.\n\n---",
+      "meta": {}
+    },
+    {
+      "id": "a1f38a26-ab0d-484d-ba24-1ffad3303717",
+      "type": "prose",
+      "props": {
+        "variant": "heading",
+        "level": "h3"
+      },
+      "content": "Request Body",
+      "meta": {}
+    },
+    {
+      "id": "a8522a76-087e-4f62-b45d-00c35257dfb4",
+      "type": "prose",
+      "props": {
+        "variant": "body"
+      },
+      "content": "**Required fields:**",
+      "meta": {}
+    },
+    {
+      "id": "b6d77401-2019-4c25-9732-4f6c89350bed",
+      "type": "prose",
+      "props": {
+        "variant": "body"
+      },
+      "content": "**Optional fields:**",
+      "meta": {}
+    },
+    {
+      "id": "c08aac06-4f0a-48d5-9c09-3463548abbcf",
+      "type": "prose",
+      "props": {
+        "variant": "body"
+      },
+      "content": "---",
+      "meta": {}
+    },
+    {
+      "id": "72944c25-3c3e-4ebc-a484-5214e4995fe5",
+      "type": "prose",
+      "props": {
+        "variant": "heading",
+        "level": "h3"
+      },
+      "content": "Response",
+      "meta": {}
+    },
+    {
+      "id": "6950f104-cd58-4746-86ac-1caeb597be36",
+      "type": "code",
+      "props": {
+        "language": "json"
+      },
+      "content": "{\n  \"status\": \"success\",\n  \"code\": 0,\n  \"message\": \"Payout request accepted\",\n  \"data\": {\n    \"reference\": \"APX-PO-XXXXXX\",\n    \"amount\": 50000,\n    \"status\": \"processing\"\n  }\n}",
+      "meta": {}
+    },
+    {
+      "id": "43cdf897-61d2-48b2-979a-b86cbdbec5d6",
+      "type": "prose",
+      "props": {
+        "variant": "body"
+      },
+      "content": "---",
+      "meta": {}
+    },
+    {
+      "id": "252ee9e5-9069-46fe-8b6d-7d313885aa3e",
+      "type": "prose",
+      "props": {
+        "variant": "heading",
+        "level": "h3"
+      },
+      "content": "Failure Codes Specific to Payouts",
+      "meta": {}
+    },
+    {
+      "id": "c756e3ba-3f53-4eee-92d0-416e7bb3a57e",
+      "type": "table",
+      "props": {
+        "headers": [
+          {
+            "text": "Code"
+          },
+          {
+            "text": "Meaning"
+          }
+        ],
+        "rows": [
+          {
+            "cells": [
+              {
+                "text": "`INSUFFICIENT_FUNDS`"
+              },
+              {
+                "text": "Wallet balance too low — check with `GET /v1/account/get-wallet`"
+              }
+            ]
+          },
+          {
+            "cells": [
+              {
+                "text": "`ACCOUNT_NOT_FOUND`"
+              },
+              {
+                "text": "Invalid `account_number` or `bank_id` combination"
+              }
+            ]
+          },
+          {
+            "cells": [
+              {
+                "text": "`ACCOUNT_BLOCKED`"
+              },
+              {
+                "text": "Beneficiary account is frozen"
+              }
+            ]
+          },
+          {
+            "cells": [
+              {
+                "text": "`TRANSACTION_LIMIT_EXCEEDED`"
+              },
+              {
+                "text": "Amount exceeds configured payout limit"
+              }
+            ]
+          }
+        ]
+      },
+      "content": null,
+      "meta": {}
+    }
+  ]
+}

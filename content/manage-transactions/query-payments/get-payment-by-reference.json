@@ -1,0 +1,197 @@
+{
+  "type": "endpoint",
+  "title": "Get Payment by Reference",
+  "meta": {
+    "description": "",
+    "hidden": false
+  },
+  "method": "GET",
+  "path": "/api/v1/transactions/{{transaction_reference}}/status",
+  "headers": [
+    {
+      "key": "x-api-key",
+      "value": "{{secret_key}}",
+      "description": ""
+    },
+    {
+      "key": "Content-Type",
+      "value": "application/json",
+      "description": ""
+    }
+  ],
+  "body": "",
+  "params": [
+    {
+      "name": "payment_reference",
+      "type": "",
+      "required": false,
+      "description": "The `reference` returned at payment initialisation. Auto-populated from collection variable."
+    },
+    {
+      "name": "id",
+      "type": "",
+      "required": false,
+      "description": "string"
+    },
+    {
+      "name": "amount",
+      "type": "",
+      "required": false,
+      "description": "number"
+    },
+    {
+      "name": "type",
+      "type": "",
+      "required": false,
+      "description": "string"
+    },
+    {
+      "name": "method",
+      "type": "",
+      "required": false,
+      "description": "string"
+    },
+    {
+      "name": "status",
+      "type": "",
+      "required": false,
+      "description": "string"
+    },
+    {
+      "name": "currency",
+      "type": "",
+      "required": false,
+      "description": "string"
+    },
+    {
+      "name": "reference",
+      "type": "",
+      "required": false,
+      "description": "string"
+    },
+    {
+      "name": "business_id",
+      "type": "",
+      "required": false,
+      "description": "string"
+    },
+    {
+      "name": "created_at",
+      "type": "",
+      "required": false,
+      "description": "string"
+    },
+    {
+      "name": "environment",
+      "type": "",
+      "required": false,
+      "description": "string"
+    },
+    {
+      "name": "redirect_url",
+      "type": "",
+      "required": false,
+      "description": "string"
+    },
+    {
+      "name": "email",
+      "type": "",
+      "required": false,
+      "description": "string"
+    },
+    {
+      "name": "customer_first_name",
+      "type": "",
+      "required": false,
+      "description": "string"
+    },
+    {
+      "name": "customer_last_name",
+      "type": "",
+      "required": false,
+      "description": "string"
+    },
+    {
+      "name": "phone_number",
+      "type": "",
+      "required": false,
+      "description": "string"
+    }
+  ],
+  "responses": [
+    {
+      "name": "200",
+      "status": "OK",
+      "code": 200,
+      "body": "{\n    \"success\": true,\n    \"code\": 200,\n    \"data\": {\n        \"uuid\": \"6d4a7b3c-39e4-4b26-bcca-2a4b433bab15\",\n        \"reference\": \"PAYIN-VES-1781519012\",\n        \"type\": \"pay_in\",\n        \"status\": \"completed\",\n        \"method\": \"mobilemoney\",\n        \"source\": \"provider\",\n        \"funding_id\": null,\n        \"environment\": \"live\",\n        \"amount\": 3.1,\n        \"currency\": \"ZMW\",\n        \"fee\": 0,\n        \"net_amount\": 3.1,\n        \"provider_amount\": 3.1,\n        \"narration\": \"Test payment\",\n        \"account_number\": \"260968832801\",\n        \"bank_code\": \"\",\n        \"failure_reason\": \"\",\n        \"created_at\": \"2026-06-15T10:23:32Z\",\n        \"completed_at\": \"2026-06-15T10:25:03Z\"\n    }\n}"
+    },
+    {
+      "name": "200",
+      "status": "OK",
+      "code": 200,
+      "body": "{\n    \"success\": true,\n    \"code\": 200,\n    \"data\": {\n        \"uuid\": \"a1b2c3d4-e5f6-7890-abcd-ef1234567890\",\n        \"reference\": \"PAYIN-VES-1781519999\",\n        \"type\": \"pay_in\",\n        \"status\": \"failed\",\n        \"method\": \"mobilemoney\",\n        \"source\": \"provider\",\n        \"environment\": \"live\",\n        \"amount\": 1.0,\n        \"currency\": \"GHS\",\n        \"fee\": 0,\n        \"net_amount\": 0,\n        \"failure_reason\": \"INSUFFICIENT_FUNDS\",\n        \"created_at\": \"2026-06-15T11:00:00Z\",\n        \"completed_at\": null\n    }\n}"
+    },
+    {
+      "name": "401",
+      "status": "Unauthorized",
+      "code": 401,
+      "body": "{\n    \"success\": false,\n    \"code\": 401,\n    \"message\": \"Unauthorized. Invalid or missing API key.\"\n}"
+    },
+    {
+      "name": "500",
+      "status": "Internal Server Error",
+      "code": 500,
+      "body": "{\n    \"success\": false,\n    \"code\": 500,\n    \"message\": \"Internal Server Error. An unexpected error occurred. Please try again later.\"\n}"
+    }
+  ],
+  "blocks": [
+    {
+      "id": "12dd6edb-6d1a-46ce-985a-58ba45ae14ba",
+      "type": "prose",
+      "props": {
+        "variant": "heading",
+        "level": "h2"
+      },
+      "content": "Get Payment Status by Reference",
+      "meta": {}
+    },
+    {
+      "id": "1fdc8764-05e2-4aab-952d-c33458d84cfe",
+      "type": "prose",
+      "props": {
+        "variant": "body"
+      },
+      "content": "**Endpoint:** `GET /v1/payment/:payment_reference`\n\nFetches the current state of a single payment. Optimised for post-redirect and post-webhook status confirmation.\n\n---",
+      "meta": {}
+    },
+    {
+      "id": "05f3c719-b209-4a49-8323-276581527d44",
+      "type": "prose",
+      "props": {
+        "variant": "heading",
+        "level": "h3"
+      },
+      "content": "Path Parameters",
+      "meta": {}
+    },
+    {
+      "id": "6ec0a64b-a896-4df0-b8ba-a7f27fc5d4cc",
+      "type": "prose",
+      "props": {
+        "variant": "body"
+      },
+      "content": "---",
+      "meta": {}
+    },
+    {
+      "id": "c4640944-d953-4b72-9dea-f4001bdfef24",
+      "type": "prose",
+      "props": {
+        "variant": "heading",
+        "level": "h3"
+      },
+      "content": "Response Fields",
+      "meta": {}
+    }
+  ]
+}

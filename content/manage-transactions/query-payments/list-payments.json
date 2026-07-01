@@ -1,0 +1,129 @@
+{
+  "type": "endpoint",
+  "title": "List Payments",
+  "meta": {
+    "description": "",
+    "hidden": false
+  },
+  "method": "GET",
+  "path": "/api/v1/transactions",
+  "headers": [
+    {
+      "key": "Content-Type",
+      "value": "application/json",
+      "description": ""
+    }
+  ],
+  "body": "",
+  "params": [
+    {
+      "name": "page",
+      "type": "integer",
+      "required": false,
+      "description": "The page of results to retrieve. Starts at `1`. Use alongside `limit` to paginate through large result sets."
+    },
+    {
+      "name": "limit",
+      "type": "integer",
+      "required": false,
+      "description": "Number of transactions to return per page. Defaults to `20`. Maximum allowed value is `100`."
+    },
+    {
+      "name": "reference",
+      "type": "string",
+      "required": false,
+      "description": "Filter results to a single transaction by its Vesicash reference string. Returns a list containing one item when a match is found."
+    },
+    {
+      "name": "from",
+      "type": "integer",
+      "required": false,
+      "description": "Start of the date range as a Unix timestamp (seconds since epoch). Only transactions created on or after this time are returned."
+    },
+    {
+      "name": "to",
+      "type": "integer",
+      "required": false,
+      "description": "End of the date range as a Unix timestamp (seconds since epoch). Only transactions created on or before this time are returned."
+    }
+  ],
+  "responses": [
+    {
+      "name": "200",
+      "status": "OK",
+      "code": 200,
+      "body": "{\n    \"success\": true,\n    \"code\": 200,\n    \"data\": {\n        \"transactions\": [\n            {\n                \"uuid\": \"6d4a7b3c-39e4-4b26-bcca-2a4b433bab15\",\n                \"reference\": \"PAYIN-VES-1781519012\",\n                \"type\": \"pay_in\",\n                \"status\": \"completed\",\n                \"method\": \"mobilemoney\",\n                \"environment\": \"live\",\n                \"amount\": 3.1,\n                \"currency\": \"ZMW\",\n                \"narration\": \"Test payment\",\n                \"created_at\": \"2026-06-15T10:23:32Z\"\n            },\n            {\n                \"uuid\": \"e10079a7-5355-479f-a555-72bbba9618c7\",\n                \"reference\": \"PAYIN-VES-1781520809\",\n                \"type\": \"pay_in\",\n                \"status\": \"pending\",\n                \"method\": \"card\",\n                \"environment\": \"live\",\n                \"amount\": 2.0,\n                \"currency\": \"GHS\",\n                \"narration\": \"Payment for Order #12345\",\n                \"created_at\": \"2026-06-15T10:53:29Z\"\n            }\n        ],\n        \"page\": 1,\n        \"page_count\": 2,\n        \"total_count\": 2\n    }\n}"
+    },
+    {
+      "name": "401",
+      "status": "Unauthorized",
+      "code": 401,
+      "body": "{\n    \"success\": false,\n    \"code\": 401,\n    \"message\": \"Unauthorized. Invalid or missing API key.\"\n}"
+    },
+    {
+      "name": "500",
+      "status": "Internal Server Error",
+      "code": 500,
+      "body": "{\n    \"success\": false,\n    \"code\": 500,\n    \"message\": \"Internal Server Error. An unexpected error occurred. Please try again later.\"\n}"
+    }
+  ],
+  "blocks": [
+    {
+      "id": "75133210-ccdf-46c9-8375-3f32af5d220d",
+      "type": "prose",
+      "props": {
+        "variant": "heading",
+        "level": "h2"
+      },
+      "content": "Get All Payments for Business",
+      "meta": {}
+    },
+    {
+      "id": "174e4dd3-b1d1-49af-88e4-2cd43acec521",
+      "type": "prose",
+      "props": {
+        "variant": "body"
+      },
+      "content": "**Endpoint:** `GET /v1/payment`\n\nReturns a paginated list of all transactions associated with your business account.\n\n---",
+      "meta": {}
+    },
+    {
+      "id": "64c355da-7782-4eb7-9c19-7ce2c96fc734",
+      "type": "prose",
+      "props": {
+        "variant": "heading",
+        "level": "h3"
+      },
+      "content": "Query Parameters",
+      "meta": {}
+    },
+    {
+      "id": "845fe935-ee7e-4d86-8b20-ce82424bc09c",
+      "type": "prose",
+      "props": {
+        "variant": "body"
+      },
+      "content": "---",
+      "meta": {}
+    },
+    {
+      "id": "8b9fb6f3-86e7-4b49-81ab-4b72dfd33516",
+      "type": "prose",
+      "props": {
+        "variant": "heading",
+        "level": "h3"
+      },
+      "content": "Response",
+      "meta": {}
+    },
+    {
+      "id": "3f8c5817-a197-4b81-950f-c54d33433cf1",
+      "type": "code",
+      "props": {
+        "language": "json"
+      },
+      "content": "{\n  \"status\": \"success\",\n  \"code\": 200,\n  \"data\": {\n    \"payments\": [\n      {\n        \"id\": \"pay_XXX\",\n        \"amount\": 10000,\n        \"environment\": \"live\",\n        \"type\": \"payment\",\n        \"method\": \"card\",\n        \"status\": \"success\",\n        \"currency\": \"GHS\",\n        \"reference\": \"APX-REF-XXX\",\n        \"narration\": \"Payment for Order #12345\",\n        \"provider_transaction_id\": \"MPGS-XXX\",\n        \"business_id\": \"biz_XXX\",\n        \"created_at\": \"2026-05-25T10:00:00Z\",\n        \"updated_at\": \"2026-05-25T10:00:05Z\"\n      }\n    ],\n    \"page\": 1,\n    \"pageCount\": 5,\n    \"totalPages\": 5\n  }\n}",
+      "meta": {}
+    }
+  ]
+}

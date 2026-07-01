@@ -1,0 +1,17 @@
+{
+  "title": "Query Payments",
+  "items": [
+    {
+      "type": "page",
+      "slug": "list-payments"
+    },
+    {
+      "type": "page",
+      "slug": "get-payment-by-reference"
+    },
+    {
+      "type": "page",
+      "slug": "get-transaction-details"
+    }
+  ]
+}

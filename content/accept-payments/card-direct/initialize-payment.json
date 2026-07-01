@@ -1,0 +1,197 @@
+{
+  "type": "endpoint",
+  "title": "Initialize Payment",
+  "meta": {
+    "description": "",
+    "hidden": false
+  },
+  "method": "POST",
+  "path": "/api/v1/transactions/initiate",
+  "headers": [
+    {
+      "key": "x-api-key",
+      "value": "{{secret_key}}",
+      "description": ""
+    },
+    {
+      "key": "Idempotency-Key",
+      "value": "{{public_key}}",
+      "description": ""
+    },
+    {
+      "key": "Content-Type",
+      "value": "application/json",
+      "description": ""
+    }
+  ],
+  "body": "{\n  \"amount\": 10000,\n  \"country_code\": \"GH\",\n  \"currency\": \"GHS\",\n  \"method\": \"card\",\n  \"operator\": \"mpgs\",\n  \"narration\": \"Payment for Order #12345\",\n  \"redirect_success_url\": \"https://yourbank.com/payment/success\",\n  \"redirect_failed_url\": \"https://yourbank.com/payment/failed\",\n  \"webhook_url\": \"{{webhook_url}}\",\n  \"integration_type\": \"DIRECT_API\"\n}",
+  "params": [
+    {
+      "name": "amount",
+      "type": "number",
+      "required": true,
+      "description": "The transaction amount in the **smallest currency unit**. For Ghana, pass pesewas (1 GHS = 100 pesewas); for Nigeria, pass kobo (1 NGN = 100 kobo); for Zambia, pass ngwe (1 ZMW = 100 ngwe). Must be a positive integer."
+    },
+    {
+      "name": "country",
+      "type": "string",
+      "required": true,
+      "description": "ISO 3166-1 alpha-2 country code for the transaction. Determines which banking network Vesicash routes through. Example: `GH` for Ghana, `NG` for Nigeria, `ZM` for Zambia, `KE` for Kenya."
+    },
+    {
+      "name": "currency",
+      "type": "string",
+      "required": true,
+      "description": "ISO 4217 three-letter currency code. Must match the country you specified. Example: `GHS` for Ghana Cedis, `NGN` for Nigerian Naira, `ZMW` for Zambian Kwacha."
+    },
+    {
+      "name": "method",
+      "type": "string",
+      "required": true,
+      "description": "The payment channel to use. Set to `\"card\"` to process a card payment through the Mastercard Payment Gateway."
+    },
+    {
+      "name": "operator",
+      "type": "string",
+      "required": true,
+      "description": "The payment processor to route through. Use `\"mpgs\"` for Mastercard Payment Gateway Services, which supports 3DS2 card processing across all supported markets."
+    },
+    {
+      "name": "narration",
+      "type": "string",
+      "required": true,
+      "description": "A short description of what the customer is paying for. Displayed on the Vesicash checkout page and included on the customer's bank statement. Maximum 100 characters."
+    },
+    {
+      "name": "redirect_success_url",
+      "type": "string",
+      "required": true,
+      "description": "A publicly accessible URL on your server. Vesicash redirects the customer here after a successful payment, appending `?payment_reference=<ref>` as a query parameter. Must be HTTPS in production."
+    },
+    {
+      "name": "redirect_failed_url",
+      "type": "string",
+      "required": true,
+      "description": "A publicly accessible URL on your server. Vesicash redirects the customer here if the payment fails or is abandoned. Use this to show an appropriate retry or support message."
+    },
+    {
+      "name": "webhook_url",
+      "type": "string",
+      "required": true,
+      "description": "A publicly accessible HTTPS endpoint on your server. Vesicash POSTs a signed JSON payload to this URL whenever the transaction status changes. Always verify the signature using your webhook secret."
+    },
+    {
+      "name": "integration_type",
+      "type": "string",
+      "required": true,
+      "description": "Defines the integration mode. Set to `\"DIRECT_API\"` for all server-to-server integrations. This controls whether Vesicash uses a hosted checkout page or returns raw payment data for your own UI."
+    }
+  ],
+  "responses": [
+    {
+      "name": "201",
+      "status": "Created",
+      "code": 201,
+      "body": "{\n    \"success\": true,\n    \"code\": 201,\n    \"data\": {\n        \"uuid\": \"f2a1b3c4-d5e6-7890-abcd-1234567890ef\",\n        \"reference\": \"PAYIN-VES-1781520100\",\n        \"merchant_reference\": \"MREF-VES-1781520100\",\n        \"status\": \"pending\",\n        \"environment\": \"live\",\n        \"payment_url\": null,\n        \"message\": \"success\"\n    }\n}"
+    },
+    {
+      "name": "400",
+      "status": "Bad Request",
+      "code": 400,
+      "body": "{\n    \"success\": false,\n    \"code\": 400,\n    \"message\": \"Bad Request. The request contains invalid or missing required parameters.\"\n}"
+    },
+    {
+      "name": "401",
+      "status": "Unauthorized",
+      "code": 401,
+      "body": "{\n    \"success\": false,\n    \"code\": 401,\n    \"message\": \"Unauthorized. Invalid or missing API key.\"\n}"
+    },
+    {
+      "name": "500",
+      "status": "Internal Server Error",
+      "code": 500,
+      "body": "{\n    \"success\": false,\n    \"code\": 500,\n    \"message\": \"Internal Server Error. An unexpected error occurred. Please try again later.\"\n}"
+    }
+  ],
+  "blocks": [
+    {
+      "id": "f7c74895-d88f-4b64-bfb6-512d95cd7749",
+      "type": "prose",
+      "props": {
+        "variant": "body"
+      },
+      "content": "Same endpoint as the checkout flow, but returns a `payment_reference` (not a `payment_link`) which you use in the next step to submit card details directly.",
+      "meta": {}
+    },
+    {
+      "id": "958dff48-9363-4b46-a2d3-0e79176fcd02",
+      "type": "prose",
+      "props": {
+        "variant": "heading",
+        "level": "h3"
+      },
+      "content": "Request Body",
+      "meta": {}
+    },
+    {
+      "id": "aab4cb65-5d41-4dce-b65f-4921e5c37a1b",
+      "type": "prose",
+      "props": {
+        "variant": "body"
+      },
+      "content": "---",
+      "meta": {}
+    },
+    {
+      "id": "b9df5a29-5391-4f2c-842e-ba577e269187",
+      "type": "prose",
+      "props": {
+        "variant": "heading",
+        "level": "h3"
+      },
+      "content": "Response",
+      "meta": {}
+    },
+    {
+      "id": "1951d119-b194-4afb-ad5c-949b4b6ebc35",
+      "type": "code",
+      "props": {
+        "language": "json"
+      },
+      "content": "{\n  \"status\": \"success\",\n  \"code\": 200,\n  \"data\": {\n    \"reference\": \"APX-REF-XXXXXX\",\n    \"payment_id\": \"pay_XXXXXX\",\n    \"status\": \"pending\"\n  }\n}",
+      "meta": {}
+    },
+    {
+      "id": "51ef5749-370f-4df7-a626-08a99cf8a5a1",
+      "type": "prose",
+      "props": {
+        "variant": "body"
+      },
+      "content": "**Note:** In the non-checkout flow, `data.reference` is the `payment_reference` you pass to the next step. There is no `payment_link`.",
+      "meta": {}
+    }
+  ],
+  "sectionOrder": [
+    "f7c74895-d88f-4b64-bfb6-512d95cd7749",
+    "endpoint",
+    "958dff48-9363-4b46-a2d3-0e79176fcd02",
+    "aab4cb65-5d41-4dce-b65f-4921e5c37a1b",
+    "b9df5a29-5391-4f2c-842e-ba577e269187",
+    "1951d119-b194-4afb-ad5c-949b4b6ebc35",
+    "51ef5749-370f-4df7-a626-08a99cf8a5a1",
+    "params-heading",
+    "headers",
+    "body-params",
+    "request-example-heading",
+    "request-example",
+    "response-heading",
+    "responses",
+    "description",
+    "auth",
+    "path-params",
+    "query-params",
+    "response-schema",
+    "errors-heading",
+    "errors"
+  ]
+}

@@ -1,0 +1,333 @@
+{
+  "type": "guide",
+  "title": "Introduction",
+  "meta": {
+    "description": "",
+    "hidden": false
+  },
+  "blocks": [
+    {
+      "id": "b028ac9c-7098-4d2c-936c-ec1cd1ab6ac7",
+      "type": "callout",
+      "props": {
+        "variant": "note"
+      },
+      "content": "- Create a free account at [portal.vesicash.com](https://portal.vesicash.com) and verify your business.\n- Copy your **Secret Key** from the API Keys section of your dashboard.\n- Use your **test key** while building — test transactions never touch real funds.",
+      "meta": {}
+    },
+    {
+      "id": "dc8184e7-9e57-4304-ba5c-50553082a816",
+      "type": "prose",
+      "props": {
+        "variant": "heading",
+        "level": "h2",
+        "color": "text-brand-green"
+      },
+      "content": "API basics",
+      "meta": {}
+    },
+    {
+      "id": "21afe91b-67e9-41a4-9b17-5e8a33406405",
+      "type": "prose",
+      "props": {
+        "variant": "body"
+      },
+      "content": "The Vesicash Merchant API is a REST API that gives you programmatic access to payments, payouts, and transaction management across Africa. Every feature in the Vesicash Portal Dashboard is available via the API, so you can build fully custom payment experiences from the ground up.\n\nAll requests are made over **HTTPS** and encrypted with TLS. Plain HTTP requests are rejected.",
+      "meta": {}
+    },
+    {
+      "id": "dc0c8834-c39f-43d7-908a-08c73977ebc3",
+      "type": "prose",
+      "props": {
+        "variant": "heading",
+        "level": "h2"
+      },
+      "content": "API Base URL",
+      "meta": {}
+    },
+    {
+      "id": "3106b318-e495-4463-a1be-c695d5718c65",
+      "type": "prose",
+      "props": {
+        "variant": "body"
+      },
+      "content": "All API requests — both test and live — use the same base URL. The environment is determined entirely by the API key you supply:",
+      "meta": {}
+    },
+    {
+      "id": "6e44ec5c-1d1a-4b67-ab28-a4e0413b0037",
+      "type": "code",
+      "props": {
+        "language": "text",
+        "title": "API BASE URL",
+        "hideCopy": true
+      },
+      "content": "https://api.portal.vesicash.com",
+      "meta": {}
+    },
+    {
+      "id": "ad4d7700-7065-4ca9-9e58-7580c15b0c66",
+      "type": "prose",
+      "props": {
+        "variant": "heading",
+        "level": "h2"
+      },
+      "content": "Authentication",
+      "meta": {}
+    },
+    {
+      "id": "5c0c186f-ac82-409c-b9ef-c742a8fbcdc7",
+      "type": "prose",
+      "props": {
+        "variant": "body"
+      },
+      "content": "The Vesicash API uses API keys to authenticate requests. Pass your **Secret Key** in the `x-api-key` header. Find your key in the [Vesicash Dashboard](https://portal.vesicash.com) under **Settings → API Keys**.",
+      "meta": {}
+    },
+    {
+      "id": "457b1887-d025-4040-bbb8-0c54b3bf387b",
+      "type": "code",
+      "props": {
+        "language": "bash",
+        "title": "Authorization Header",
+        "hideCopy": true
+      },
+      "content": "x-api-key: YOUR_SECRET_KEY",
+      "meta": {}
+    },
+    {
+      "id": "0f1c3ea2-e70c-4ad2-8f4d-545d964f2cbc",
+      "type": "prose",
+      "props": {
+        "variant": "heading",
+        "level": "h2"
+      },
+      "content": "HTTP methods",
+      "meta": {}
+    },
+    {
+      "id": "cc5dc988-7d6d-4adf-8511-a4906078ef38",
+      "type": "prose",
+      "props": {
+        "variant": "body"
+      },
+      "content": "The Vesicash Portal API follows REST conventions:",
+      "meta": {}
+    },
+    {
+      "id": "6e638313-f0f5-4901-9700-4b4fdbc4f463",
+      "type": "table",
+      "props": {
+        "headers": [
+          {
+            "text": "Method"
+          },
+          {
+            "text": "Operation"
+          },
+          {
+            "text": "Description"
+          }
+        ],
+        "rows": [
+          {
+            "cells": [
+              {
+                "text": "**`POST`**"
+              },
+              {
+                "text": "Create"
+              },
+              {
+                "text": "Creates a resource or triggers an action on the server"
+              }
+            ]
+          },
+          {
+            "cells": [
+              {
+                "text": "`GET`",
+                "meta": {}
+              },
+              {
+                "text": "Read"
+              },
+              {
+                "text": "Retrieves an existing resource or a list of resources"
+              }
+            ]
+          },
+          {
+            "cells": [
+              {
+                "text": "`PUT`"
+              },
+              {
+                "text": "Replace"
+              },
+              {
+                "text": "Replaces an existing resource in full"
+              }
+            ]
+          },
+          {
+            "cells": [
+              {
+                "text": "`PATCH`"
+              },
+              {
+                "text": "Update"
+              },
+              {
+                "text": "Updates specific fields of an existing resource"
+              }
+            ]
+          },
+          {
+            "cells": [
+              {
+                "text": "`DELETE`"
+              },
+              {
+                "text": "Remove"
+              },
+              {
+                "text": "Removes a resource"
+              }
+            ]
+          }
+        ]
+      },
+      "content": null,
+      "meta": {}
+    },
+    {
+      "id": "f52db392-5c7f-45ba-9c9b-cdc274069603",
+      "type": "prose",
+      "props": {
+        "variant": "heading",
+        "level": "h2"
+      },
+      "content": "Making requests",
+      "meta": {}
+    },
+    {
+      "id": "c392e4b7-3bb2-43bc-b93b-459387fe388c",
+      "type": "prose",
+      "props": {
+        "variant": "body"
+      },
+      "content": "Requests must always include your `x-api-key` header. When sending a body, set `Content-Type: application/json`.",
+      "meta": {}
+    },
+    {
+      "id": "7044aa94-e094-4e7d-811c-435834c75a6f",
+      "type": "code",
+      "props": {
+        "language": "bash",
+        "title": "Example POST Request"
+      },
+      "content": "POST {{API_BASE_URL}}/v1/payment/init\nx-api-key: sk_test_xxxxxxxxxxxx\nContent-Type: application/json\n\n{\n  \"amount\": 5000,\n  \"country\": \"GH\",\n  \"currency\": \"GHS\",\n  \"method\": \"card\",\n  \"operator\": \"mpgs\",\n  \"narration\": \"Payment for Order #1234\"\n}",
+      "meta": {}
+    },
+    {
+      "id": "71e2fc7b-6a10-460d-9c4e-ae1bf3c2177e",
+      "type": "prose",
+      "props": {
+        "variant": "body"
+      },
+      "content": "For `GET` requests, pass parameters directly in the query string:",
+      "meta": {}
+    },
+    {
+      "id": "84cad98f-b16a-4261-8b94-137c3cc2b852",
+      "type": "code",
+      "props": {
+        "language": "bash",
+        "title": "Example GET Request",
+        "hideCopy": true
+      },
+      "content": "GET {{API_BASE_URL}}/v1/payment?page=1&limit=20\nx-api-key: sk_test_xxxxxxxxxxxx",
+      "meta": {}
+    },
+    {
+      "id": "318ea4c4-9b2e-4034-abd4-8d45c068360a",
+      "type": "prose",
+      "props": {
+        "variant": "heading",
+        "level": "h2"
+      },
+      "content": "Response format",
+      "meta": {}
+    },
+    {
+      "id": "d3affbed-bae1-4c5a-9bd5-613cc556e88d",
+      "type": "prose",
+      "props": {
+        "variant": "body"
+      },
+      "content": "Every response from the Vesicash Portal API follows the same envelope structure:",
+      "meta": {}
+    },
+    {
+      "id": "761aa84e-5ac3-48e7-90de-0013d73d694f",
+      "type": "code",
+      "props": {
+        "language": "json",
+        "title": "Success Response",
+        "hideCopy": true
+      },
+      "content": "{\n  \"status\": \"success\",\n  \"code\": 200,\n  \"data\": { ... }\n}",
+      "meta": {}
+    },
+    {
+      "id": "792ab5d9-eb3b-4525-af71-5492f8abcc62",
+      "type": "prose",
+      "props": {
+        "variant": "body"
+      },
+      "content": "When a request fails, the same envelope is returned with <span class='text-red-500'>`\"status\": \"error\"`</span>:",
+      "meta": {}
+    },
+    {
+      "id": "06168af7-9fe0-460d-99e2-e4e778359697",
+      "type": "code",
+      "props": {
+        "language": "json",
+        "title": "Error Response",
+        "hideCopy": true
+      },
+      "content": "{\n  \"status\": \"error\",\n  \"code\": 400,\n  \"data\": null\n}",
+      "meta": {}
+    },
+    {
+      "id": "5e39c958-7e3a-426d-8340-e3d9e6aee81e",
+      "type": "prose",
+      "props": {
+        "variant": "body"
+      },
+      "content": "For list endpoints, `data` includes both the resource array and a `meta` object:",
+      "meta": {}
+    },
+    {
+      "id": "a118fd3a-cf02-4795-be9e-8bdb090a35f3",
+      "type": "code",
+      "props": {
+        "language": "json",
+        "title": "Paginated Response",
+        "hideCopy": true
+      },
+      "content": "{\n  \"status\": \"success\",\n  \"data\": {\n    \"transactions\": [ ... ],\n    \"meta\": {\n      \"page\": 1,\n      \"totalPages\": 8,\n      \"perPage\": 20,\n      \"total\": 143,\n      \"next\": \"/v1/payment?page=2&limit=20\",\n      \"previous\": null\n    }\n  }\n}",
+      "meta": {}
+    },
+    {
+      "id": "1de9333a-f870-45f3-b5b3-a0fbeba7b438",
+      "type": "prose",
+      "props": {
+        "variant": "body"
+      },
+      "content": "`meta.next` and `meta.previous` are fully-formed URL paths you can use directly. When on the last page, `meta.next` is `null`.",
+      "meta": {}
+    }
+  ]
+}

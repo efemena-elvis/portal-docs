@@ -1,0 +1,28 @@
+{
+  "title": "Getting Started",
+  "collapsible": true,
+  "protected": true,
+  "items": [
+    {
+      "type": "page",
+      "slug": "introduction"
+    },
+    {
+      "type": "page",
+      "slug": "authentication"
+    },
+    {
+      "type": "page",
+      "slug": "rate-limits"
+    },
+    {
+      "type": "page",
+      "slug": "pagination"
+    },
+    {
+      "type": "page",
+      "slug": "errors"
+    }
+  ],
+  "order": 0
+}

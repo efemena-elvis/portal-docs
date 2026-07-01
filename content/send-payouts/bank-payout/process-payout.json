@@ -1,0 +1,258 @@
+{
+  "type": "endpoint",
+  "title": "Process Payout",
+  "meta": {
+    "description": "",
+    "hidden": false
+  },
+  "method": "POST",
+  "path": "/api/v1/transactions/pay-out",
+  "headers": [
+    {
+      "key": "x-api-key",
+      "value": "{{secret_key}}",
+      "description": ""
+    },
+    {
+      "key": "Idempotency-Key",
+      "value": "kkknjjkDDjdkddffdkik",
+      "description": ""
+    },
+    {
+      "key": "Content-Type",
+      "value": "application/json",
+      "description": ""
+    }
+  ],
+  "body": "{\n  \"country_code\": \"GH\",\n  \"amount\": 1,\n  \"narration\": \"Payout to customer\",\n  \"method\": \"bank\",\n  \"webhook_url\": \"{{webhook_url}}\",\n  \"account_number\": \"{{beneficiary_account_number}}\",\n  \"account_name\": \"{{beneficiary_account_name}}\",\n  \"bank_code\": \"{{beneficiary_bank_code}}\",\n  \"bank_name\": \"{{beneficiary_bank_name}}\",\n  \"metadata\": {\n    \"order_id\": \"ORD-123\"\n  }\n}",
+  "params": [
+    {
+      "name": "amount",
+      "type": "",
+      "required": false,
+      "description": "integer"
+    },
+    {
+      "name": "countryId",
+      "type": "",
+      "required": false,
+      "description": "string"
+    },
+    {
+      "name": "transfer_to",
+      "type": "",
+      "required": false,
+      "description": "string"
+    },
+    {
+      "name": "bank_id",
+      "type": "",
+      "required": false,
+      "description": "string"
+    },
+    {
+      "name": "account_number",
+      "type": "",
+      "required": false,
+      "description": "string"
+    },
+    {
+      "name": "narration",
+      "type": "",
+      "required": false,
+      "description": "string"
+    },
+    {
+      "name": "webhook_url",
+      "type": "",
+      "required": false,
+      "description": "string"
+    }
+  ],
+  "responses": [
+    {
+      "name": "201",
+      "status": "Created",
+      "code": 201,
+      "body": "{\n    \"success\": true,\n    \"code\": 201,\n    \"data\": {\n        \"uuid\": \"1c543991-bdc3-4918-a800-6f19b61a0781\",\n        \"reference\": \"PAYOUT-JP83-1781276304\",\n        \"merchant_reference\": \"MREF-JP83-1781276304\",\n        \"status\": \"pending\",\n        \"environment\": \"live\",\n        \"message\": \"Payout is being processed\"\n    }\n}"
+    },
+    {
+      "name": "201",
+      "status": "Created",
+      "code": 201,
+      "body": "{\n    \"success\": true,\n    \"code\": 201,\n    \"data\": {\n        \"uuid\": \"5111e7e9-0c32-41b2-8ac2-5a3d4158c5fc\",\n        \"reference\": \"PAYOUT-JP83-1781528144\",\n        \"merchant_reference\": \"MREF-JP83-1781528144\",\n        \"status\": \"completed\",\n        \"environment\": \"live\",\n        \"message\": \"Payout completed successfully\"\n    }\n}"
+    },
+    {
+      "name": "400",
+      "status": "Bad Request",
+      "code": 400,
+      "body": "{\n    \"success\": false,\n    \"code\": 400,\n    \"message\": \"Bad Request. The request contains invalid or missing required parameters.\"\n}"
+    },
+    {
+      "name": "401",
+      "status": "Unauthorized",
+      "code": 401,
+      "body": "{\n    \"success\": false,\n    \"code\": 401,\n    \"message\": \"Unauthorized. Invalid or missing API key.\"\n}"
+    },
+    {
+      "name": "500",
+      "status": "Internal Server Error",
+      "code": 500,
+      "body": "{\n    \"success\": false,\n    \"code\": 500,\n    \"message\": \"Internal Server Error. An unexpected error occurred. Please try again later.\"\n}"
+    }
+  ],
+  "blocks": [
+    {
+      "id": "fc5ef661-dc9a-4492-a10b-1cfede516b3e",
+      "type": "prose",
+      "props": {
+        "variant": "heading",
+        "level": "h2"
+      },
+      "content": "Process Bank Payout",
+      "meta": {}
+    },
+    {
+      "id": "24aa13e8-77a1-4656-ad0c-ba05a51c8158",
+      "type": "prose",
+      "props": {
+        "variant": "body"
+      },
+      "content": "**Endpoint:** `POST /v1/payment/payouts/process`\n\nInitiates a disbursement from your Vesicash wallet to a beneficiary's bank account.\n\n---",
+      "meta": {}
+    },
+    {
+      "id": "c59e66f5-11e9-4d92-965f-046bd565b3b7",
+      "type": "prose",
+      "props": {
+        "variant": "heading",
+        "level": "h3"
+      },
+      "content": "Request Body",
+      "meta": {}
+    },
+    {
+      "id": "03436825-6f65-474d-810b-6ecf831b80ec",
+      "type": "prose",
+      "props": {
+        "variant": "body"
+      },
+      "content": "**Required fields:**",
+      "meta": {}
+    },
+    {
+      "id": "360ad8a5-a3d0-4d7d-8aac-0a3714ac79aa",
+      "type": "prose",
+      "props": {
+        "variant": "body"
+      },
+      "content": "**Optional fields:**",
+      "meta": {}
+    },
+    {
+      "id": "ac743e57-8193-4cae-828b-7edf048933c0",
+      "type": "prose",
+      "props": {
+        "variant": "body"
+      },
+      "content": "---",
+      "meta": {}
+    },
+    {
+      "id": "eb529eae-a7b5-4d9b-a4cb-8c162a2f04a4",
+      "type": "prose",
+      "props": {
+        "variant": "heading",
+        "level": "h3"
+      },
+      "content": "Response",
+      "meta": {}
+    },
+    {
+      "id": "9868b04f-402d-4b1d-b809-2208f0d3a7bd",
+      "type": "code",
+      "props": {
+        "language": "json"
+      },
+      "content": "{\n  \"status\": \"success\",\n  \"code\": 0,\n  \"message\": \"Payout request accepted\",\n  \"data\": {\n    \"reference\": \"APX-PO-XXXXXX\",\n    \"amount\": 50000,\n    \"status\": \"processing\"\n  }\n}",
+      "meta": {}
+    },
+    {
+      "id": "4bbadb3a-95ff-419f-8cc9-40ff60210fbe",
+      "type": "prose",
+      "props": {
+        "variant": "body"
+      },
+      "content": "---",
+      "meta": {}
+    },
+    {
+      "id": "9d69a339-f466-4fe4-88d4-a1f1a266c25f",
+      "type": "prose",
+      "props": {
+        "variant": "heading",
+        "level": "h3"
+      },
+      "content": "Failure Codes Specific to Payouts",
+      "meta": {}
+    },
+    {
+      "id": "bf376a43-94cb-49c9-ba8f-ade19e50b860",
+      "type": "table",
+      "props": {
+        "headers": [
+          {
+            "text": "Code"
+          },
+          {
+            "text": "Meaning"
+          }
+        ],
+        "rows": [
+          {
+            "cells": [
+              {
+                "text": "`INSUFFICIENT_FUNDS`"
+              },
+              {
+                "text": "Wallet balance too low — check with `GET /v1/account/get-wallet`"
+              }
+            ]
+          },
+          {
+            "cells": [
+              {
+                "text": "`ACCOUNT_NOT_FOUND`"
+              },
+              {
+                "text": "Invalid `account_number` or `bank_id` combination"
+              }
+            ]
+          },
+          {
+            "cells": [
+              {
+                "text": "`ACCOUNT_BLOCKED`"
+              },
+              {
+                "text": "Beneficiary account is frozen"
+              }
+            ]
+          },
+          {
+            "cells": [
+              {
+                "text": "`TRANSACTION_LIMIT_EXCEEDED`"
+              },
+              {
+                "text": "Amount exceeds configured payout limit"
+              }
+            ]
+          }
+        ]
+      },
+      "content": null,
+      "meta": {}
+    }
+  ]
+}

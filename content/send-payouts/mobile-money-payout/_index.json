@@ -1,0 +1,17 @@
+{
+  "title": "Mobile Money Payout",
+  "items": [
+    {
+      "type": "page",
+      "slug": "check-wallet-balance"
+    },
+    {
+      "type": "page",
+      "slug": "process-payout"
+    },
+    {
+      "type": "page",
+      "slug": "check-payout-status"
+    }
+  ]
+}

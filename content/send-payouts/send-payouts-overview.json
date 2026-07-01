@@ -1,0 +1,141 @@
+{
+  "type": "guide",
+  "title": "Send Payouts Overview",
+  "meta": {
+    "description": "",
+    "hidden": false
+  },
+  "blocks": [
+    {
+      "id": "a3065daf-1a1c-4553-b223-56e4d3f4e3b3",
+      "type": "callout",
+      "props": {
+        "variant": "nutshell"
+      },
+      "content": "Disburse funds to bank accounts and mobile money wallets across Africa.",
+      "meta": {}
+    },
+    {
+      "id": "157811b2-900b-494e-b428-384937518f47",
+      "type": "callout",
+      "props": {
+        "variant": "before-you-begin"
+      },
+      "content": "- Your merchant wallet has sufficient balance for the payout amount.\n- You have collected accurate recipient details (account number, bank code, or mobile number).\n- You have configured a `webhook_url` to receive payout status events.",
+      "meta": {}
+    },
+    {
+      "id": "057d32c7-0bd2-463c-b707-870ec152bde9",
+      "type": "prose",
+      "props": {
+        "variant": "heading",
+        "level": "h2"
+      },
+      "content": "Payout Flow",
+      "meta": {}
+    },
+    {
+      "id": "413a5ffa-b579-4982-adbd-6e6d68cbc105",
+      "type": "code",
+      "props": {
+        "language": "@step number=1 title=\"Check your wallet balance\""
+      },
+      "content": "Call `GET /api/v1/merchant/wallets` and confirm `balance` is greater than or equal to the payout amount. Payouts fail immediately with `INSUFFICIENT_FUNDS` if your balance is too low.",
+      "meta": {}
+    },
+    {
+      "id": "4c7250fa-8ecd-4198-9139-6ad1d586b69a",
+      "type": "code",
+      "props": {
+        "language": "@step number=2 title=\"Initiate the payout\""
+      },
+      "content": "Call `POST /v1/payment/payouts/process` with recipient details and the amount. Vesicash queues the payout asynchronously and returns a `reference`.",
+      "meta": {}
+    },
+    {
+      "id": "34a68c88-c32d-4df9-8224-5ac2068c8dca",
+      "type": "code",
+      "props": {
+        "language": "@step number=3 title=\"Receive the webhook\""
+      },
+      "content": "Vesicash POSTs a `payout.completed` or `payout.failed` event to your `webhook_url` when the transfer is processed.",
+      "meta": {}
+    },
+    {
+      "id": "cbacd078-ad3e-4083-b3d6-878faf71b9ef",
+      "type": "code",
+      "props": {
+        "language": "@step number=4 title=\"Verify the outcome\" last=true"
+      },
+      "content": "Call `GET /v1/payment/:reference` and confirm `is_disbursed: true` before updating your records.",
+      "meta": {}
+    },
+    {
+      "id": "082e2040-ceea-4be1-83a7-b41b277056cb",
+      "type": "prose",
+      "props": {
+        "variant": "heading",
+        "level": "h2"
+      },
+      "content": "Payout Types",
+      "meta": {}
+    },
+    {
+      "id": "91898ce5-ca66-4c43-b39a-9782a58d8bfe",
+      "type": "prose",
+      "props": {
+        "variant": "heading",
+        "level": "h3"
+      },
+      "content": "Bank Payout",
+      "meta": {}
+    },
+    {
+      "id": "e82443f5-ae3f-431a-840b-daeb70d2893b",
+      "type": "prose",
+      "props": {
+        "variant": "body"
+      },
+      "content": "Send money to a bank account using the recipient's account number and bank code. Set `transfer_to: \"bank\"`.",
+      "meta": {}
+    },
+    {
+      "id": "b5b75bc6-debe-48f8-ba9f-9c6de652fa48",
+      "type": "prose",
+      "props": {
+        "variant": "heading",
+        "level": "h3"
+      },
+      "content": "Mobile Money Payout",
+      "meta": {}
+    },
+    {
+      "id": "f723373e-b2f6-4127-bcb7-d80b92507d46",
+      "type": "prose",
+      "props": {
+        "variant": "body"
+      },
+      "content": "Send money directly to a mobile money wallet. Set `transfer_to: \"mobile_money\"`.",
+      "meta": {}
+    },
+    {
+      "id": "ca8dae92-fb38-4bc7-9ddf-a2332637d31e",
+      "type": "prose",
+      "props": {
+        "variant": "heading",
+        "level": "h2"
+      },
+      "content": "Related Endpoints",
+      "meta": {}
+    },
+    {
+      "id": "66b334f6-0e6c-488d-ba6f-559c1ebffaac",
+      "type": "prose",
+      "props": {
+        "variant": "body"
+      },
+      "content": "- [Bank Payout](/send-payouts/bank-payout/process-payout)\n- [Mobile Money Payout](/send-payouts/mobile-money-payout/process-payout)",
+      "meta": {}
+    }
+  ]
+}

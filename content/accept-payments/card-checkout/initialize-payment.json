@@ -1,0 +1,203 @@
+{
+  "type": "endpoint",
+  "title": "Initialize Payment",
+  "meta": {
+    "description": "",
+    "hidden": false
+  },
+  "method": "POST",
+  "path": "/api/v1/transactions/initiate",
+  "headers": [
+    {
+      "key": "x-api-key",
+      "value": "{{secret_key}}",
+      "description": "Private key — required"
+    },
+    {
+      "key": "Idempotency-Key",
+      "value": "fjfhhfgggvvf",
+      "description": "Public key — required"
+    },
+    {
+      "key": "Content-Type",
+      "value": "application/json",
+      "description": ""
+    }
+  ],
+  "body": "{\n  \"amount\": 2,\n  \"country\": \"GH\",\n  \"currency\": \"GHS\",\n  \"method\": \"card\",\n  \"operator\": \"mpgs\",\n  \"narration\": \"Payment for Order #12345\",\n  \"redirect_success_url\": \"https://yourbank.com/payment/success\",\n  \"redirect_failed_url\": \"https://yourbank.com/payment/failed\",\n  \"webhook_url\": \"{{webhook_url}}\",\n  \"integration_type\": \"DIRECT_API\"\n}",
+  "params": [
+    {
+      "name": "amount",
+      "type": "number",
+      "required": true,
+      "description": "The transaction amount in the **smallest currency unit**. For Ghana, pass pesewas (1 GHS = 100 pesewas); for Nigeria, pass kobo (1 NGN = 100 kobo); for Zambia, pass ngwe (1 ZMW = 100 ngwe). Must be a positive integer."
+    },
+    {
+      "name": "country",
+      "type": "string",
+      "required": true,
+      "description": "ISO 3166-1 alpha-2 country code for the transaction. Determines which banking network Vesicash routes through. Example: `GH` for Ghana, `NG` for Nigeria, `ZM` for Zambia, `KE` for Kenya."
+    },
+    {
+      "name": "currency",
+      "type": "string",
+      "required": true,
+      "description": "ISO 4217 three-letter currency code. Must match the country you specified. Example: `GHS` for Ghana Cedis, `NGN` for Nigerian Naira, `ZMW` for Zambian Kwacha."
+    },
+    {
+      "name": "method",
+      "type": "string",
+      "required": true,
+      "description": "The payment channel to use. Set to `\"card\"` to process a card payment through the Mastercard Payment Gateway."
+    },
+    {
+      "name": "operator",
+      "type": "string",
+      "required": true,
+      "description": "The payment processor to route through. Use `\"mpgs\"` for Mastercard Payment Gateway Services, which supports 3DS2 card processing across all supported markets."
+    },
+    {
+      "name": "narration",
+      "type": "string",
+      "required": true,
+      "description": "A short description of what the customer is paying for. Displayed on the Vesicash checkout page and included on the customer's bank statement. Maximum 100 characters."
+    },
+    {
+      "name": "redirect_success_url",
+      "type": "string",
+      "required": true,
+      "description": "A publicly accessible URL on your server. Vesicash redirects the customer here after a successful payment, appending `?payment_reference=<ref>` as a query parameter. Must be HTTPS in production."
+    },
+    {
+      "name": "redirect_failed_url",
+      "type": "string",
+      "required": true,
+      "description": "A publicly accessible URL on your server. Vesicash redirects the customer here if the payment fails or is abandoned. Use this to show an appropriate retry or support message."
+    },
+    {
+      "name": "webhook_url",
+      "type": "string",
+      "required": true,
+      "description": "A publicly accessible HTTPS endpoint on your server. Vesicash POSTs a signed JSON payload to this URL whenever the transaction status changes. Always verify the signature using your webhook secret."
+    },
+    {
+      "name": "integration_type",
+      "type": "string",
+      "required": true,
+      "description": "Defines the integration mode. Set to `\"DIRECT_API\"` for all server-to-server integrations. This controls whether Vesicash uses a hosted checkout page or returns raw payment data for your own UI."
+    }
+  ],
+  "responses": [
+    {
+      "name": "201",
+      "status": "Created",
+      "code": 201,
+      "body": "{\n    \"success\": true,\n    \"code\": 201,\n    \"data\": {\n        \"uuid\": \"e10079a7-5355-479f-a555-72bbba9618c7\",\n        \"reference\": \"PAYIN-JP83-1781520809\",\n        \"merchant_reference\": \"MREF-JP83-1781520809\",\n        \"status\": \"pending\",\n        \"environment\": \"live\",\n        \"payment_url\": \"https://portal.vesicash.com/checkout?reference=PAYIN-JP83-1781520809\",\n        \"message\": \"success\"\n    }\n}"
+    },
+    {
+      "name": "400",
+      "status": "Bad Request",
+      "code": 400,
+      "body": "{\n    \"success\": false,\n    \"code\": 400,\n    \"message\": \"Bad Request. The request contains invalid or missing required parameters.\"\n}"
+    },
+    {
+      "name": "401",
+      "status": "Unauthorized",
+      "code": 401,
+      "body": "{\n    \"success\": false,\n    \"code\": 401,\n    \"message\": \"Unauthorized. Invalid or missing API key.\"\n}"
+    },
+    {
+      "name": "500",
+      "status": "Internal Server Error",
+      "code": 500,
+      "body": "{\n    \"success\": false,\n    \"code\": 500,\n    \"message\": \"Internal Server Error. An unexpected error occurred. Please try again later.\"\n}"
+    }
+  ],
+  "blocks": [
+    {
+      "id": "19d3c10d-3508-4281-93a8-d92ef444de24",
+      "type": "prose",
+      "props": {
+        "variant": "heading",
+        "level": "h2"
+      },
+      "content": "Initialize Payment — Checkout Flow",
+      "meta": {}
+    },
+    {
+      "id": "70928f83-f699-4d7c-9a4e-4d49ce6f65f0",
+      "type": "prose",
+      "props": {
+        "variant": "body"
+      },
+      "content": "**Endpoint:** `POST /v1/payment/init`\n\nCreates a new card payment transaction. Vesicash returns a hosted `payment_link` to which you redirect the customer. Vesicash handles card data collection and 3DS2 entirely.\n\n---",
+      "meta": {}
+    },
+    {
+      "id": "19f8dba3-c62b-4567-924e-7bac41dbc92e",
+      "type": "prose",
+      "props": {
+        "variant": "heading",
+        "level": "h3"
+      },
+      "content": "Request Body",
+      "meta": {}
+    },
+    {
+      "id": "cbbc35f6-ed12-4fe2-b418-f2596657a1e2",
+      "type": "prose",
+      "props": {
+        "variant": "body"
+      },
+      "content": "---",
+      "meta": {}
+    },
+    {
+      "id": "b9b4751a-1da3-4030-92db-9db85c18f04d",
+      "type": "prose",
+      "props": {
+        "variant": "heading",
+        "level": "h3"
+      },
+      "content": "Response",
+      "meta": {}
+    },
+    {
+      "id": "73b65449-1ce6-43cc-8b37-c96b9a1b8bec",
+      "type": "code",
+      "props": {
+        "language": "json"
+      },
+      "content": "{\n  \"status\": \"success\",\n  \"code\": 200,\n  \"message\": \"Payment initialized\",\n  \"data\": {\n    \"payment_link\": \"https://checkout.vesicash.com/pay/abc123\",\n    \"reference\": \"APX-REF-XXXXXX\",\n    \"payment_id\": \"pay_XXXXXX\",\n    \"status\": \"pending\"\n  }\n}",
+      "meta": {}
+    },
+    {
+      "id": "ca348118-5626-43e7-a6c9-afdc9084bdc3",
+      "type": "prose",
+      "props": {
+        "variant": "body"
+      },
+      "content": "---",
+      "meta": {}
+    },
+    {
+      "id": "a0b9d62b-60dc-4579-9829-7ea4c06e544b",
+      "type": "prose",
+      "props": {
+        "variant": "heading",
+        "level": "h3"
+      },
+      "content": "Next Step",
+      "meta": {}
+    },
+    {
+      "id": "e2f6b2f6-5923-442d-9cdd-a10f105defde",
+      "type": "prose",
+      "props": {
+        "variant": "body"
+      },
+      "content": "Redirect the customer to `data.payment_link`. After payment, Vesicash will redirect back to your `redirect_success_url` or `redirect_failed_url`. **Always verify the outcome using `GET /v1/payment/:reference`.**",
+      "meta": {}
+    }
+  ]
+}

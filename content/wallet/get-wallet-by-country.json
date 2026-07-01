@@ -1,0 +1,125 @@
+{
+  "type": "endpoint",
+  "title": "Get Wallet by Country",
+  "meta": {
+    "description": "",
+    "hidden": false
+  },
+  "method": "GET",
+  "path": "/api/v1/wallet/{{country_code}}",
+  "headers": [
+    {
+      "key": "x-api-key",
+      "value": "{{secret_key}}",
+      "description": ""
+    },
+    {
+      "key": "Content-Type",
+      "value": "application/json",
+      "description": ""
+    }
+  ],
+  "body": "",
+  "params": [
+    {
+      "name": "country_code",
+      "type": "string",
+      "required": true,
+      "description": "ISO 3166-1 alpha-2 country code for the wallet to retrieve. Vesicash maintains a separate wallet per supported country. Example: `GH` for Ghana, `ZM` for Zambia, `NG` for Nigeria, `KE` for Kenya."
+    }
+  ],
+  "responses": [
+    {
+      "name": "200",
+      "status": "OK",
+      "code": 200,
+      "body": "{\n    \"success\": true,\n    \"code\": 200,\n    \"data\": {\n        \"uuid\": \"6563a12c-87d9-4e40-b6c7-4d0cb80c6d87\",\n        \"country_code\": \"GH\",\n        \"currency\": \"GHS\",\n        \"balance\": 0.22,\n        \"collection_balance\": 8.42,\n        \"status\": \"active\"\n    }\n}"
+    },
+    {
+      "name": "401",
+      "status": "Unauthorized",
+      "code": 401,
+      "body": "{\n    \"success\": false,\n    \"code\": 401,\n    \"message\": \"Unauthorized. Invalid or missing API key.\"\n}"
+    },
+    {
+      "name": "500",
+      "status": "Internal Server Error",
+      "code": 500,
+      "body": "{\n    \"success\": false,\n    \"code\": 500,\n    \"message\": \"Internal Server Error. An unexpected error occurred. Please try again later.\"\n}"
+    }
+  ],
+  "blocks": [
+    {
+      "id": "e88edeac-c725-4e48-b461-c5e48c219bfc",
+      "type": "prose",
+      "props": {
+        "variant": "body"
+      },
+      "content": "**Endpoint:** `GET /api/v1/wallet/:country_code`\n\nReturns the single wallet for the specified country. Use the `country_code` collection variable (default: `GH`) or pass a specific ISO code.\n\n---",
+      "meta": {}
+    },
+    {
+      "id": "fdd3a300-1a29-4391-956d-7a3ff012b7fa",
+      "type": "prose",
+      "props": {
+        "variant": "heading",
+        "level": "h3"
+      },
+      "content": "Path Parameters",
+      "meta": {}
+    },
+    {
+      "id": "d3ea8b66-a50b-417e-83c9-8aee4e80f8f5",
+      "type": "prose",
+      "props": {
+        "variant": "body"
+      },
+      "content": "---",
+      "meta": {}
+    },
+    {
+      "id": "9086bddc-d7fd-4cba-9880-a15ab38cf0b6",
+      "type": "prose",
+      "props": {
+        "variant": "heading",
+        "level": "h3"
+      },
+      "content": "Headers",
+      "meta": {}
+    },
+    {
+      "id": "3313fba4-4b0e-408e-9912-8b5b371ecb73",
+      "type": "table",
+      "props": {
+        "headers": [
+          {
+            "text": "Header"
+          },
+          {
+            "text": "Required"
+          },
+          {
+            "text": "Description"
+          }
+        ],
+        "rows": [
+          {
+            "cells": [
+              {
+                "text": "`x-api-key`"
+              },
+              {
+                "text": "✅"
+              },
+              {
+                "text": "Your Vesicash secret key"
+              }
+            ]
+          }
+        ]
+      },
+      "content": null,
+      "meta": {}
+    }
+  ]
+}
