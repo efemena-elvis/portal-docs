@@ -35,40 +35,61 @@
       "meta": {}
     },
     {
-      "id": "413a5ffa-b579-4982-adbd-6e6d68cbc105",
-      "type": "code",
-      "props": {
-        "language": "@step number=1 title=\"Check your wallet balance\""
-      },
-      "content": "Call `GET /api/v1/merchant/wallets` and confirm `balance` is greater than or equal to the payout amount. Payouts fail immediately with `INSUFFICIENT_FUNDS` if your balance is too low.",
-      "meta": {}
-    },
-    {
-      "id": "4c7250fa-8ecd-4198-9139-6ad1d586b69a",
-      "type": "code",
-      "props": {
-        "language": "@step number=2 title=\"Initiate the payout\""
-      },
-      "content": "Call `POST /v1/payment/payouts/process` with recipient details and the amount. Vesicash queues the payout asynchronously and returns a `reference`.",
-      "meta": {}
-    },
-    {
-      "id": "34a68c88-c32d-4df9-8224-5ac2068c8dca",
-      "type": "code",
-      "props": {
-        "language": "@step number=3 title=\"Receive the webhook\""
-      },
-      "content": "Vesicash POSTs a `payout.completed` or `payout.failed` event to your `webhook_url` when the transfer is processed.",
-      "meta": {}
-    },
-    {
-      "id": "cbacd078-ad3e-4083-b3d6-878faf71b9ef",
-      "type": "code",
-      "props": {
-        "language": "@step number=4 title=\"Verify the outcome\" last=true"
-      },
-      "content": "Call `GET /v1/payment/:reference` and confirm `is_disbursed: true` before updating your records.",
-      "meta": {}
+      "id": "c9d4e2f7-3a5b-4c8d-9e1f-6b7a8c9d0e1f",
+      "type": "steps",
+      "props": {},
+      "content": null,
+      "meta": {},
+      "children": [
+        {
+          "id": "413a5ffa-b579-4982-adbd-6e6d68cbc105",
+          "type": "step",
+          "props": {
+            "number": 1,
+            "title": "Check your wallet balance",
+            "description": "Call `GET /api/v1/merchant/wallets` and confirm `balance` is greater than or equal to the payout amount. Payouts fail immediately with `INSUFFICIENT_FUNDS` if your balance is too low.",
+            "last": false
+          },
+          "content": null,
+          "meta": {}
+        },
+        {
+          "id": "4c7250fa-8ecd-4198-9139-6ad1d586b69a",
+          "type": "step",
+          "props": {
+            "number": 2,
+            "title": "Initiate the payout",
+            "description": "Call `POST /v1/payment/payouts/process` with recipient details and the amount. Vesicash queues the payout asynchronously and returns a `reference`.",
+            "last": false
+          },
+          "content": null,
+          "meta": {}
+        },
+        {
+          "id": "34a68c88-c32d-4df9-8224-5ac2068c8dca",
+          "type": "step",
+          "props": {
+            "number": 3,
+            "title": "Receive the webhook",
+            "description": "Vesicash POSTs a `payout.completed` or `payout.failed` event to your `webhook_url` when the transfer is processed.",
+            "last": false
+          },
+          "content": null,
+          "meta": {}
+        },
+        {
+          "id": "cbacd078-ad3e-4083-b3d6-878faf71b9ef",
+          "type": "step",
+          "props": {
+            "number": 4,
+            "title": "Verify the outcome",
+            "description": "Call `GET /v1/payment/:reference` and confirm `is_disbursed: true` before updating your records.",
+            "last": true
+          },
+          "content": null,
+          "meta": {}
+        }
+      ]
     },
     {
       "id": "082e2040-ceea-4be1-83a7-b41b277056cb",

@@ -44,40 +44,61 @@
       "meta": {}
     },
     {
-      "id": "58737a8b-8673-4645-b8a0-6bbeca597a71",
-      "type": "code",
-      "props": {
-        "language": "@step number=1 title=\"Initialize the payment\""
-      },
-      "content": "Call `POST /v1/payment/init`. Vesicash returns a `payment_link` and a `reference`.",
-      "meta": {}
-    },
-    {
-      "id": "0997b0ce-017a-4e1b-a9ef-c7f256dc5821",
-      "type": "code",
-      "props": {
-        "language": "@step number=2 title=\"Redirect the customer\""
-      },
-      "content": "Send the customer to `data.payment_link`. Vesicash handles card data collection and 3DS2 entirely.",
-      "meta": {}
-    },
-    {
-      "id": "812910f6-39af-4320-b251-e304e31ac5dd",
-      "type": "code",
-      "props": {
-        "language": "@step number=3 title=\"Handle the redirect\""
-      },
-      "content": "After payment, Vesicash redirects to your `redirect_success_url` or `redirect_failed_url` with `?payment_reference=<ref>` appended.",
-      "meta": {}
-    },
-    {
-      "id": "51043438-b6b6-4303-bcd6-94389689d13e",
-      "type": "code",
-      "props": {
-        "language": "@step number=4 title=\"Verify the outcome\" last=true"
-      },
-      "content": "**Always** confirm with `GET /v1/payment/:reference` before fulfilling the order. Never rely on redirect parameters alone.",
-      "meta": {}
+      "id": "a1b2c3d4-0001-4000-8000-000000000001",
+      "type": "steps",
+      "props": {},
+      "content": null,
+      "meta": {},
+      "children": [
+        {
+          "id": "58737a8b-8673-4645-b8a0-6bbeca597a71",
+          "type": "step",
+          "props": {
+            "number": 1,
+            "title": "Initialize the payment",
+            "description": "Call `POST /api/v1/transactions/initiate`. Vesicash returns a `payment_link` and a `reference`.",
+            "last": false
+          },
+          "content": null,
+          "meta": {}
+        },
+        {
+          "id": "0997b0ce-017a-4e1b-a9ef-c7f256dc5821",
+          "type": "step",
+          "props": {
+            "number": 2,
+            "title": "Redirect the customer",
+            "description": "Send the customer to `data.payment_link`. Vesicash handles card data collection and 3DS2 entirely.",
+            "last": false
+          },
+          "content": null,
+          "meta": {}
+        },
+        {
+          "id": "812910f6-39af-4320-b251-e304e31ac5dd",
+          "type": "step",
+          "props": {
+            "number": 3,
+            "title": "Handle the redirect",
+            "description": "After payment, Vesicash redirects to your `redirect_success_url` or `redirect_failed_url` with `?payment_reference=<ref>` appended.",
+            "last": false
+          },
+          "content": null,
+          "meta": {}
+        },
+        {
+          "id": "51043438-b6b6-4303-bcd6-94389689d13e",
+          "type": "step",
+          "props": {
+            "number": 4,
+            "title": "Verify the outcome",
+            "description": "**Always** confirm with `GET /api/v1/transactions/{{reference}}/status` before fulfilling the order. Never rely on redirect parameters alone.",
+            "last": true
+          },
+          "content": null,
+          "meta": {}
+        }
+      ]
     },
     {
       "id": "86bf0595-c1ae-4acd-a892-c1e96ee1f9a8",
@@ -99,40 +120,61 @@
       "meta": {}
     },
     {
-      "id": "d117eec1-5c92-490b-b5d2-65ea023c6e74",
-      "type": "code",
-      "props": {
-        "language": "@step number=1 title=\"Initialize the payment\""
-      },
-      "content": "Call `POST /v1/payment/init` with `integration_type: \"DIRECT_API\"`. You receive a `reference` — no `payment_link` is returned.",
-      "meta": {}
-    },
-    {
-      "id": "24afa8f9-2702-4709-a9d9-c7870a2371f8",
-      "type": "code",
-      "props": {
-        "language": "@step number=2 title=\"Collect and submit card details\""
-      },
-      "content": "POST the customer's card details and device fingerprint to `POST /v1/payment/pay/:reference`.",
-      "meta": {}
-    },
-    {
-      "id": "49f7e1be-c65c-4fb3-9c9a-a478dc63c90b",
-      "type": "code",
-      "props": {
-        "language": "@step number=3 title=\"Handle 3DS2 challenge (if required)\""
-      },
-      "content": "If the issuer returns `challenge_required`, display the ACS challenge to the customer and await the webhook confirmation.",
-      "meta": {}
-    },
-    {
-      "id": "4f5eec39-a643-4ab7-a789-10add988c289",
-      "type": "code",
-      "props": {
-        "language": "@step number=4 title=\"Verify the outcome\" last=true"
-      },
-      "content": "Call `GET /v1/payment/:reference` to confirm `status: \"success\"` before fulfilling the order.",
-      "meta": {}
+      "id": "b8c2e5a1-4f6d-4b8e-9c3a-7d5f1e2b4c8a",
+      "type": "steps",
+      "props": {},
+      "content": null,
+      "meta": {},
+      "children": [
+        {
+          "id": "d117eec1-5c92-490b-b5d2-65ea023c6e74",
+          "type": "step",
+          "props": {
+            "number": 1,
+            "title": "Initialize the payment",
+            "description": "Call `POST /api/v1/transactions/initiate` with `integration_type: \"DIRECT_API\"`. You receive a `reference` — no `payment_link` is returned.",
+            "last": false
+          },
+          "content": null,
+          "meta": {}
+        },
+        {
+          "id": "24afa8f9-2702-4709-a9d9-c7870a2371f8",
+          "type": "step",
+          "props": {
+            "number": 2,
+            "title": "Collect and submit card details",
+            "description": "POST the customer's card details and device fingerprint to `POST /api/v1/transactions/{{reference}}/pay`.",
+            "last": false
+          },
+          "content": null,
+          "meta": {}
+        },
+        {
+          "id": "49f7e1be-c65c-4fb3-9c9a-a478dc63c90b",
+          "type": "step",
+          "props": {
+            "number": 3,
+            "title": "Handle 3DS2 challenge (if required)",
+            "description": "If the issuer returns `challenge_required`, display the ACS challenge to the customer and await the webhook confirmation.",
+            "last": false
+          },
+          "content": null,
+          "meta": {}
+        },
+        {
+          "id": "4f5eec39-a643-4ab7-a789-10add988c289",
+          "type": "step",
+          "props": {
+            "number": 4,
+            "title": "Verify the outcome",
+            "description": "Call `GET /api/v1/transactions/{{reference}}/status` to confirm `status: \"success\"` before fulfilling the order.",
+            "last": true
+          },
+          "content": null,
+          "meta": {}
+        }
+      ]
     },
     {
       "id": "334091ab-5812-4d5d-b47c-9f81ec3f01a7",

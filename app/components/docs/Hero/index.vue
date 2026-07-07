@@ -31,11 +31,14 @@
 
 <script setup lang="ts">
 interface Props {
-  title: string;
-  description: string;
+  title?: string;
+  description?: string;
   badge?: string;
   pulse?: boolean;
 }
 
-defineProps<Props>();
+withDefaults(defineProps<Props>(), {
+  title: '',
+  description: '',
+})
 </script>

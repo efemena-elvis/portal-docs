@@ -19,9 +19,9 @@
             @click="removeStep(ci)"><UiIcon name="trash" size="xs" /></button>
         </div>
         <UiTextarea
-          :model-value="child.content ?? ''"
+          :model-value="child.props.description ?? ''"
           placeholder="Body (optional)"
-          @update:model-value="updateChild(ci, { content: $event || null })"
+          @update:model-value="updateChild(ci, { props: { ...child.props, description: $event || undefined } })"
         />
       </div>
     </div>
