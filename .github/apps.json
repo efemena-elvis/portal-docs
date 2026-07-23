@@ -1,0 +1,16 @@
+[
+  {
+    "name": "vesicash-docs",
+    "path": "apps/vesicash-docs",
+    "deploy_target": "vercel",
+    "vercel": {
+      "project_id_secret": "VERCEL_PROJECT_ID_VESICASH_DOCS",
+      "production_url": "https://developers.vesicash.com",
+      "production_branch": "main"
+    },
+    "aws": {
+      "s3_bucket_secret": "S3_BUCKET_VESICASH_DOCS",
+      "cloudfront_dist_secret": "CLOUDFRONT_DIST_ID_VESICASH_DOCS"
+    }
+  }
+]

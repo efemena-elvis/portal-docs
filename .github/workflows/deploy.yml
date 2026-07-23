@@ -1,0 +1,96 @@
+name: Deploy
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main]
+
+concurrency:
+  group: deploy-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  # ── Step 1: detect which apps are affected ─────────────────────────────────
+  detect:
+    name: Detect affected apps
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.build-matrix.outputs.matrix }}
+      has_apps: ${{ steps.build-matrix.outputs.has_apps }}
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2   # need HEAD^ for turbo affected detection
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build deploy matrix from affected apps
+        id: build-matrix
+        run: |
+          REGISTRY=".github/apps.json"
+          AFFECTED_JSON=$(pnpm turbo run build --filter="...[HEAD^1]" --dry-run=json 2>/dev/null || echo '{"tasks":[]}')
+
+          # Build matrix entries for apps that turbo says are affected
+          MATRIX=$(node -e "
+            const fs = require('fs');
+            const registry = JSON.parse(fs.readFileSync('$REGISTRY', 'utf8'));
+            const affected = $AFFECTED_JSON;
+            const affectedNames = new Set(
+              (affected.tasks || [])
+                .filter(t => t.task === 'build')
+                .map(t => t.package)
+            );
+
+            // On first push (no HEAD^) or when packages/docs-core changes, deploy all apps
+            const forceAll = !affected.tasks || affected.tasks.length === 0
+              || (affected.tasks || []).some(t => t.package === '@docs/core');
+
+            const apps = registry.filter(app => forceAll || affectedNames.has(app.name));
+            console.log(JSON.stringify({ include: apps }));
+          ")
+
+          echo "matrix=$MATRIX" >> "$GITHUB_OUTPUT"
+          COUNT=$(echo "$MATRIX" | node -e "const d=require('/dev/stdin');process.stdout.write(String(JSON.parse(d).include.length))")
+          echo "has_apps=$([ $COUNT -gt 0 ] && echo 'true' || echo 'false')" >> "$GITHUB_OUTPUT"
+          echo "Deploying $COUNT app(s)"
+
+  # ── Step 2: route each affected app to the right deployment pipeline ───────
+  deploy-vercel:
+    name: Deploy ${{ matrix.name }} → Vercel
+    needs: detect
+    if: needs.detect.outputs.has_apps == 'true'
+    strategy:
+      fail-fast: false
+      matrix: ${{ fromJson(needs.detect.outputs.matrix) }}
+
+    uses: ./.github/workflows/_deploy-vercel.yml
+    with:
+      app_name: ${{ matrix.name }}
+      app_path: ${{ matrix.path }}
+      production_branch: ${{ matrix.vercel.production_branch }}
+      production_url: ${{ matrix.vercel.production_url }}
+      is_production: ${{ github.ref == format('refs/heads/{0}', matrix.vercel.production_branch) }}
+    secrets:
+      VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+      VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+      VERCEL_PROJECT_ID: ${{ secrets[matrix.vercel.project_id_secret] }}
+      ADMIN_ACCESS_CODE: ${{ secrets.ADMIN_ACCESS_CODE }}
+      ADMIN_JWT_SECRET: ${{ secrets.ADMIN_JWT_SECRET }}
+      R2_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
+      R2_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
+      R2_BUCKET_NAME: ${{ secrets.R2_BUCKET_NAME }}
+      R2_ENDPOINT: ${{ secrets.R2_ENDPOINT }}
+
+  # deploy-aws:  ← future: mirror deploy-vercel but call _deploy-aws.yml

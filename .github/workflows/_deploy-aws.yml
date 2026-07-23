@@ -1,0 +1,119 @@
+name: _Deploy app to AWS (reusable — placeholder)
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Mirrors the structure of _deploy-vercel.yml so switching an app's
+# deploy_target from "vercel" to "aws" in .github/apps.json is the only
+# change needed on the app side.
+#
+# To activate:
+#   1. Set deploy_target: "aws" for the app in .github/apps.json
+#   2. Add a `deploy-aws` job in deploy.yml (see the commented line there)
+#   3. Add these secrets to GitHub:
+#        AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, AWS_REGION
+#        S3_BUCKET_<APP>  (matches aws.s3_bucket_secret in apps.json)
+#        CLOUDFRONT_DIST_<APP>  (matches aws.cloudfront_dist_secret)
+#   4. Uncomment the deploy steps below
+# ─────────────────────────────────────────────────────────────────────────────
+
+on:
+  workflow_call:
+    inputs:
+      app_name:
+        required: true
+        type: string
+      app_path:
+        required: true
+        type: string
+      production_branch:
+        required: true
+        type: string
+      production_url:
+        required: true
+        type: string
+      is_production:
+        required: true
+        type: boolean
+    secrets:
+      AWS_ACCESS_KEY_ID:
+        required: true
+      AWS_SECRET_ACCESS_KEY:
+        required: true
+      AWS_REGION:
+        required: true
+      S3_BUCKET:
+        required: true
+      CLOUDFRONT_DIST_ID:
+        required: true
+      ADMIN_ACCESS_CODE:
+        required: false
+      ADMIN_JWT_SECRET:
+        required: false
+      R2_ACCESS_KEY_ID:
+        required: false
+      R2_SECRET_ACCESS_KEY:
+        required: false
+      R2_BUCKET_NAME:
+        required: false
+      R2_ENDPOINT:
+        required: false
+
+jobs:
+  deploy:
+    name: ${{ inputs.is_production && 'Production' || 'Preview' }} → AWS
+    runs-on: ubuntu-latest
+    environment:
+      name: ${{ inputs.is_production && 'production' || 'preview' }}
+      url: ${{ inputs.is_production && inputs.production_url || '' }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build
+        run: pnpm turbo run build --filter=${{ inputs.app_name }}
+        env:
+          ADMIN_ACCESS_CODE: ${{ secrets.ADMIN_ACCESS_CODE }}
+          ADMIN_JWT_SECRET: ${{ secrets.ADMIN_JWT_SECRET }}
+          R2_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
+          R2_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
+          R2_BUCKET_NAME: ${{ secrets.R2_BUCKET_NAME }}
+          R2_ENDPOINT: ${{ secrets.R2_ENDPOINT }}
+
+      # ── Uncomment when AWS credentials are configured ──────────────────────
+      # - name: Configure AWS credentials
+      #   uses: aws-actions/configure-aws-credentials@v4
+      #   with:
+      #     aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      #     aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      #     aws-region: ${{ secrets.AWS_REGION }}
+      #
+      # - name: Sync static assets to S3 (immutable, long cache)
+      #   run: |
+      #     aws s3 sync ${{ inputs.app_path }}/.output/public \
+      #       s3://${{ secrets.S3_BUCKET }} \
+      #       --delete \
+      #       --exclude "index.html" \
+      #       --cache-control "public,max-age=31536000,immutable"
+      #
+      # - name: Upload index.html (no-cache)
+      #   run: |
+      #     aws s3 cp ${{ inputs.app_path }}/.output/public/index.html \
+      #       s3://${{ secrets.S3_BUCKET }}/index.html \
+      #       --cache-control "public,max-age=0,must-revalidate"
+      #
+      # - name: Invalidate CloudFront
+      #   run: |
+      #     aws cloudfront create-invalidation \
+      #       --distribution-id ${{ secrets.CLOUDFRONT_DIST_ID }} \
+      #       --paths "/*"
