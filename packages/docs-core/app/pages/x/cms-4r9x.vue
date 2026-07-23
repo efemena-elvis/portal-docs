@@ -506,8 +506,8 @@
 <script setup lang="ts">
 // All code example strings live here — never inline in the template.
 // Triple-backtick strings inside Vue template bindings break the compiler.
-import docsConfig from '../../../docs.config'
-const API_BASE_URL = docsConfig.api.baseUrl
+const { api } = useRuntimeConfig().public as { api: { baseUrl: string } }
+const API_BASE_URL = api.baseUrl
 
 const ex = {
   frontmatter: `---\ndocs-type: guide\n---`,

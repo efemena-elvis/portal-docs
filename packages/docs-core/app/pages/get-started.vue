@@ -80,9 +80,8 @@
 </template>
 
 <script setup lang="ts">
-import docsConfig from '../../docs.config'
-
-const baseUrl = ref(docsConfig.api.baseUrl)
+const { api } = useRuntimeConfig().public as { api: { baseUrl: string } }
+const baseUrl = ref(api.baseUrl)
 
 const headersSnippet = `x-api-key: YOUR_SECRET_KEY
 Idempotency-Key: a4f3b2c1-d5e6-7890-abcd-ef1234567890

@@ -37,7 +37,7 @@
 <script setup lang="ts">
 import type { Block, ProseBlock, CalloutBlock, CodeBlock, MermaidBlock, StepsBlock, StepBlock, ParamsTableBlock, TableBlock, AuthNoteBlock, MethodPathBlock, CodeResponseBlock } from '~/types/content'
 import { h, resolveComponent, type VNode } from 'vue'
-import docsConfig from '../../../../docs.config'
+const _apiBaseUrl = (useRuntimeConfig().public as { api: { baseUrl: string } }).api.baseUrl
 
 interface Props {
   blocks: Block[]
@@ -485,7 +485,7 @@ function renderMethodPath(block: MethodPathBlock): VNode {
     h(CDocsEndpointHeader, {
       method: block.props.method,
       urlPath: block.props.path,
-      baseUrl: block.props.baseUrl || docsConfig.api.baseUrl,
+      baseUrl: block.props.baseUrl || _apiBaseUrl,
     }),
   ])
 }
@@ -500,7 +500,7 @@ function renderEndpointRef(block: Block): VNode {
       default: () => h(CDocsEndpointHeader, {
         method: p.method,
         urlPath: p.path,
-        baseUrl: docsConfig.api.baseUrl,
+        baseUrl: _apiBaseUrl,
       })
     })
   ])

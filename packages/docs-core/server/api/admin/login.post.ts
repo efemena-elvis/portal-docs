@@ -1,8 +1,10 @@
 import { signToken } from '../../utils/adminToken'
 import { createHmac, timingSafeEqual } from 'crypto'
 
+type ServerConfig = { adminAccessCode: string; adminJwtSecret: string }
+
 export default defineEventHandler(async (event) => {
-  const { adminAccessCode, adminJwtSecret } = useRuntimeConfig()
+  const { adminAccessCode, adminJwtSecret } = useRuntimeConfig() as unknown as ServerConfig
   const body = await readBody<{ code: string }>(event)
 
   if (!body?.code) {

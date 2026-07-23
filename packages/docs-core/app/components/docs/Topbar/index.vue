@@ -214,8 +214,6 @@
 </template>
 
 <script setup lang="ts">
-import { useRuntimeConfig } from "#app";
-
 const route = useRoute();
 const config = useRuntimeConfig();
 const { isAdmin, logout } = useAdmin();

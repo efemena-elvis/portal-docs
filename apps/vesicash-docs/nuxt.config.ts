@@ -51,6 +51,7 @@ export default defineNuxtConfig({
       design: docsConfig.design,
       layout: docsConfig.layout,
       nav: docsConfig.nav,
+      api: docsConfig.api,
     }
   }
 })

@@ -8,7 +8,7 @@ export default defineEventHandler(async (event) => {
   const body = await readBody(event)
   if (!body) throw createError({ statusCode: 400, message: 'Collection data required' })
 
-  const { sourceJsonPath: jsonPath } = useRuntimeConfig()
+  const { sourceJsonPath: jsonPath } = useRuntimeConfig() as unknown as { sourceJsonPath: string }
   if (!jsonPath) throw createError({ statusCode: 503, message: 'JSON save path not configured' })
 
   const absolute = resolve(process.cwd(), jsonPath)

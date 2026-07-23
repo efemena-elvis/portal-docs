@@ -1,5 +1,4 @@
 import type { Page } from '~/types/page'
-import docsConfig from '../../docs.config'
 
 // ── Module-level page cache ────────────────────────────────────────────────────
 // Persists across navigations for the lifetime of the session.
@@ -26,7 +25,7 @@ export function useEndpointPage(slug: Ref<string>) {
   const cached = _cache.get(slug.value) ?? null
   const page = ref<Page | null>(cached)
   const loading = ref(cached === null)
-  const baseUrl = ref(docsConfig.api.baseUrl)
+  const baseUrl = ref((useRuntimeConfig().public as { api: { baseUrl: string } }).api.baseUrl)
   const notFound = ref(false)
 
   async function load(opts: { bust?: boolean; scrollToTop?: boolean } = {}) {

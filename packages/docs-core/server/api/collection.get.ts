@@ -1,10 +1,11 @@
-import { $fetch } from 'ofetch'
 import { readFileSync, existsSync } from 'fs'
 import { resolve } from 'path'
 
+type ServerConfig = { sourcePriority: string; sourceJsonPath: string; sourcePostmanCacheTtlMs: number; postmanApiKey: string; postmanCollectionUid: string }
+
 let _cache: { data: any; fetchedAt: number } | null = null
 
-async function fromPostman(apiKey: string, collectionUid: string, cacheTtlMs: number): Promise<any> {
+async function fromPostman(apiKey: string, collectionUid: string, cacheTtlMs: number): Promise<unknown> {
   const effectiveTtl = import.meta.dev ? 10_000 : cacheTtlMs
   const now = Date.now()
 
@@ -12,16 +13,16 @@ async function fromPostman(apiKey: string, collectionUid: string, cacheTtlMs: nu
     return _cache.data
   }
 
-  const response = await $fetch<{ collection: any }>(
+  const response = await $fetch<{ collection: unknown }>(
     `https://api.getpostman.com/collections/${collectionUid}`,
     { headers: { 'X-Api-Key': apiKey } }
   )
 
-  if (!response?.collection) {
+  if (!(response as { collection?: unknown })?.collection) {
     throw new Error('Invalid response from Postman API')
   }
 
-  _cache = { data: response.collection, fetchedAt: now }
+  _cache = { data: (response as { collection: unknown }).collection, fetchedAt: now }
   return response.collection
 }
 
@@ -42,7 +43,7 @@ export default defineEventHandler(async () => {
     sourcePostmanCacheTtlMs: cacheTtlMs,
     postmanApiKey,
     postmanCollectionUid,
-  } = useRuntimeConfig()
+  } = useRuntimeConfig() as unknown as ServerConfig
 
   const hasPostmanCredentials = Boolean(postmanApiKey && postmanCollectionUid)
 

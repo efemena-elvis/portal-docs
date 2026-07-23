@@ -1,0 +1,90 @@
+name: Deploy — AWS
+
+# ─────────────────────────────────────────────────────────────────────────────
+# AWS deployment pipeline (placeholder — not yet active)
+#
+# When ready, this workflow will:
+#   1. Build the app with `pnpm turbo run build --filter=<app>`
+#   2. Sync the .output/public static assets to an S3 bucket
+#   3. Invalidate the CloudFront distribution cache
+#
+# Required GitHub secrets to add when activating:
+#   AWS_ACCESS_KEY_ID        — IAM access key with S3 + CloudFront permissions
+#   AWS_SECRET_ACCESS_KEY    — IAM secret key
+#   AWS_REGION               — e.g. eu-west-1
+#   S3_BUCKET_VESICASH_DOCS  — e.g. docs.vesicash.com
+#   CLOUDFRONT_DIST_ID       — CloudFront distribution ID
+#   ADMIN_ACCESS_CODE        — same as Vercel secrets
+#   ADMIN_JWT_SECRET
+#   R2_ACCESS_KEY_ID
+#   R2_SECRET_ACCESS_KEY
+#   R2_BUCKET_NAME
+#   R2_ENDPOINT
+#
+# To activate: remove the `if: false` guard below and uncomment the deploy steps.
+# ─────────────────────────────────────────────────────────────────────────────
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: aws-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  deploy-aws:
+    name: Deploy to AWS (disabled)
+    runs-on: ubuntu-latest
+    if: false  # ← remove this line when ready to activate
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build vesicash-docs
+        run: pnpm turbo run build --filter=vesicash-docs
+        env:
+          ADMIN_ACCESS_CODE: ${{ secrets.ADMIN_ACCESS_CODE }}
+          ADMIN_JWT_SECRET: ${{ secrets.ADMIN_JWT_SECRET }}
+          R2_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
+          R2_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
+          R2_BUCKET_NAME: ${{ secrets.R2_BUCKET_NAME }}
+          R2_ENDPOINT: ${{ secrets.R2_ENDPOINT }}
+
+      # ── Uncomment when AWS credentials are configured ──────────────────────
+      # - name: Configure AWS credentials
+      #   uses: aws-actions/configure-aws-credentials@v4
+      #   with:
+      #     aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      #     aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      #     aws-region: ${{ secrets.AWS_REGION }}
+      #
+      # - name: Sync static output to S3
+      #   run: |
+      #     aws s3 sync apps/vesicash-docs/.output/public s3://${{ secrets.S3_BUCKET_VESICASH_DOCS }} \
+      #       --delete \
+      #       --cache-control "public,max-age=31536000,immutable" \
+      #       --exclude "index.html" \
+      #       --exclude "*.json"
+      #     aws s3 cp apps/vesicash-docs/.output/public/index.html \
+      #       s3://${{ secrets.S3_BUCKET_VESICASH_DOCS }}/index.html \
+      #       --cache-control "public,max-age=0,must-revalidate"
+      #
+      # - name: Invalidate CloudFront cache
+      #   run: |
+      #     aws cloudfront create-invalidation \
+      #       --distribution-id ${{ secrets.CLOUDFRONT_DIST_ID }} \
+      #       --paths "/*"

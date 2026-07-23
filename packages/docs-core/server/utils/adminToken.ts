@@ -46,7 +46,7 @@ export function verifyToken(token: string, secret: string): boolean {
 }
 
 export function requireAdminToken(event: Parameters<typeof getHeader>[0]): void {
-  const { adminJwtSecret } = useRuntimeConfig()
+  const { adminJwtSecret } = useRuntimeConfig() as unknown as { adminJwtSecret: string }
   const auth = getHeader(event, 'authorization') ?? ''
   const token = auth.startsWith('Bearer ') ? auth.slice(7) : ''
 

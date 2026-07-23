@@ -138,7 +138,7 @@ import type { SidebarSection } from "~/types/docs";
 import type { CreateItemType } from "~/composables/useAdminCollection";
 import type { IconName } from "~/components/ui/Icon/icons";
 import AdminDialog from "~/components/admin/AdminDialog/index.vue";
-import docsConfig from "../../docs.config";
+const { nav: navConfig } = useRuntimeConfig().public as { nav: { footerLinks: { label: string; href: string; external?: boolean }[] } }
 
 const { nav, navLoading, fetchNav } = useDocsNav();
 const { navData, invalidate } = useContentNav();
@@ -252,12 +252,12 @@ const primaryNav = computed<{ label: string; href: string }[]>(() => {
 
 const sidebarSections = computed<SidebarSection[]>(() => {
   const dynamic = [...nav.value];
-  if (docsConfig.nav.footerLinks.length) {
+  if (navConfig.footerLinks.length) {
     dynamic.push({
       title: "Reference",
       collapsible: false,
       open: true,
-      items: docsConfig.nav.footerLinks.map((link) => ({
+      items: navConfig.footerLinks.map((link) => ({
         type: "page" as const,
         title: link.label,
         path: link.href,
