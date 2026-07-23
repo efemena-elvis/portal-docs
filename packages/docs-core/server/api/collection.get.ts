@@ -1,13 +1,10 @@
 import { $fetch } from 'ofetch'
 import { readFileSync, existsSync } from 'fs'
 import { resolve } from 'path'
-import docsConfig from '../../docs.config'
 
 let _cache: { data: any; fetchedAt: number } | null = null
 
-async function fromPostman(apiKey: string, collectionUid: string): Promise<any> {
-  const { cacheTtlMs } = docsConfig.source.postman
-  // Short TTL in dev so Postman saves appear on next reload without stalling every navigation
+async function fromPostman(apiKey: string, collectionUid: string, cacheTtlMs: number): Promise<any> {
   const effectiveTtl = import.meta.dev ? 10_000 : cacheTtlMs
   const now = Date.now()
 
@@ -28,8 +25,7 @@ async function fromPostman(apiKey: string, collectionUid: string): Promise<any> 
   return response.collection
 }
 
-function fromJson(): any {
-  const jsonPath = docsConfig.source.json.path
+function fromJson(jsonPath: string): any {
   if (!jsonPath) throw new Error('JSON fallback path is not configured')
 
   const absolute = resolve(process.cwd(), jsonPath)
@@ -40,15 +36,20 @@ function fromJson(): any {
 }
 
 export default defineEventHandler(async () => {
-  const { priority } = docsConfig.source
-  const { postmanApiKey, postmanCollectionUid } = useRuntimeConfig()
+  const {
+    sourcePriority: priority,
+    sourceJsonPath: jsonPath,
+    sourcePostmanCacheTtlMs: cacheTtlMs,
+    postmanApiKey,
+    postmanCollectionUid,
+  } = useRuntimeConfig()
 
   const hasPostmanCredentials = Boolean(postmanApiKey && postmanCollectionUid)
 
   if (priority === 'postman') {
     if (hasPostmanCredentials) {
       try {
-        return await fromPostman(postmanApiKey, postmanCollectionUid)
+        return await fromPostman(postmanApiKey, postmanCollectionUid, cacheTtlMs)
       } catch (postmanErr) {
         console.warn('[docs] Postman fetch failed, trying JSON fallback:', (postmanErr as Error).message)
       }
@@ -57,7 +58,7 @@ export default defineEventHandler(async () => {
     }
 
     try {
-      return fromJson()
+      return fromJson(jsonPath)
     } catch (jsonErr) {
       throw createError({ statusCode: 502, message: `Collection unavailable. ${(jsonErr as Error).message}` })
     }
@@ -65,7 +66,7 @@ export default defineEventHandler(async () => {
 
   // priority === 'json'
   try {
-    return fromJson()
+    return fromJson(jsonPath)
   } catch (jsonErr) {
     console.warn('[docs] JSON source failed, trying Postman fallback:', (jsonErr as Error).message)
 
@@ -74,7 +75,7 @@ export default defineEventHandler(async () => {
     }
 
     try {
-      return await fromPostman(postmanApiKey, postmanCollectionUid)
+      return await fromPostman(postmanApiKey, postmanCollectionUid, cacheTtlMs)
     } catch (postmanErr) {
       throw createError({ statusCode: 502, message: `Both sources failed. ${(postmanErr as Error).message}` })
     }

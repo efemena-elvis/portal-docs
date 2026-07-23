@@ -1,13 +1,12 @@
 import docsConfig from './docs.config'
 
 export default defineNuxtConfig({
+  extends: ['../../packages/docs-core'],
   compatibilityDate: '2025-01-01',
   ssr: false,
   nitro: {
     preset: process.env.VERCEL ? 'vercel' : undefined,
   },
-  devtools: { enabled: false },
-  modules: ['@nuxtjs/tailwindcss'],
   vite: {
     optimizeDeps: {
       include: [
@@ -22,14 +21,7 @@ export default defineNuxtConfig({
         'fuse.js',
       ],
     },
-    server: {
-      watch: {
-        // Prevent Vite HMR from reloading when draft JSON files are written to disk
-        ignored: ['**/content/**'],
-      },
-    },
   },
-  css: ['~/assets/css/main.css'],
   app: {
     head: {
       title: `${docsConfig.site.name} — ${docsConfig.site.tagline}`,
@@ -47,13 +39,13 @@ export default defineNuxtConfig({
     }
   },
   runtimeConfig: {
-    // Server-only (never sent to browser)
     postmanApiKey: process.env.POSTMAN_API_KEY ?? '',
     postmanCollectionUid: process.env.POSTMAN_COLLECTION_UID ?? '',
     adminAccessCode: process.env.ADMIN_ACCESS_CODE ?? '',
     adminJwtSecret: process.env.ADMIN_JWT_SECRET ?? 'dev-secret-change-in-production',
-
-    // Public (available on client + server)
+    sourcePriority: docsConfig.source.priority,
+    sourceJsonPath: docsConfig.source.json.path ?? '',
+    sourcePostmanCacheTtlMs: docsConfig.source.postman.cacheTtlMs,
     public: {
       site: docsConfig.site,
       design: docsConfig.design,

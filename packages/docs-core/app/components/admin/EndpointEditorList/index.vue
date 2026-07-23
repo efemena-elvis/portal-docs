@@ -73,7 +73,7 @@ function normalizeErrors(raw: unknown): ErrorsTableRow[] {
     code: (e.code as string) ?? '',
     status: Number(e.status) || 400,
     description: (e.description as string) ?? '',
-  })).filter(r => r.code.trim())
+  }))
 }
 
 // ─── Props ───────────────────────────────────────────────────────────────────
@@ -172,7 +172,7 @@ function onSectionUpdate(key: string, block: Block) {
       break
     case 'endpoint': {
       const b = block as MethodPathBlock
-      patchFields({ method: b.props.method, path: b.props.path, baseUrl: b.props.baseUrl })
+      patchFields({ method: b.props.method, path: b.props.path, baseUrl: b.props.baseUrl, hideBaseUrl: b.props.hideBaseUrl })
       break
     }
     case 'headers': {
@@ -291,7 +291,7 @@ const allSections = computed<SectionDef[]>(() => {
       showWhen: true,
       syntheticBlock: {
         id: 'ep-endpoint', type: 'method-path',
-        props: { method: mf.method || 'GET', path: mf.path || '' },
+        props: { method: mf.method || 'GET', path: mf.path || '', baseUrl: mf.baseUrl as string | undefined, hideBaseUrl: mf.hideBaseUrl as boolean | undefined },
         content: null,
         meta: { hidden: hiddenSections.value.includes('endpoint'), ...sm.endpoint },
       },

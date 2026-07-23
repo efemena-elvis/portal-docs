@@ -36,6 +36,12 @@
         @update:model-value="patchProps({ baseUrl: $event || undefined })"
       />
     </div>
+
+    <!-- Display options -->
+    <UiCheckbox
+      :model-value="block.props.hideBaseUrl === true"
+      @update:model-value="patchProps({ hideBaseUrl: $event || undefined })"
+    >Hide <code class="text-[11px]">{{ baseUrlLabel }}</code> prefix in view</UiCheckbox>
   </div>
 </template>
 
@@ -47,6 +53,7 @@ const props = defineProps<Props>()
 const emit = defineEmits<{ update: [block: MethodPathBlock] }>()
 
 const METHODS = ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'] as const
+const baseUrlLabel = '{{base_url}}'
 
 function patchProps(patch: Partial<MethodPathBlock['props']>) {
   emit('update', { ...props.block, props: { ...props.block.props, ...patch } })

@@ -4,13 +4,6 @@ export default {
   darkMode: "class",
   content: [
     "./app/**/*.{vue,ts}",
-    "./components/**/*.{vue,ts}",
-    "./layouts/**/*.{vue,ts}",
-    "./pages/**/*.{vue,ts}",
-    // Scan all CMS content files — any class an admin types ends up here,
-    // so the next build automatically includes it. No manual safelist needed.
-    "./content/**/*.json",
-    "./public/collection.json",
   ],
   // No safelist needed — content scanning covers everything authored in the CMS,
   // and the Tailwind CDN is loaded in admin mode for real-time class generation.

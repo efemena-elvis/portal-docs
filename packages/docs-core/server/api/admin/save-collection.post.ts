@@ -1,7 +1,6 @@
 import { requireAdminToken } from '../../utils/adminToken'
 import { writeFileSync } from 'fs'
 import { resolve } from 'path'
-import docsConfig from '../../../docs.config'
 
 export default defineEventHandler(async (event) => {
   requireAdminToken(event)
@@ -9,12 +8,11 @@ export default defineEventHandler(async (event) => {
   const body = await readBody(event)
   if (!body) throw createError({ statusCode: 400, message: 'Collection data required' })
 
-  const jsonPath = docsConfig.source.json.path
+  const { sourceJsonPath: jsonPath } = useRuntimeConfig()
   if (!jsonPath) throw createError({ statusCode: 503, message: 'JSON save path not configured' })
 
   const absolute = resolve(process.cwd(), jsonPath)
 
-  // Accept either bare collection object or { collection: ... } envelope
   const toSave = body.info ? { collection: body } : body
   writeFileSync(absolute, JSON.stringify(toSave, null, 2), 'utf-8')
 

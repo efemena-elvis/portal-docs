@@ -24,7 +24,10 @@ logs
 !.env.example
 
 # Draft content files — local transient state; publish before deploying
-content/**/*.draft.json
+apps/**/content/**/*.draft.json
+
+# Turbo
+.turbo
 
 api-doc-design-principles.md
 collection-conventions.md
@@ -36,14 +39,14 @@ PLAN.md
 screenshots
 
 # Old Postman collection artefacts
-public/collection.json
-public/collection.backup*.json
+apps/**/public/collection.json
+apps/**/public/collection.backup*.json
 
 # One-time migration scripts / reports
-scripts/migrate.ts
-scripts/migration-report.txt
-scripts/restructure-collection.js
-scripts/screenshot-*.py
+apps/**/scripts/migrate.ts
+apps/**/scripts/migration-report.txt
+apps/**/scripts/restructure-collection.js
+apps/**/scripts/screenshot-*.py
 
 # Internal planning docs (root-level only)
 /docs/

@@ -142,6 +142,7 @@
             :method="(mergedFields.method as string) || page.method"
             :url-path="(mergedFields.path as string) || page.path"
             :base-url="baseUrl"
+            :hide-base-url="!!(mergedFields.hideBaseUrl ?? (page as unknown as Record<string, unknown>).hideBaseUrl)"
           />
           <template v-if="isAdmin">
             <div class="absolute inset-0 rounded pointer-events-none ring-1 ring-transparent group-hover/blk:ring-brand-green/40 group-hover/blk:bg-brand-green/[0.03] transition-all duration-150" />
@@ -633,7 +634,7 @@ const hasResponse = computed(() =>
 // ─── Errors ───────────────────────────────────────────────────────────────────
 
 const errorItems = computed((): EndpointError[] =>
-  ((mergedFields.value.errors as EndpointError[]) ?? [])
+  ((mergedFields.value.errors as EndpointError[]) ?? []).filter(e => String(e.code ?? '').trim())
 )
 
 // ─── Pagination ───────────────────────────────────────────────────────────────

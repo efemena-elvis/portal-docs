@@ -1,7 +1,7 @@
 {
-  "buildCommand": "npm run build",
+  "buildCommand": "cd ../.. && pnpm install && pnpm turbo run build --filter=vesicash-docs",
   "outputDirectory": ".output",
-  "installCommand": "npm install",
+  "installCommand": "echo 'install handled by buildCommand'",
   "headers": [
     {
       "source": "/(.*)",

@@ -7,7 +7,7 @@
       <DocsMethodBadge :method="method" />
       <span class="text-ink-muted dark:text-dark-subtle text-sm select-none">—</span>
       <code class="flex-1 font-mono text-[13px] truncate">
-        <span class="text-ink-muted dark:text-dark-subtle">{{ BASE_URL_LABEL }}</span><span class="text-ink-primary dark:text-dark-text">{{ displayPath }}</span>
+        <span v-if="!hideBaseUrl" class="text-ink-muted dark:text-dark-subtle">{{ BASE_URL_LABEL }}</span><span class="text-ink-primary dark:text-dark-text">{{ displayPath }}</span>
       </code>
       <UiCopyButton
         :text="fullUrl"
@@ -23,6 +23,7 @@ const props = defineProps<{
   method: string
   urlPath: string
   baseUrl: string
+  hideBaseUrl?: boolean
 }>()
 
 const BASE_URL_LABEL = '{{base_url}}'
