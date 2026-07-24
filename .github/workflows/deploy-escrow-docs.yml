@@ -1,0 +1,93 @@
+name: Deploy escrow-docs
+
+on:
+  push:
+    branches: [main, develop]
+    paths:
+      - "apps/escrow-docs/**"
+      - "packages/**"
+      - "pnpm-lock.yaml"
+      - "pnpm-workspace.yaml"
+      - "turbo.json"
+      - "package.json"
+      - ".github/workflows/deploy-escrow-docs.yml"
+  pull_request:
+    paths:
+      - "apps/escrow-docs/**"
+      - "packages/**"
+      - "pnpm-lock.yaml"
+      - "pnpm-workspace.yaml"
+      - "turbo.json"
+      - "package.json"
+      - ".github/workflows/deploy-escrow-docs.yml"
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-escrow-docs-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    name: Deploy escrow-docs to Vercel
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Enable Corepack (pnpm)
+        run: corepack enable
+
+      - name: Install Vercel CLI
+        run: npm install --global vercel@latest
+
+      - name: Pull Vercel project settings
+        working-directory: apps/escrow-docs
+        env:
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: prj_nOKQOjbDIYsbhm9BDWBgw59x1Ptc
+        run: |
+          vercel pull --yes \
+            --environment=${{ github.event_name == 'push' && github.ref == 'refs/heads/main' && 'production' || 'preview' }} \
+            --token=${{ secrets.VERCEL_TOKEN }}
+
+      - name: Build
+        working-directory: apps/escrow-docs
+        env:
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: prj_nOKQOjbDIYsbhm9BDWBgw59x1Ptc
+          CF_ACCOUNT_ID: ${{ secrets.CF_ACCOUNT_ID }}
+          R2_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
+          R2_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
+          ADMIN_ACCESS_CODE: ${{ secrets.ESCROW_DOCS_ADMIN_ACCESS_CODE }}
+          ADMIN_JWT_SECRET: ${{ secrets.ESCROW_DOCS_ADMIN_JWT_SECRET }}
+          R2_BUCKET_NAME: ${{ secrets.ESCROW_DOCS_R2_BUCKET_NAME }}
+        run: |
+          if [ "${{ github.event_name }}" = "push" ] && [ "${{ github.ref }}" = "refs/heads/main" ]; then
+            vercel build --prod --token=${{ secrets.VERCEL_TOKEN }}
+          else
+            vercel build --token=${{ secrets.VERCEL_TOKEN }}
+          fi
+
+      - name: Deploy
+        id: deploy
+        working-directory: apps/escrow-docs
+        env:
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: prj_nOKQOjbDIYsbhm9BDWBgw59x1Ptc
+        run: |
+          if [ "${{ github.event_name }}" = "push" ] && [ "${{ github.ref }}" = "refs/heads/main" ]; then
+            url=$(vercel deploy --prebuilt --prod --token=${{ secrets.VERCEL_TOKEN }})
+          else
+            url=$(vercel deploy --prebuilt --token=${{ secrets.VERCEL_TOKEN }})
+          fi
+          echo "url=$url" >> "$GITHUB_OUTPUT"
+
+      - name: Summary
+        run: echo "### escrow-docs deployed to ${{ steps.deploy.outputs.url }}" >> "$GITHUB_STEP_SUMMARY"

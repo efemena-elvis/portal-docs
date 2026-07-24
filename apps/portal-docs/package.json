@@ -1,0 +1,22 @@
+{
+  "name": "portal-docs",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "nuxt dev",
+    "build": "nuxt build",
+    "generate": "nuxt generate",
+    "preview": "nuxt preview",
+    "postinstall": "nuxt prepare",
+    "typecheck": "nuxt typecheck"
+  },
+  "dependencies": {
+    "@aws-sdk/client-s3": "^3.1077.0",
+    "@docs/core": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/node": "^25.9.3",
+    "nuxt": "^4.4.8"
+  }
+}

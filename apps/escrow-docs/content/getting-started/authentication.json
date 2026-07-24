@@ -1,0 +1,99 @@
+{
+  "type": "guide",
+  "title": "Authentication",
+  "meta": { "description": "How to authenticate requests to the Vesicash Escrow API", "hidden": false },
+  "blocks": [
+    {
+      "id": "auth-intro",
+      "type": "prose",
+      "props": { "variant": "body" },
+      "content": "The Vesicash Escrow API uses API keys to authenticate all requests. Every request must include your Secret Key in the `x-api-key` header.",
+      "meta": {}
+    },
+    {
+      "id": "auth-keys-heading",
+      "type": "prose",
+      "props": { "variant": "heading", "level": "h2" },
+      "content": "API key types",
+      "meta": {}
+    },
+    {
+      "id": "auth-keys-table",
+      "type": "params-table",
+      "props": {
+        "rows": [
+          {
+            "name": "Test key",
+            "type": "sk_test_...",
+            "required": false,
+            "description": "Use during development. Transactions are simulated and no real funds move."
+          },
+          {
+            "name": "Live key",
+            "type": "sk_live_...",
+            "required": false,
+            "description": "Use in production. Transactions are real and funds move between parties."
+          }
+        ]
+      },
+      "content": null,
+      "meta": {}
+    },
+    {
+      "id": "auth-header-heading",
+      "type": "prose",
+      "props": { "variant": "heading", "level": "h2" },
+      "content": "Sending your key",
+      "meta": {}
+    },
+    {
+      "id": "auth-header-body",
+      "type": "prose",
+      "props": { "variant": "body" },
+      "content": "Include your key in the `x-api-key` header on every request. Never pass keys in the URL or request body.",
+      "meta": {}
+    },
+    {
+      "id": "auth-header-code",
+      "type": "code",
+      "props": { "language": "bash", "title": "Authenticated Request" },
+      "content": "curl -X POST https://api.escrow.vesicash.com/v1/escrow/create \\\n  -H \"x-api-key: sk_test_xxxxxxxxxxxxxxxxxxxx\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{ \"amount\": 50000, \"currency\": \"NGN\" }'",
+      "meta": {}
+    },
+    {
+      "id": "auth-idempotency-heading",
+      "type": "prose",
+      "props": { "variant": "heading", "level": "h2" },
+      "content": "Idempotency",
+      "meta": {}
+    },
+    {
+      "id": "auth-idempotency-body",
+      "type": "prose",
+      "props": { "variant": "body" },
+      "content": "For all `POST` requests, pass a unique `Idempotency-Key` header. If a request fails and you retry with the same key, the server returns the original response instead of creating a duplicate transaction.",
+      "meta": {}
+    },
+    {
+      "id": "auth-idempotency-code",
+      "type": "code",
+      "props": { "language": "bash", "title": "Idempotency Header", "hideCopy": true },
+      "content": "Idempotency-Key: 6f8e9d2c-4b3a-4a5e-9c7f-1234567890ab",
+      "meta": {}
+    },
+    {
+      "id": "auth-security-heading",
+      "type": "prose",
+      "props": { "variant": "heading", "level": "h2" },
+      "content": "Keeping keys secure",
+      "meta": {}
+    },
+    {
+      "id": "auth-security-callout",
+      "type": "callout",
+      "props": { "variant": "warning" },
+      "content": "**Never expose your Secret Key in client-side code**, version control, or public repositories. Treat it like a password. If compromised, rotate it immediately from your dashboard.",
+      "meta": {}
+    }
+  ]
+}

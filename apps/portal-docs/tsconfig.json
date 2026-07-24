@@ -1,0 +1,12 @@
+{
+  "extends": "./.nuxt/tsconfig.json",
+  "compilerOptions": {
+    "types": ["node"],
+    "paths": {
+      "~/*": ["./*", "../../packages/docs-core/app/*"],
+      "@/*": ["./*", "../../packages/docs-core/app/*"],
+      "~~/*": ["./*", "../../packages/docs-core/*"],
+      "@@/*": ["./*", "../../packages/docs-core/*"]
+    }
+  }
+}

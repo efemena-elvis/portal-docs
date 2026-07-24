@@ -1,0 +1,110 @@
+name: Deploy app (reusable - Vercel)
+
+# Shared Vercel deploy logic for any app in this monorepo.
+# Not triggered directly — each app gets its own thin caller workflow
+# (e.g. deploy-portal-docs.yml) that supplies the app name, Vercel
+# project id, and decides prod vs preview.
+#
+# The Vercel project's Root Directory (dashboard -> Project Settings ->
+# General) must be set to the app's folder, e.g. apps/portal-docs.
+
+on:
+  workflow_call:
+    inputs:
+      app_name:
+        description: Human-readable app name, used in log/summary output
+        required: true
+        type: string
+      vercel_project_id:
+        description: Vercel project id for this app (not sensitive, safe as plain input)
+        required: true
+        type: string
+      production:
+        description: "'true' = deploy to production, 'false' = preview deployment"
+        required: true
+        type: string
+    secrets:
+      vercel_token:
+        required: true
+      vercel_org_id:
+        required: true
+      cf_account_id:
+        required: false
+      r2_access_key_id:
+        required: false
+      r2_secret_access_key:
+        required: false
+      admin_access_code:
+        required: false
+      admin_jwt_secret:
+        required: false
+      r2_bucket_name:
+        required: false
+
+jobs:
+  deploy:
+    name: Deploy ${{ inputs.app_name }} to Vercel
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      # Corepack reads `packageManager` in package.json to install the exact
+      # pnpm version the repo declares, so no separate pnpm/action-setup needed.
+      - name: Enable Corepack (pnpm)
+        run: corepack enable
+
+      - name: Install Vercel CLI
+        run: npm install --global vercel@latest
+
+      - name: Pull Vercel project settings
+        env:
+          VERCEL_ORG_ID: ${{ secrets.vercel_org_id }}
+          VERCEL_PROJECT_ID: ${{ inputs.vercel_project_id }}
+        run: >
+          vercel pull --yes
+          --environment=${{ inputs.production == 'true' && 'production' || 'preview' }}
+          --token=${{ secrets.vercel_token }}
+
+      - name: Build
+        env:
+          VERCEL_ORG_ID: ${{ secrets.vercel_org_id }}
+          VERCEL_PROJECT_ID: ${{ inputs.vercel_project_id }}
+          CF_ACCOUNT_ID: ${{ secrets.cf_account_id }}
+          R2_ACCESS_KEY_ID: ${{ secrets.r2_access_key_id }}
+          R2_SECRET_ACCESS_KEY: ${{ secrets.r2_secret_access_key }}
+          ADMIN_ACCESS_CODE: ${{ secrets.admin_access_code }}
+          ADMIN_JWT_SECRET: ${{ secrets.admin_jwt_secret }}
+          R2_BUCKET_NAME: ${{ secrets.r2_bucket_name }}
+        run: vercel build ${{ inputs.production == 'true' && '--prod' || '' }} --token=${{ secrets.vercel_token }}
+
+      - name: Deploy
+        id: deploy
+        env:
+          VERCEL_ORG_ID: ${{ secrets.vercel_org_id }}
+          VERCEL_PROJECT_ID: ${{ inputs.vercel_project_id }}
+        run: |
+          url=$(vercel deploy --prebuilt ${{ inputs.production == 'true' && '--prod' || '' }} --token=${{ secrets.vercel_token }})
+          echo "url=$url" >> "$GITHUB_OUTPUT"
+
+      - name: Summary
+        run: echo "### ${{ inputs.app_name }} deployed to ${{ steps.deploy.outputs.url }}" >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Comment preview URL on PR
+        if: github.event_name == 'pull_request' && inputs.production != 'true'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: `Preview deployment for **${{ inputs.app_name }}**: ${{ steps.deploy.outputs.url }}`,
+            });

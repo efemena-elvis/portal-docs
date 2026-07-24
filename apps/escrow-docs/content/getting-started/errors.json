@@ -1,0 +1,61 @@
+{
+  "type": "guide",
+  "title": "Errors",
+  "meta": { "description": "Error codes and handling for the Vesicash Escrow API", "hidden": false },
+  "blocks": [
+    {
+      "id": "err-intro",
+      "type": "prose",
+      "props": { "variant": "body" },
+      "content": "The Vesicash Escrow API uses standard HTTP status codes. All errors follow the same JSON envelope with a machine-readable `type` and a human-readable `title`.",
+      "meta": {}
+    },
+    {
+      "id": "err-format-heading",
+      "type": "prose",
+      "props": { "variant": "heading", "level": "h2" },
+      "content": "Error format",
+      "meta": {}
+    },
+    {
+      "id": "err-format-code",
+      "type": "code",
+      "props": { "language": "json", "title": "Error Response", "hideCopy": true },
+      "content": "{\n  \"success\": false,\n  \"code\": 400,\n  \"error\": {\n    \"type\": \"VALIDATION_ERROR\",\n    \"title\": \"amount must be a positive number\"\n  }\n}",
+      "meta": {}
+    },
+    {
+      "id": "err-codes-heading",
+      "type": "prose",
+      "props": { "variant": "heading", "level": "h2" },
+      "content": "HTTP status codes",
+      "meta": {}
+    },
+    {
+      "id": "err-codes-table",
+      "type": "params-table",
+      "props": {
+        "rows": [
+          { "name": "200", "type": "OK", "required": false, "description": "Request succeeded." },
+          { "name": "201", "type": "Created", "required": false, "description": "Resource created successfully." },
+          { "name": "400", "type": "Bad Request", "required": false, "description": "Invalid parameters — fix and retry." },
+          { "name": "401", "type": "Unauthorized", "required": false, "description": "Missing or invalid API key." },
+          { "name": "403", "type": "Forbidden", "required": false, "description": "Key valid but lacks permission for this action." },
+          { "name": "404", "type": "Not Found", "required": false, "description": "Resource does not exist." },
+          { "name": "409", "type": "Conflict", "required": false, "description": "Duplicate Idempotency-Key — use a new one." },
+          { "name": "429", "type": "Rate Limited", "required": false, "description": "Too many requests — back off and retry." },
+          { "name": "500", "type": "Server Error", "required": false, "description": "Vesicash-side issue — retry with exponential backoff." }
+        ]
+      },
+      "content": null,
+      "meta": {}
+    },
+    {
+      "id": "err-callout",
+      "type": "callout",
+      "props": { "variant": "tip" },
+      "content": "For `5xx` errors, implement exponential backoff starting at 1 second, capping at 30 seconds, with a maximum of 5 retries.",
+      "meta": {}
+    }
+  ]
+}

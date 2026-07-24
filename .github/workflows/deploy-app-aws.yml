@@ -1,0 +1,116 @@
+name: Deploy app (reusable — AWS)
+
+# Mirrors deploy-app.yml so switching an app from Vercel to AWS only requires
+# changing the `uses:` line in the app's caller workflow.
+#
+# To activate:
+#   1. In the per-app workflow, change `uses: ./.github/workflows/deploy-app.yml`
+#      to `uses: ./.github/workflows/deploy-app-aws.yml`
+#   2. Pass the AWS-specific secrets in that caller (see secrets block below)
+#   3. Add these secrets to GitHub:
+#        AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, AWS_REGION
+#        S3_BUCKET          (the S3 bucket name for this app)
+#        CLOUDFRONT_DIST_ID (the CloudFront distribution id for this app)
+#   4. Uncomment the AWS deploy steps below
+
+on:
+  workflow_call:
+    inputs:
+      app-name:
+        description: Human-readable app name, used in log/summary output
+        required: true
+        type: string
+      app-path:
+        description: Path to the app folder from repo root, e.g. apps/portal-docs
+        required: true
+        type: string
+      production:
+        description: true = deploy to production, false = preview deployment
+        required: true
+        type: boolean
+    secrets:
+      AWS_ACCESS_KEY_ID:
+        required: true
+      AWS_SECRET_ACCESS_KEY:
+        required: true
+      AWS_REGION:
+        required: true
+      S3_BUCKET:
+        required: true
+      CLOUDFRONT_DIST_ID:
+        required: true
+      # App-specific runtime secrets — optional, only pass what the app needs
+      ADMIN_ACCESS_CODE:
+        required: false
+      ADMIN_JWT_SECRET:
+        required: false
+      R2_ACCESS_KEY_ID:
+        required: false
+      R2_SECRET_ACCESS_KEY:
+        required: false
+      R2_BUCKET_NAME:
+        required: false
+      R2_ENDPOINT:
+        required: false
+
+jobs:
+  deploy:
+    name: ${{ inputs.production && 'Production' || 'Preview' }} → AWS
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.production && 'production' || 'preview' }}
+    permissions:
+      contents: read
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Enable Corepack (pnpm)
+        run: corepack enable
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build
+        run: pnpm turbo run build --filter=${{ inputs.app-name }}
+        env:
+          ADMIN_ACCESS_CODE: ${{ secrets.ADMIN_ACCESS_CODE }}
+          ADMIN_JWT_SECRET: ${{ secrets.ADMIN_JWT_SECRET }}
+          R2_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
+          R2_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
+          R2_BUCKET_NAME: ${{ secrets.R2_BUCKET_NAME }}
+          R2_ENDPOINT: ${{ secrets.R2_ENDPOINT }}
+
+      # ── Uncomment when AWS credentials are configured ──────────────────────
+      # - name: Configure AWS credentials
+      #   uses: aws-actions/configure-aws-credentials@v4
+      #   with:
+      #     aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      #     aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      #     aws-region: ${{ secrets.AWS_REGION }}
+      #
+      # - name: Sync static assets to S3 (immutable, long cache)
+      #   run: |
+      #     aws s3 sync ${{ inputs.app-path }}/.output/public \
+      #       s3://${{ secrets.S3_BUCKET }} \
+      #       --delete \
+      #       --exclude "index.html" \
+      #       --cache-control "public,max-age=31536000,immutable"
+      #
+      # - name: Upload index.html (no-cache)
+      #   run: |
+      #     aws s3 cp ${{ inputs.app-path }}/.output/public/index.html \
+      #       s3://${{ secrets.S3_BUCKET }}/index.html \
+      #       --cache-control "public,max-age=0,must-revalidate"
+      #
+      # - name: Invalidate CloudFront
+      #   run: |
+      #     aws cloudfront create-invalidation \
+      #       --distribution-id ${{ secrets.CLOUDFRONT_DIST_ID }} \
+      #       --paths "/*"
+      #
+      # - name: Summary
+      #   run: echo "### ${{ inputs.app-name }} deployed to S3" >> "$GITHUB_STEP_SUMMARY"

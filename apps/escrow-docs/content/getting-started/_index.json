@@ -1,0 +1,12 @@
+{
+  "title": "Getting Started",
+  "collapsible": true,
+  "protected": true,
+  "order": 0,
+  "items": [
+    { "type": "page", "slug": "introduction" },
+    { "type": "page", "slug": "authentication" },
+    { "type": "page", "slug": "webhooks" },
+    { "type": "page", "slug": "errors" }
+  ]
+}

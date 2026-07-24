@@ -1,0 +1,99 @@
+{
+  "type": "guide",
+  "title": "Home",
+  "meta": {
+    "description": "",
+    "hidden": true
+  },
+  "heroTitle": "Secure escrow payments, built for developers",
+  "heroDescription": "Hold funds safely between buyers and sellers, release on fulfilment, and automate dispute resolution — all from a single API.",
+  "heroBadge": "API v1 · REST · HTTPS only",
+  "heroPrimaryLabel": "Get started",
+  "heroPrimaryHref": "/getting-started/introduction",
+  "heroSecondaryLabel": "Authentication",
+  "heroSecondaryHref": "/getting-started/authentication",
+  "blocks": [
+    {
+      "id": "home-cap-label",
+      "type": "prose",
+      "props": { "variant": "heading" },
+      "content": "What you can build",
+      "meta": { "hidden": false, "class": "", "style": "", "toc": "" }
+    },
+    {
+      "id": "home-cap-grid",
+      "type": "card-grid",
+      "props": {
+        "columns": 2,
+        "items": [
+          {
+            "title": "Create escrow transactions",
+            "description": "Hold buyer funds securely until delivery conditions are met.",
+            "href": "/escrow/create-transaction",
+            "icon": { "kind": "emoji", "value": "🔐" },
+            "bg": "bg-brand-green/10"
+          },
+          {
+            "title": "Release & refund funds",
+            "description": "Release held funds to the seller or refund the buyer on dispute.",
+            "href": "/escrow/release-funds",
+            "icon": { "kind": "emoji", "value": "💸" },
+            "bg": "bg-brand-sky/10"
+          },
+          {
+            "title": "Manage milestones",
+            "description": "Split large transactions into stages released on completion.",
+            "href": "/escrow/milestones",
+            "icon": { "kind": "emoji", "value": "🏁" },
+            "bg": "bg-amber-100 dark:bg-amber-900/20"
+          },
+          {
+            "title": "Webhooks",
+            "description": "Receive real-time events for every escrow state change.",
+            "href": "/getting-started/webhooks",
+            "icon": { "kind": "emoji", "value": "🔔" },
+            "bg": "bg-purple-100 dark:bg-purple-900/20"
+          }
+        ]
+      },
+      "content": null,
+      "meta": { "hidden": false, "class": "mb-16", "style": "", "toc": "" }
+    },
+    {
+      "id": "home-auth-heading",
+      "type": "prose",
+      "props": { "variant": "heading", "level": "h2" },
+      "content": "Authenticate every request",
+      "meta": { "hidden": false, "class": "", "style": "", "toc": "" }
+    },
+    {
+      "id": "home-auth-desc",
+      "type": "prose",
+      "props": { "variant": "body" },
+      "content": "Pass your secret key in the `x-api-key` header on every request. [View auth guide →](/getting-started/authentication)",
+      "meta": { "hidden": false, "class": "", "style": "", "toc": "" }
+    },
+    {
+      "id": "home-auth-code",
+      "type": "code",
+      "props": {
+        "language": "bash",
+        "title": "Request Headers",
+        "hideHeader": false,
+        "hideCopy": true
+      },
+      "content": "x-api-key: sk_test_xxxxxxxxxxxxxxxxxxxx\nIdempotency-Key: 6f8e9d2c-4b3a-4a5e-9c7f-1234567890ab\nContent-Type: application/json",
+      "meta": { "hidden": false, "class": "mb-16", "style": "", "toc": "" }
+    },
+    {
+      "id": "home-support",
+      "type": "support",
+      "props": {
+        "buttonText": "Contact Support",
+        "href": "mailto:developers@vesicash.com"
+      },
+      "content": "Need help with your escrow integration? Reach out to our developer team.",
+      "meta": { "hidden": false, "class": "", "style": "", "toc": "" }
+    }
+  ]
+}
