@@ -20,9 +20,9 @@ on:
         required: true
         type: string
       production:
-        description: true = deploy to production, false = preview deployment
+        description: "'true' = deploy to production, 'false' = preview deployment"
         required: true
-        type: boolean
+        type: string
     secrets:
       vercel_token:
         required: true
@@ -70,7 +70,7 @@ jobs:
           VERCEL_PROJECT_ID: ${{ inputs.vercel_project_id }}
         run: >
           vercel pull --yes
-          --environment=${{ inputs.production && 'production' || 'preview' }}
+          --environment=${{ inputs.production == 'true' && 'production' || 'preview' }}
           --token=${{ secrets.vercel_token }}
 
       - name: Build
@@ -83,7 +83,7 @@ jobs:
           ADMIN_ACCESS_CODE: ${{ secrets.admin_access_code }}
           ADMIN_JWT_SECRET: ${{ secrets.admin_jwt_secret }}
           R2_BUCKET_NAME: ${{ secrets.r2_bucket_name }}
-        run: vercel build ${{ inputs.production && '--prod' || '' }} --token=${{ secrets.vercel_token }}
+        run: vercel build ${{ inputs.production == 'true' && '--prod' || '' }} --token=${{ secrets.vercel_token }}
 
       - name: Deploy
         id: deploy
@@ -91,14 +91,14 @@ jobs:
           VERCEL_ORG_ID: ${{ secrets.vercel_org_id }}
           VERCEL_PROJECT_ID: ${{ inputs.vercel_project_id }}
         run: |
-          url=$(vercel deploy --prebuilt ${{ inputs.production && '--prod' || '' }} --token=${{ secrets.vercel_token }})
+          url=$(vercel deploy --prebuilt ${{ inputs.production == 'true' && '--prod' || '' }} --token=${{ secrets.vercel_token }})
           echo "url=$url" >> "$GITHUB_OUTPUT"
 
       - name: Summary
         run: echo "### ${{ inputs.app_name }} deployed to ${{ steps.deploy.outputs.url }}" >> "$GITHUB_STEP_SUMMARY"
 
       - name: Comment preview URL on PR
-        if: github.event_name == 'pull_request' && !inputs.production
+        if: github.event_name == 'pull_request' && inputs.production != 'true'
         uses: actions/github-script@v7
         with:
           script: |

@@ -38,7 +38,7 @@ jobs:
     with:
       app_name: escrow-docs
       vercel_project_id: prj_nOKQOjbDIYsbhm9BDWBgw59x1Ptc
-      production: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
+      production: ${{ (github.event_name == 'push' && github.ref == 'refs/heads/main') && 'true' || 'false' }}
     secrets:
       vercel_token: ${{ secrets.VERCEL_TOKEN }}
       vercel_org_id: ${{ secrets.VERCEL_ORG_ID }}
