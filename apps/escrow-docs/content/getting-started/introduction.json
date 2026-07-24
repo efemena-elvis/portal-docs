@@ -1,0 +1,91 @@
+{
+  "type": "guide",
+  "title": "Introduction",
+  "meta": { "description": "Overview of the Vesicash Escrow API", "hidden": false },
+  "blocks": [
+    {
+      "id": "intro-callout",
+      "type": "callout",
+      "props": { "variant": "note" },
+      "content": "- Create a free account at [escrow.vesicash.com](https://escrow.vesicash.com) and verify your business.\n- Copy your **Secret Key** from the API Keys section of your dashboard.\n- Use your **test key** while building — test transactions never touch real funds.",
+      "meta": {}
+    },
+    {
+      "id": "intro-overview-heading",
+      "type": "prose",
+      "props": { "variant": "heading", "level": "h2", "color": "text-brand-green" },
+      "content": "API overview",
+      "meta": {}
+    },
+    {
+      "id": "intro-overview-body",
+      "type": "prose",
+      "props": { "variant": "body" },
+      "content": "The Vesicash Escrow API is a REST API that lets you programmatically create and manage escrow transactions between buyers and sellers. Funds are held securely by Vesicash and released only when defined conditions are met — protecting both parties in every transaction.\n\nAll requests are made over **HTTPS** and encrypted with TLS. Plain HTTP is rejected.",
+      "meta": {}
+    },
+    {
+      "id": "intro-baseurl-heading",
+      "type": "prose",
+      "props": { "variant": "heading", "level": "h2" },
+      "content": "Base URL",
+      "meta": {}
+    },
+    {
+      "id": "intro-baseurl-code",
+      "type": "code",
+      "props": { "language": "text", "title": "API BASE URL", "hideCopy": true },
+      "content": "https://api.escrow.vesicash.com",
+      "meta": {}
+    },
+    {
+      "id": "intro-auth-heading",
+      "type": "prose",
+      "props": { "variant": "heading", "level": "h2" },
+      "content": "Authentication",
+      "meta": {}
+    },
+    {
+      "id": "intro-auth-body",
+      "type": "prose",
+      "props": { "variant": "body" },
+      "content": "Pass your **Secret Key** in the `x-api-key` header. Find your key in the [Vesicash Dashboard](https://escrow.vesicash.com) under **Settings → API Keys**.",
+      "meta": {}
+    },
+    {
+      "id": "intro-auth-code",
+      "type": "code",
+      "props": { "language": "bash", "title": "Authorization Header", "hideCopy": true },
+      "content": "x-api-key: YOUR_SECRET_KEY",
+      "meta": {}
+    },
+    {
+      "id": "intro-response-heading",
+      "type": "prose",
+      "props": { "variant": "heading", "level": "h2" },
+      "content": "Response format",
+      "meta": {}
+    },
+    {
+      "id": "intro-response-body",
+      "type": "prose",
+      "props": { "variant": "body" },
+      "content": "Every response follows the same JSON envelope. Check `success` and `code` before reading `data`.",
+      "meta": {}
+    },
+    {
+      "id": "intro-response-success",
+      "type": "code",
+      "props": { "language": "json", "title": "Success Response", "hideCopy": true },
+      "content": "{\n  \"success\": true,\n  \"code\": 200,\n  \"data\": {\n    \"reference\": \"ESC-VES-1781519012\",\n    \"status\": \"held\"\n  }\n}",
+      "meta": {}
+    },
+    {
+      "id": "intro-response-error",
+      "type": "code",
+      "props": { "language": "json", "title": "Error Response", "hideCopy": true },
+      "content": "{\n  \"success\": false,\n  \"code\": 400,\n  \"error\": {\n    \"type\": \"VALIDATION_ERROR\",\n    \"title\": \"amount is required\"\n  }\n}",
+      "meta": {}
+    }
+  ]
+}

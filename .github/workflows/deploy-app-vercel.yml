@@ -1,0 +1,113 @@
+name: Deploy app (reusable — Vercel)
+
+# Shared Vercel deploy logic for any app in this monorepo.
+# Not triggered directly — each app gets its own thin caller workflow
+# (e.g. deploy-portal-docs.yml) that supplies the app name, Vercel
+# project id, and decides prod vs preview.
+#
+# The Vercel project's Root Directory (dashboard → Project Settings →
+# General) must be set to the app's folder, e.g. apps/portal-docs.
+
+on:
+  workflow_call:
+    inputs:
+      app-name:
+        description: Human-readable app name, used in log/summary output
+        required: true
+        type: string
+      vercel-project-id:
+        description: Vercel project id for this app (not sensitive, safe as plain input)
+        required: true
+        type: string
+      production:
+        description: true = deploy to production, false = preview deployment
+        required: true
+        type: boolean
+    secrets:
+      vercel-token:
+        required: true
+      vercel-org-id:
+        required: true
+      # Shared infrastructure secrets (Cloudflare account-level)
+      CF_ACCOUNT_ID:
+        required: false
+      R2_ACCESS_KEY_ID:
+        required: false
+      R2_SECRET_ACCESS_KEY:
+        required: false
+      # Per-app secrets (passed with app-specific names by the caller)
+      ADMIN_ACCESS_CODE:
+        required: false
+      ADMIN_JWT_SECRET:
+        required: false
+      R2_BUCKET_NAME:
+        required: false
+
+jobs:
+  deploy:
+    name: ${{ inputs.production && 'Production' || 'Preview' }} → Vercel
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.production && 'production' || 'preview' }}
+    permissions:
+      contents: read
+      pull-requests: write
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      # Corepack reads `packageManager` in package.json to install the exact
+      # pnpm version the repo declares, so no separate pnpm/action-setup needed.
+      - name: Enable Corepack (pnpm)
+        run: corepack enable
+
+      - name: Install Vercel CLI
+        run: npm install --global vercel@latest
+
+      - name: Pull Vercel project settings
+        env:
+          VERCEL_ORG_ID: ${{ secrets.vercel-org-id }}
+          VERCEL_PROJECT_ID: ${{ inputs.vercel-project-id }}
+        run: >
+          vercel pull --yes
+          --environment=${{ inputs.production && 'production' || 'preview' }}
+          --token=${{ secrets.vercel-token }}
+
+      - name: Build
+        env:
+          VERCEL_ORG_ID: ${{ secrets.vercel-org-id }}
+          VERCEL_PROJECT_ID: ${{ inputs.vercel-project-id }}
+          CF_ACCOUNT_ID: ${{ secrets.CF_ACCOUNT_ID }}
+          R2_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
+          R2_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
+          ADMIN_ACCESS_CODE: ${{ secrets.ADMIN_ACCESS_CODE }}
+          ADMIN_JWT_SECRET: ${{ secrets.ADMIN_JWT_SECRET }}
+          R2_BUCKET_NAME: ${{ secrets.R2_BUCKET_NAME }}
+        run: vercel build ${{ inputs.production && '--prod' || '' }} --token=${{ secrets.vercel-token }}
+
+      - name: Deploy
+        id: deploy
+        env:
+          VERCEL_ORG_ID: ${{ secrets.vercel-org-id }}
+          VERCEL_PROJECT_ID: ${{ inputs.vercel-project-id }}
+        run: |
+          url=$(vercel deploy --prebuilt ${{ inputs.production && '--prod' || '' }} --token=${{ secrets.vercel-token }})
+          echo "url=$url" >> "$GITHUB_OUTPUT"
+
+      - name: Summary
+        run: echo "### ${{ inputs.app-name }} deployed to ${{ steps.deploy.outputs.url }}" >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Comment preview URL on PR
+        if: github.event_name == 'pull_request' && !inputs.production
+        uses: actions/github-script@v7
+        with:
+          script: |
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: `Preview deployment for **${{ inputs.app-name }}**: ${{ steps.deploy.outputs.url }}`,
+            });

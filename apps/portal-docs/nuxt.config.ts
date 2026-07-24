@@ -7,21 +7,6 @@ export default defineNuxtConfig({
   nitro: {
     preset: process.env.VERCEL ? 'vercel' : undefined,
   },
-  vite: {
-    optimizeDeps: {
-      include: [
-        'shiki',
-        'markdown-it',
-        '@lucide/vue',
-        '@codemirror/view',
-        '@codemirror/state',
-        '@codemirror/lang-json',
-        '@codemirror/commands',
-        '@codemirror/language',
-        'fuse.js',
-      ],
-    },
-  },
   app: {
     head: {
       title: `${docsConfig.site.name} — ${docsConfig.site.tagline}`,
@@ -39,18 +24,14 @@ export default defineNuxtConfig({
     }
   },
   runtimeConfig: {
-    postmanApiKey: process.env.POSTMAN_API_KEY ?? '',
-    postmanCollectionUid: process.env.POSTMAN_COLLECTION_UID ?? '',
     adminAccessCode: process.env.ADMIN_ACCESS_CODE ?? '',
     adminJwtSecret: process.env.ADMIN_JWT_SECRET ?? 'dev-secret-change-in-production',
-    sourcePriority: docsConfig.source.priority,
-    sourceJsonPath: docsConfig.source.json.path ?? '',
-    sourcePostmanCacheTtlMs: docsConfig.source.postman.cacheTtlMs,
     public: {
       site: docsConfig.site,
       design: docsConfig.design,
       layout: docsConfig.layout,
       nav: docsConfig.nav,
+      topbar: docsConfig.topbar,
       api: docsConfig.api,
     }
   }

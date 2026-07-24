@@ -30,34 +30,14 @@
       </div>
     </div>
 
-    <!-- Business Failure Codes -->
-    <h2 class="text-[17px] font-bold text-ink-primary dark:text-dark-text mb-7">Business Failure Codes</h2>
-    <div class="divide-y divide-surface-sage dark:divide-dark-border border-t border-surface-sage dark:border-dark-border">
-      <div
-        v-for="(fc, i) in failureCodes"
-        :key="fc.code"
-        class="py-4 px-3 -mx-3 rounded-md"
-        :class="i % 2 === 1 ? 'bg-surface-off-white/55 dark:bg-dark-surface/40' : ''"
-      >
-        <div class="mb-2">
-          <code class="text-[13px] font-mono font-semibold text-ink-primary dark:text-dark-text tracking-tight">{{ fc.code }}</code>
-        </div>
-        <p class="text-[14.5px] text-ink-muted dark:text-dark-muted leading-[1.7]">{{ fc.meaning }}</p>
-      </div>
-    </div>
-
     <DocsPageFooter
-      :prev="{ label: 'Collection Variables', href: '/reference/variables' }"
+      :prev="null"
       :next="null"
     />
   </NuxtLayout>
 </template>
 
 <script setup lang="ts">
-interface FailureCode { code: string; meaning: string }
-
-const failureCodes = ref<FailureCode[]>([])
-
 const httpCodes = [
   { code: '200', meaning: 'OK', action: 'Request succeeded.', color: 'green' },
   { code: '201', meaning: 'Created', action: 'Resource was successfully created.', color: 'green' },
@@ -75,24 +55,4 @@ function badgeVariantFor(color: string): 'success' | 'warning' | 'error' {
   if (color === 'yellow') return 'warning'
   return 'error'
 }
-
-onMounted(async () => {
-  try {
-    const page = await $fetch<any>('/api/content/reference/errors')
-    const block = page?.blocks?.find((b: any) => b.type === 'table' || b.type === 'params-table')
-    if (block?.type === 'table') {
-      failureCodes.value = (block.props.rows ?? []).map((r: any) => ({
-        code: r.cells?.[0]?.text ?? '',
-        meaning: r.cells?.[1]?.text ?? '',
-      }))
-    } else if (block?.type === 'params-table') {
-      failureCodes.value = (block.props.rows ?? []).map((r: any) => ({
-        code: r.name ?? '',
-        meaning: r.description ?? '',
-      }))
-    }
-  } catch {
-    // errors page not found — silently skip
-  }
-})
 </script>

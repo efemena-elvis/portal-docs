@@ -1,5 +1,5 @@
 /**
- * Vesicash Docs Configuration
+ * Portal Docs Configuration
  * ─────────────────────────────────────────────────────────────────────────────
  * Central config for data sources, design, and layout.
  * Changes here take effect on the next build / server restart.
@@ -19,35 +19,11 @@ const docsConfig = {
     baseUrl: "https://api.portal.vesicash.com",
   },
 
-  // ── Data source ────────────────────────────────────────────────────────────
-  source: {
-    /**
-     * Which source to try first.
-     * 'postman' → fetch live from Postman API, fall back to JSON if it fails
-     * 'json'    → load from the local JSON file, fall back to Postman if it fails
-     */
-    priority: "json" as "postman" | "json",
-
-    postman: {
-      /** How long (ms) to cache the Postman response in memory between requests */
-      cacheTtlMs: 5 * 60 * 1000, // 5 minutes
-    },
-
-    json: {
-      /**
-       * Path to a local Postman collection JSON export, relative to project root.
-       * Used as fallback when Postman is unavailable, or as the primary source
-       * when priority is 'json'. Set to null to disable JSON fallback entirely.
-       */
-      path: "./public/collection.json" as string | null,
-    },
-  },
-
   // ── Site metadata ──────────────────────────────────────────────────────────
   site: {
     name: "Vesicash Portal Developer Docs",
     tagline: "Merchant API Integration Guide",
-    domain: "developers.vesicash.com",
+    domain: "docs.portal.vesicash.com",
     logo: {
       /** Text shown in the sidebar header */
       text: "Vesicash",
@@ -55,6 +31,11 @@ const docsConfig = {
       image: "/vesicash-logo.png" as string | null,
       /** Dark-mode variant — shown when the dark class is active */
       darkImage: "/vesicash-dark.png" as string | null,
+    },
+    /** Small pill badge shown beneath the logo's bottom-right corner */
+    badge: {
+      text: "Portal",
+      visible: true,
     },
   },
 
@@ -97,6 +78,37 @@ const docsConfig = {
      * collection nav. Add external links with external: true.
      */
     footerLinks: [] as { label: string; href: string; external?: boolean }[],
+  },
+
+  // ── Topbar links ───────────────────────────────────────────────────────────
+  topbar: {
+    /**
+     * Primary nav links shown in the center of the topbar (desktop only).
+     * href can be an internal path or an external URL.
+     */
+    primaryLinks: [
+      { label: "Docs", href: "/", visible: true },
+      { label: "API Reference", href: "auto:first-endpoint", visible: true },
+      { label: "Guides", href: "auto:first-page", visible: true },
+    ] as { label: string; href: string; visible?: boolean }[],
+
+    /**
+     * Utility links shown on the right side of the topbar (desktop only).
+     * These are always rendered as external <a> tags opening in a new tab.
+     * Set visible: false to hide without removing.
+     */
+    utilityLinks: [
+      {
+        label: "Dashboard",
+        href: "https://portal.vesicash.com",
+        visible: true,
+      },
+      {
+        label: "Support",
+        href: "mailto:developers@vesicash.com",
+        visible: true,
+      },
+    ] as { label: string; href: string; visible?: boolean }[],
   },
 };
 

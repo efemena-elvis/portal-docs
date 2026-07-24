@@ -1,4 +1,4 @@
-const STORAGE_KEY = 'vesicash-docs:code-language'
+const STORAGE_KEY = 'portal-docs:code-language'
 
 export function useCodeLanguagePreference() {
   const language = ref('curl')

@@ -1,36 +1,31 @@
-name: _Deploy app to AWS (reusable — placeholder)
+name: Deploy app (reusable — AWS)
 
-# ─────────────────────────────────────────────────────────────────────────────
-# Mirrors the structure of _deploy-vercel.yml so switching an app's
-# deploy_target from "vercel" to "aws" in .github/apps.json is the only
-# change needed on the app side.
+# Mirrors deploy-app.yml so switching an app from Vercel to AWS only requires
+# changing the `uses:` line in the app's caller workflow.
 #
 # To activate:
-#   1. Set deploy_target: "aws" for the app in .github/apps.json
-#   2. Add a `deploy-aws` job in deploy.yml (see the commented line there)
+#   1. In the per-app workflow, change `uses: ./.github/workflows/deploy-app.yml`
+#      to `uses: ./.github/workflows/deploy-app-aws.yml`
+#   2. Pass the AWS-specific secrets in that caller (see secrets block below)
 #   3. Add these secrets to GitHub:
 #        AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, AWS_REGION
-#        S3_BUCKET_<APP>  (matches aws.s3_bucket_secret in apps.json)
-#        CLOUDFRONT_DIST_<APP>  (matches aws.cloudfront_dist_secret)
-#   4. Uncomment the deploy steps below
-# ─────────────────────────────────────────────────────────────────────────────
+#        S3_BUCKET          (the S3 bucket name for this app)
+#        CLOUDFRONT_DIST_ID (the CloudFront distribution id for this app)
+#   4. Uncomment the AWS deploy steps below
 
 on:
   workflow_call:
     inputs:
-      app_name:
+      app-name:
+        description: Human-readable app name, used in log/summary output
         required: true
         type: string
-      app_path:
+      app-path:
+        description: Path to the app folder from repo root, e.g. apps/portal-docs
         required: true
         type: string
-      production_branch:
-        required: true
-        type: string
-      production_url:
-        required: true
-        type: string
-      is_production:
+      production:
+        description: true = deploy to production, false = preview deployment
         required: true
         type: boolean
     secrets:
@@ -44,6 +39,7 @@ on:
         required: true
       CLOUDFRONT_DIST_ID:
         required: true
+      # App-specific runtime secrets — optional, only pass what the app needs
       ADMIN_ACCESS_CODE:
         required: false
       ADMIN_JWT_SECRET:
@@ -59,29 +55,27 @@ on:
 
 jobs:
   deploy:
-    name: ${{ inputs.is_production && 'Production' || 'Preview' }} → AWS
+    name: ${{ inputs.production && 'Production' || 'Preview' }} → AWS
     runs-on: ubuntu-latest
-    environment:
-      name: ${{ inputs.is_production && 'production' || 'preview' }}
-      url: ${{ inputs.is_production && inputs.production_url || '' }}
+    environment: ${{ inputs.production && 'production' || 'preview' }}
+    permissions:
+      contents: read
 
     steps:
       - uses: actions/checkout@v4
 
-      - uses: pnpm/action-setup@v4
-        with:
-          version: 10
-
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-          cache: pnpm
+
+      - name: Enable Corepack (pnpm)
+        run: corepack enable
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
       - name: Build
-        run: pnpm turbo run build --filter=${{ inputs.app_name }}
+        run: pnpm turbo run build --filter=${{ inputs.app-name }}
         env:
           ADMIN_ACCESS_CODE: ${{ secrets.ADMIN_ACCESS_CODE }}
           ADMIN_JWT_SECRET: ${{ secrets.ADMIN_JWT_SECRET }}
@@ -100,7 +94,7 @@ jobs:
       #
       # - name: Sync static assets to S3 (immutable, long cache)
       #   run: |
-      #     aws s3 sync ${{ inputs.app_path }}/.output/public \
+      #     aws s3 sync ${{ inputs.app-path }}/.output/public \
       #       s3://${{ secrets.S3_BUCKET }} \
       #       --delete \
       #       --exclude "index.html" \
@@ -108,7 +102,7 @@ jobs:
       #
       # - name: Upload index.html (no-cache)
       #   run: |
-      #     aws s3 cp ${{ inputs.app_path }}/.output/public/index.html \
+      #     aws s3 cp ${{ inputs.app-path }}/.output/public/index.html \
       #       s3://${{ secrets.S3_BUCKET }}/index.html \
       #       --cache-control "public,max-age=0,must-revalidate"
       #
@@ -117,3 +111,6 @@ jobs:
       #     aws cloudfront create-invalidation \
       #       --distribution-id ${{ secrets.CLOUDFRONT_DIST_ID }} \
       #       --paths "/*"
+      #
+      # - name: Summary
+      #   run: echo "### ${{ inputs.app-name }} deployed to S3" >> "$GITHUB_STEP_SUMMARY"

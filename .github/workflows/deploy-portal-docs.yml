@@ -1,0 +1,57 @@
+name: Deploy portal-docs
+
+# Only triggers when something this app actually depends on changes: its own
+# folder, shared packages, workspace-level config, or this workflow itself.
+# Editing another app under apps/** will NOT trigger this.
+
+on:
+  push:
+    branches: [main, develop]
+    paths:
+      - "apps/portal-docs/**"
+      - "packages/**"
+      - "pnpm-lock.yaml"
+      - "pnpm-workspace.yaml"
+      - "turbo.json"
+      - "package.json"
+      - ".github/workflows/deploy-portal-docs.yml"
+      - ".github/workflows/deploy-app-vercel.yml"
+  pull_request:
+    paths:
+      - "apps/portal-docs/**"
+      - "packages/**"
+      - "pnpm-lock.yaml"
+      - "pnpm-workspace.yaml"
+      - "turbo.json"
+      - "package.json"
+      - ".github/workflows/deploy-portal-docs.yml"
+      - ".github/workflows/deploy-app-vercel.yml"
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-portal-docs-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    # ── Active pipeline: Vercel ────────────────────────────────────────────────
+    # To switch to AWS: change `uses` to deploy-app-aws.yml, swap the secrets
+    # block for the AWS equivalents (see deploy-app-aws.yml for the full list),
+    # and update the paths trigger above to reference deploy-app-aws.yml.
+    uses: ./.github/workflows/deploy-app-vercel.yml
+    with:
+      app-name: portal-docs
+      # Vercel project id — Vercel dashboard → Project Settings → General → Project ID
+      vercel-project-id: prj_6uqxlSbXlJ6v0ug62vUBldY9akrI
+      production: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
+    secrets:
+      vercel-token: ${{ secrets.VERCEL_TOKEN }}
+      vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
+      # Shared infrastructure — same Cloudflare account across all apps
+      CF_ACCOUNT_ID: ${{ secrets.CF_ACCOUNT_ID }}
+      R2_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
+      R2_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
+      # Per-app — a compromise here does not affect other apps
+      ADMIN_ACCESS_CODE: ${{ secrets.PORTAL_DOCS_ADMIN_ACCESS_CODE }}
+      ADMIN_JWT_SECRET: ${{ secrets.PORTAL_DOCS_ADMIN_JWT_SECRET }}
+      R2_BUCKET_NAME: ${{ secrets.PORTAL_DOCS_R2_BUCKET_NAME }}

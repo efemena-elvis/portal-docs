@@ -2,7 +2,7 @@
   "name": "vesicash-docs-monorepo",
   "private": true,
   "scripts": {
-    "dev": "turbo run dev --filter=vesicash-docs",
+    "dev": "turbo run dev --filter=portal-docs",
     "build": "turbo run build",
     "typecheck": "turbo run typecheck",
     "generate": "turbo run generate"

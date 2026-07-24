@@ -14,10 +14,8 @@
     <h2 id="overview" class="text-xl font-bold text-ink-primary dark:text-dark-text mb-3 mt-10">Overview</h2>
     <div class="docs-prose mb-6">
       <p>
-        Guide page content lives in <code>public/collection.json</code> — specifically in each
-        request item's <code>description</code> field. The parser reads this field, strips the
-        frontmatter, extracts special sections, and renders the rest as a mix of prose, code
-        blocks, and component directives.
+        Guide page content is managed through the admin panel and stored as structured JSON blocks.
+        Each page is composed of a <code>blocks[]</code> array rendered by the block system.
       </p>
       <p>Two systems work together:</p>
       <ul>

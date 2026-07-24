@@ -99,6 +99,7 @@
     <template #topbar>
       <DocsTopbar
         :primary-nav="primaryNav"
+        :utility-nav="utilityNav"
         :sidebar-open="sidebarOpen"
         @open-search="searchOpen = true"
         @toggle-sidebar="sidebarOpen = !sidebarOpen"
@@ -138,7 +139,13 @@ import type { SidebarSection } from "~/types/docs";
 import type { CreateItemType } from "~/composables/useAdminCollection";
 import type { IconName } from "~/components/ui/Icon/icons";
 import AdminDialog from "~/components/admin/AdminDialog/index.vue";
-const { nav: navConfig } = useRuntimeConfig().public as { nav: { footerLinks: { label: string; href: string; external?: boolean }[] } }
+type NavLink = { label: string; href: string; visible?: boolean }
+type NavLinkConfig = { label: string; href: string; visible?: boolean }
+type PublicConfig = {
+  nav: { footerLinks: { label: string; href: string; external?: boolean }[] }
+  topbar?: { primaryLinks?: NavLinkConfig[]; utilityLinks?: NavLinkConfig[] }
+}
+const { nav: navConfig, topbar: topbarConfig } = useRuntimeConfig().public as unknown as PublicConfig
 
 const { nav, navLoading, fetchNav } = useDocsNav();
 const { navData, invalidate } = useContentNav();
@@ -235,20 +242,31 @@ function onKeydown(e: KeyboardEvent) {
   }
 }
 
-const primaryNav = computed<{ label: string; href: string }[]>(() => {
-  const index = navData.value?.searchIndex ?? [];
-  const firstEndpoint = index.find(e => e.method);
-  const firstGuide = index.find(e => !e.method);
-  return [
-    { label: "Docs", href: "/" },
-    firstEndpoint
-      ? { label: "API Reference", href: `/${firstEndpoint.slug}` }
-      : { label: "API Reference", href: "/accept-payments/accept-payments-overview" },
-    firstGuide
-      ? { label: "Guides", href: `/${firstGuide.slug}` }
-      : { label: "Guides", href: "/getting-started/introduction" },
-  ];
-});
+function resolveHref(href: string): string | null {
+  const index = navData.value?.searchIndex ?? []
+  if (href === 'auto:first-endpoint') {
+    const entry = index.find(e => e.method)
+    return entry ? `/${entry.slug}` : null
+  }
+  if (href === 'auto:first-page') {
+    const entry = index[0]
+    return entry ? `/${entry.slug}` : null
+  }
+  return href
+}
+
+const primaryNav = computed<NavLink[]>(() => {
+  return (topbarConfig?.primaryLinks ?? []).flatMap(link => {
+    if (link.visible === false) return []
+    const resolved = resolveHref(link.href)
+    if (resolved === null) return []
+    return [{ label: link.label, href: resolved }]
+  })
+})
+
+const utilityNav = computed<NavLink[]>(() => {
+  return (topbarConfig?.utilityLinks ?? []).filter(l => l.visible !== false)
+})
 
 const sidebarSections = computed<SidebarSection[]>(() => {
   const dynamic = [...nav.value];

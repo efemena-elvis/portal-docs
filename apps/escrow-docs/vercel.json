@@ -1,5 +1,5 @@
 {
-  "buildCommand": "cd ../.. && pnpm install && pnpm turbo run build --filter=vesicash-docs",
+  "buildCommand": "cd ../.. && pnpm install && pnpm turbo run build --filter=escrow-docs",
   "outputDirectory": ".output",
   "installCommand": "echo 'install handled by buildCommand'",
   "headers": [

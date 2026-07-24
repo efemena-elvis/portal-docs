@@ -20,16 +20,23 @@
       <!-- Logo -->
       <NuxtLink to="/" class="flex items-center gap-2.5 min-w-0 mr-2">
         <template v-if="logoImage">
-          <img
-            :src="logoImage"
-            alt="Vesicash"
-            class="h-9 w-auto object-contain flex-none dark:hidden"
-          />
-          <img
-            :src="logoDarkImage || logoImage"
-            alt="Vesicash"
-            class="h-9 w-auto object-contain flex-none hidden dark:block"
-          />
+          <div class="relative flex-none">
+            <img
+              :src="logoImage"
+              alt="Vesicash"
+              class="h-9 w-auto object-contain dark:hidden"
+            />
+            <img
+              :src="logoDarkImage || logoImage"
+              alt="Vesicash"
+              class="h-9 w-auto object-contain hidden dark:block"
+            />
+            <span
+              v-if="logoBadge"
+              class="absolute -bottom-2 -right-1 px-1.5 py-[3.5px] rounded-full text-[9px] font-bold leading-none tracking-wide bg-brand-green text-white"
+              >{{ logoBadge }}</span
+            >
+          </div>
         </template>
         <template v-else>
           <div
@@ -125,7 +132,7 @@
         @click="showPublishModal = true"
       >
         <UiIcon name="upload" size="xs" />
-        Publish {{ drafts.length }} change{{ drafts.length === 1 ? '' : 's' }}
+        Publish {{ drafts.length }} change{{ drafts.length === 1 ? "" : "s" }}
       </button>
 
       <!-- Admin indicator + sign-out (only when logged in as editor) -->
@@ -165,31 +172,51 @@
         class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm"
         @click.self="showPublishModal = false"
       >
-        <div class="bg-white dark:bg-dark-surface rounded-xl shadow-xl w-full max-w-md mx-4 overflow-hidden">
-          <div class="px-6 py-5 border-b border-surface-sage dark:border-dark-border">
-            <h2 class="text-base font-semibold text-ink-primary dark:text-dark-text">
-              Publish {{ drafts.length }} draft change{{ drafts.length === 1 ? '' : 's' }}
+        <div
+          class="bg-white dark:bg-dark-surface rounded-xl shadow-xl w-full max-w-md mx-4 overflow-hidden"
+        >
+          <div
+            class="px-6 py-5 border-b border-surface-sage dark:border-dark-border"
+          >
+            <h2
+              class="text-base font-semibold text-ink-primary dark:text-dark-text"
+            >
+              Publish {{ drafts.length }} draft change{{
+                drafts.length === 1 ? "" : "s"
+              }}
             </h2>
             <p class="mt-1 text-sm text-ink-secondary dark:text-dark-muted">
               These pages will go live immediately.
             </p>
           </div>
 
-          <ul class="max-h-60 overflow-y-auto divide-y divide-surface-sage dark:divide-dark-border">
+          <ul
+            class="max-h-60 overflow-y-auto divide-y divide-surface-sage dark:divide-dark-border"
+          >
             <li
               v-for="draft in drafts"
               :key="draft.slug"
               class="px-6 py-3 flex items-start gap-3"
             >
-              <span class="mt-1.5 w-1.5 h-1.5 rounded-full bg-brand-green flex-none" />
+              <span
+                class="mt-1.5 w-1.5 h-1.5 rounded-full bg-brand-green flex-none"
+              />
               <div class="min-w-0">
-                <div class="text-sm font-medium text-ink-primary dark:text-dark-text truncate">{{ draft.title }}</div>
-                <div class="text-xs text-ink-muted dark:text-dark-subtle">{{ draft.sectionTitle }}</div>
+                <div
+                  class="text-sm font-medium text-ink-primary dark:text-dark-text truncate"
+                >
+                  {{ draft.title }}
+                </div>
+                <div class="text-xs text-ink-muted dark:text-dark-subtle">
+                  {{ draft.sectionTitle }}
+                </div>
               </div>
             </li>
           </ul>
 
-          <div class="px-6 py-4 flex justify-end gap-3 border-t border-surface-sage dark:border-dark-border">
+          <div
+            class="px-6 py-4 flex justify-end gap-3 border-t border-surface-sage dark:border-dark-border"
+          >
             <button
               type="button"
               class="px-4 py-2 rounded-md text-sm font-medium text-ink-secondary dark:text-dark-muted hover:bg-surface-off-white dark:hover:bg-dark-card transition-colors"
@@ -204,7 +231,7 @@
               class="px-4 py-2 rounded-md text-sm font-medium bg-brand-green text-white hover:bg-brand-green/90 disabled:opacity-60 transition-colors"
               @click="onConfirmPublish"
             >
-              {{ publishing ? 'Publishing…' : 'Publish all' }}
+              {{ publishing ? "Publishing…" : "Publish all" }}
             </button>
           </div>
         </div>
@@ -217,7 +244,13 @@
 const route = useRoute();
 const config = useRuntimeConfig();
 const { isAdmin, logout } = useAdmin();
-const { drafts, hasDrafts, publishing, refresh: refreshDrafts, publishAll } = useDraftState();
+const {
+  drafts,
+  hasDrafts,
+  publishing,
+  refresh: refreshDrafts,
+  publishAll,
+} = useDraftState();
 
 const logoImage = computed(
   () => (config.public.site as any)?.logo?.image || null,
@@ -225,6 +258,10 @@ const logoImage = computed(
 const logoDarkImage = computed(
   () => (config.public.site as any)?.logo?.darkImage || null,
 );
+const logoBadge = computed(() => {
+  const b = (config.public.site as any)?.badge;
+  return b?.visible ? b.text : null;
+});
 
 const showPublishModal = ref(false);
 
@@ -243,14 +280,8 @@ interface Props {
 }
 
 withDefaults(defineProps<Props>(), {
-  primaryNav: () => [
-    { label: "Docs", href: "/" },
-    { label: "Guides", href: "/getting-started/introduction" },
-  ],
-  utilityNav: () => [
-    { label: "Dashboard", href: "https://portal.vesicash.com" },
-    { label: "Support", href: "mailto:developers@vesicash.com" },
-  ],
+  primaryNav: () => [],
+  utilityNav: () => [],
 });
 
 defineEmits<{

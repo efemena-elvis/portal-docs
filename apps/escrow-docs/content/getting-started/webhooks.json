@@ -1,0 +1,73 @@
+{
+  "type": "guide",
+  "title": "Webhooks",
+  "meta": { "description": "Receive real-time escrow event notifications", "hidden": false },
+  "blocks": [
+    {
+      "id": "wh-intro",
+      "type": "prose",
+      "props": { "variant": "body" },
+      "content": "Webhooks let your application react to escrow state changes in real time. Vesicash sends an HTTP `POST` request to your configured endpoint whenever a relevant event occurs — such as funds being held, released, or a dispute being raised.",
+      "meta": {}
+    },
+    {
+      "id": "wh-events-heading",
+      "type": "prose",
+      "props": { "variant": "heading", "level": "h2" },
+      "content": "Escrow events",
+      "meta": {}
+    },
+    {
+      "id": "wh-events-table",
+      "type": "params-table",
+      "props": {
+        "rows": [
+          { "name": "escrow.created", "type": "string", "required": false, "description": "A new escrow transaction has been created and funds are being held." },
+          { "name": "escrow.funded", "type": "string", "required": false, "description": "The buyer has funded the escrow successfully." },
+          { "name": "escrow.released", "type": "string", "required": false, "description": "Funds have been released to the seller." },
+          { "name": "escrow.refunded", "type": "string", "required": false, "description": "Funds have been returned to the buyer." },
+          { "name": "escrow.dispute.opened", "type": "string", "required": false, "description": "A dispute has been raised on the transaction." },
+          { "name": "escrow.dispute.resolved", "type": "string", "required": false, "description": "A dispute has been resolved." },
+          { "name": "escrow.expired", "type": "string", "required": false, "description": "The escrow window expired before conditions were met." }
+        ]
+      },
+      "content": null,
+      "meta": {}
+    },
+    {
+      "id": "wh-payload-heading",
+      "type": "prose",
+      "props": { "variant": "heading", "level": "h2" },
+      "content": "Payload structure",
+      "meta": {}
+    },
+    {
+      "id": "wh-payload-code",
+      "type": "code",
+      "props": { "language": "json", "title": "Example Webhook Payload", "hideCopy": true },
+      "content": "{\n  \"event\": \"escrow.released\",\n  \"timestamp\": \"2024-07-24T12:00:00Z\",\n  \"data\": {\n    \"reference\": \"ESC-VES-1781519012\",\n    \"amount\": 50000,\n    \"currency\": \"NGN\",\n    \"status\": \"released\",\n    \"released_at\": \"2024-07-24T12:00:00Z\"\n  }\n}",
+      "meta": {}
+    },
+    {
+      "id": "wh-security-heading",
+      "type": "prose",
+      "props": { "variant": "heading", "level": "h2" },
+      "content": "Verifying signatures",
+      "meta": {}
+    },
+    {
+      "id": "wh-security-body",
+      "type": "prose",
+      "props": { "variant": "body" },
+      "content": "Every webhook includes an `x-vesicash-signature` header. Verify it against the raw request body using your webhook secret to ensure the payload came from Vesicash.",
+      "meta": {}
+    },
+    {
+      "id": "wh-security-callout",
+      "type": "callout",
+      "props": { "variant": "warning" },
+      "content": "Always verify the webhook signature before processing. Reject any request that fails verification.",
+      "meta": {}
+    }
+  ]
+}
