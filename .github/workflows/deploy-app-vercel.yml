@@ -1,21 +1,21 @@
-name: Deploy app (reusable — Vercel)
+name: Deploy app (reusable - Vercel)
 
 # Shared Vercel deploy logic for any app in this monorepo.
 # Not triggered directly — each app gets its own thin caller workflow
 # (e.g. deploy-portal-docs.yml) that supplies the app name, Vercel
 # project id, and decides prod vs preview.
 #
-# The Vercel project's Root Directory (dashboard → Project Settings →
+# The Vercel project's Root Directory (dashboard -> Project Settings ->
 # General) must be set to the app's folder, e.g. apps/portal-docs.
 
 on:
   workflow_call:
     inputs:
-      app-name:
+      app_name:
         description: Human-readable app name, used in log/summary output
         required: true
         type: string
-      vercel-project-id:
+      vercel_project_id:
         description: Vercel project id for this app (not sensitive, safe as plain input)
         required: true
         type: string
@@ -24,28 +24,26 @@ on:
         required: true
         type: boolean
     secrets:
-      vercel-token:
+      vercel_token:
         required: true
-      vercel-org-id:
+      vercel_org_id:
         required: true
-      # Shared infrastructure secrets (Cloudflare account-level)
-      CF_ACCOUNT_ID:
+      cf_account_id:
         required: false
-      R2_ACCESS_KEY_ID:
+      r2_access_key_id:
         required: false
-      R2_SECRET_ACCESS_KEY:
+      r2_secret_access_key:
         required: false
-      # Per-app secrets (passed with app-specific names by the caller)
-      ADMIN_ACCESS_CODE:
+      admin_access_code:
         required: false
-      ADMIN_JWT_SECRET:
+      admin_jwt_secret:
         required: false
-      R2_BUCKET_NAME:
+      r2_bucket_name:
         required: false
 
 jobs:
   deploy:
-    name: ${{ inputs.production && 'Production' || 'Preview' }} → Vercel
+    name: Deploy ${{ inputs.app_name }} to Vercel
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -68,36 +66,36 @@ jobs:
 
       - name: Pull Vercel project settings
         env:
-          VERCEL_ORG_ID: ${{ secrets.vercel-org-id }}
-          VERCEL_PROJECT_ID: ${{ inputs.vercel-project-id }}
+          VERCEL_ORG_ID: ${{ secrets.vercel_org_id }}
+          VERCEL_PROJECT_ID: ${{ inputs.vercel_project_id }}
         run: >
           vercel pull --yes
           --environment=${{ inputs.production && 'production' || 'preview' }}
-          --token=${{ secrets.vercel-token }}
+          --token=${{ secrets.vercel_token }}
 
       - name: Build
         env:
-          VERCEL_ORG_ID: ${{ secrets.vercel-org-id }}
-          VERCEL_PROJECT_ID: ${{ inputs.vercel-project-id }}
-          CF_ACCOUNT_ID: ${{ secrets.CF_ACCOUNT_ID }}
-          R2_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
-          R2_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
-          ADMIN_ACCESS_CODE: ${{ secrets.ADMIN_ACCESS_CODE }}
-          ADMIN_JWT_SECRET: ${{ secrets.ADMIN_JWT_SECRET }}
-          R2_BUCKET_NAME: ${{ secrets.R2_BUCKET_NAME }}
-        run: vercel build ${{ inputs.production && '--prod' || '' }} --token=${{ secrets.vercel-token }}
+          VERCEL_ORG_ID: ${{ secrets.vercel_org_id }}
+          VERCEL_PROJECT_ID: ${{ inputs.vercel_project_id }}
+          CF_ACCOUNT_ID: ${{ secrets.cf_account_id }}
+          R2_ACCESS_KEY_ID: ${{ secrets.r2_access_key_id }}
+          R2_SECRET_ACCESS_KEY: ${{ secrets.r2_secret_access_key }}
+          ADMIN_ACCESS_CODE: ${{ secrets.admin_access_code }}
+          ADMIN_JWT_SECRET: ${{ secrets.admin_jwt_secret }}
+          R2_BUCKET_NAME: ${{ secrets.r2_bucket_name }}
+        run: vercel build ${{ inputs.production && '--prod' || '' }} --token=${{ secrets.vercel_token }}
 
       - name: Deploy
         id: deploy
         env:
-          VERCEL_ORG_ID: ${{ secrets.vercel-org-id }}
-          VERCEL_PROJECT_ID: ${{ inputs.vercel-project-id }}
+          VERCEL_ORG_ID: ${{ secrets.vercel_org_id }}
+          VERCEL_PROJECT_ID: ${{ inputs.vercel_project_id }}
         run: |
-          url=$(vercel deploy --prebuilt ${{ inputs.production && '--prod' || '' }} --token=${{ secrets.vercel-token }})
+          url=$(vercel deploy --prebuilt ${{ inputs.production && '--prod' || '' }} --token=${{ secrets.vercel_token }})
           echo "url=$url" >> "$GITHUB_OUTPUT"
 
       - name: Summary
-        run: echo "### ${{ inputs.app-name }} deployed to ${{ steps.deploy.outputs.url }}" >> "$GITHUB_STEP_SUMMARY"
+        run: echo "### ${{ inputs.app_name }} deployed to ${{ steps.deploy.outputs.url }}" >> "$GITHUB_STEP_SUMMARY"
 
       - name: Comment preview URL on PR
         if: github.event_name == 'pull_request' && !inputs.production
@@ -108,5 +106,5 @@ jobs:
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
-              body: `Preview deployment for **${{ inputs.app-name }}**: ${{ steps.deploy.outputs.url }}`,
+              body: `Preview deployment for **${{ inputs.app_name }}**: ${{ steps.deploy.outputs.url }}`,
             });

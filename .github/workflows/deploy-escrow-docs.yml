@@ -34,24 +34,17 @@ concurrency:
 
 jobs:
   deploy:
-    # ── Active pipeline: Vercel ────────────────────────────────────────────────
-    # To switch to AWS: change `uses` to deploy-app-aws.yml, swap the secrets
-    # block for the AWS equivalents (see deploy-app-aws.yml for the full list),
-    # and update the paths trigger above to reference deploy-app-aws.yml.
     uses: ./.github/workflows/deploy-app-vercel.yml
     with:
-      app-name: escrow-docs
-      # Vercel project id — Vercel dashboard → Project Settings → General → Project ID
-      vercel-project-id: prj_nOKQOjbDIYsbhm9BDWBgw59x1Ptc
+      app_name: escrow-docs
+      vercel_project_id: prj_nOKQOjbDIYsbhm9BDWBgw59x1Ptc
       production: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
     secrets:
-      vercel-token: ${{ secrets.VERCEL_TOKEN }}
-      vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
-      # Shared infrastructure — same Cloudflare account across all apps
-      CF_ACCOUNT_ID: ${{ secrets.CF_ACCOUNT_ID }}
-      R2_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
-      R2_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
-      # Per-app — a compromise here does not affect other apps
-      ADMIN_ACCESS_CODE: ${{ secrets.ESCROW_DOCS_ADMIN_ACCESS_CODE }}
-      ADMIN_JWT_SECRET: ${{ secrets.ESCROW_DOCS_ADMIN_JWT_SECRET }}
-      R2_BUCKET_NAME: ${{ secrets.ESCROW_DOCS_R2_BUCKET_NAME }}
+      vercel_token: ${{ secrets.VERCEL_TOKEN }}
+      vercel_org_id: ${{ secrets.VERCEL_ORG_ID }}
+      cf_account_id: ${{ secrets.CF_ACCOUNT_ID }}
+      r2_access_key_id: ${{ secrets.R2_ACCESS_KEY_ID }}
+      r2_secret_access_key: ${{ secrets.R2_SECRET_ACCESS_KEY }}
+      admin_access_code: ${{ secrets.ESCROW_DOCS_ADMIN_ACCESS_CODE }}
+      admin_jwt_secret: ${{ secrets.ESCROW_DOCS_ADMIN_JWT_SECRET }}
+      r2_bucket_name: ${{ secrets.ESCROW_DOCS_R2_BUCKET_NAME }}
