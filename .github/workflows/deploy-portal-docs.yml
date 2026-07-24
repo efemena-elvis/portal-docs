@@ -67,6 +67,8 @@ jobs:
           R2_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
           ADMIN_ACCESS_CODE: ${{ secrets.PORTAL_DOCS_ADMIN_ACCESS_CODE }}
           ADMIN_JWT_SECRET: ${{ secrets.PORTAL_DOCS_ADMIN_JWT_SECRET }}
+          NUXT_ADMIN_ACCESS_CODE: ${{ secrets.PORTAL_DOCS_ADMIN_ACCESS_CODE }}
+          NUXT_ADMIN_JWT_SECRET: ${{ secrets.PORTAL_DOCS_ADMIN_JWT_SECRET }}
           R2_BUCKET_NAME: ${{ secrets.PORTAL_DOCS_R2_BUCKET_NAME }}
         run: |
           if [ "${{ github.event_name }}" = "push" ] && [ "${{ github.ref }}" = "refs/heads/main" ]; then
