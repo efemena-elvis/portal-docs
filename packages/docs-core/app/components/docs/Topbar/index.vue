@@ -253,10 +253,10 @@ const {
 } = useDraftState();
 
 const logoImage = computed(
-  () => (config.public.site as any)?.logo?.image || null,
+  () => (config.public.site as any)?.logo?.image || undefined,
 );
 const logoDarkImage = computed(
-  () => (config.public.site as any)?.logo?.darkImage || null,
+  () => (config.public.site as any)?.logo?.darkImage || undefined,
 );
 const logoBadge = computed(() => {
   const b = (config.public.site as any)?.badge;

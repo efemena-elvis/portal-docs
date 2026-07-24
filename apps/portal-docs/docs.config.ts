@@ -28,9 +28,9 @@ const docsConfig = {
       /** Text shown in the sidebar header */
       text: "Vesicash",
       /** Path to an image in /public — set to override the text logo */
-      image: "/vesicash-logo.png" as string | null,
+      image: "/vesicash-logo.png" as string | undefined,
       /** Dark-mode variant — shown when the dark class is active */
-      darkImage: "/vesicash-dark.png" as string | null,
+      darkImage: "/vesicash-dark.png" as string | undefined,
     },
     /** Small pill badge shown beneath the logo's bottom-right corner */
     badge: {

@@ -18,8 +18,8 @@ const docsConfig = {
     domain: "docs.escrow.vesicash.com",
     logo: {
       text: "Vesicash Escrow",
-      image: "/vesicash-logo.png" as string | null,
-      darkImage: "/vesicash-dark.png" as string | null,
+      image: "/vesicash-logo.png" as string | undefined,
+      darkImage: "/vesicash-dark.png" as string | undefined,
     },
     /** Small pill badge shown beneath the logo's bottom-right corner */
     badge: {
